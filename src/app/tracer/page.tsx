@@ -54,9 +54,10 @@ function TracerContent() {
               width: "100%", 
               padding: "10px", 
               borderRadius: "var(--radius-md)", 
-              background: "var(--bg-card)", 
+              background: "#ffffff", 
               border: "1px solid var(--border-subtle)",
-              color: "white"
+              color: "var(--text-primary)",
+              fontSize: "0.9rem"
             }}
             value={selectedReport?.id || ""}
             onChange={(e) => {

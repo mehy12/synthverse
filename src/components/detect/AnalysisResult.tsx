@@ -1,17 +1,14 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FiAlertCircle, FiCheckCircle, FiInfo, FiMapPin, FiRefreshCw, FiAward } from "react-icons/fi";
 import styles from "./Detect.module.css";
-import { useRouter } from "next/navigation";
 import { addPoints, getUserPoints } from "@/lib/points";
 
 const LocationPickerMap = dynamic(() => import("./LocationPickerMap"), {
   ssr: false,
-  loading: () => (
-    <div className={styles.mapLoading}>Loading map...</div>
-  ),
+  loading: () => <div className={styles.mapLoading}>Loading map...</div>,
 });
 
 interface Location {
@@ -36,16 +33,12 @@ interface Props {
 }
 
 export default function AnalysisResult({ result, imageBase64, selectedLocation, onLocationChange, onClear }: Props) {
-  const router = useRouter();
   const [locating, setLocating] = useState(false);
   const [userPoints, setUserPoints] = useState(0);
 
-  // Load user points on mount
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const points = getUserPoints();
-      setUserPoints(points.totalPoints);
-    }
+    const points = getUserPoints();
+    setUserPoints(points.totalPoints);
   }, []);
 
   const getBadgeClass = (severity: number) => {
@@ -65,29 +58,28 @@ export default function AnalysisResult({ result, imageBase64, selectedLocation, 
       return;
     }
 
-    if (typeof window !== "undefined") {
-      const userReports = JSON.parse(localStorage.getItem("neptune_user_reports") || "[]");
-      const newReport = {
-        id: `user-${Date.now()}`,
-        latitude: selectedLocation.lat,
-        longitude: selectedLocation.lng,
-        type: result.pollution_type.replace("_", " ").toUpperCase(),
-        severity: result.severity,
-        title: "FIELD REPORT: CITIZEN DETECTION",
-        description: result.description,
-        imageBase64,
-        timestamp: new Date().toISOString(),
-        isLive: false,
-        isUserReport: true,
-      };
+    const userReports = JSON.parse(localStorage.getItem("neptune_user_reports") || "[]");
+    const newReport = {
+      id: `user-${Date.now()}`,
+      latitude: selectedLocation.lat,
+      longitude: selectedLocation.lng,
+      type: result.pollution_type.replace("_", " ").toUpperCase(),
+      severity: result.severity,
+      title: "FIELD REPORT: CITIZEN DETECTION",
+      description: result.description,
+      imageBase64,
+      timestamp: new Date().toISOString(),
+      isLive: false,
+      isUserReport: true,
+    };
 
-      localStorage.setItem("neptune_user_reports", JSON.stringify([newReport, ...userReports]));
+    localStorage.setItem("neptune_user_reports", JSON.stringify([newReport, ...userReports]));
 
-      // Award 10 points for valid report
-      const updatedPoints = addPoints(10);
-      setUserPoints(updatedPoints.totalPoints);
+    const updatedPoints = addPoints(10);
+    setUserPoints(updatedPoints.totalPoints);
 
-      alert(`✓ Report submitted! You earned 10 points. Total: ${updatedPoints.totalPoints} pts`);
+    alert(`✓ Report submitted! You earned 10 points. Total: ${updatedPoints.totalPoints} pts`);
+  };
 
   const useCurrentLocation = () => {
     if (typeof window === "undefined" || !navigator.geolocation) {
@@ -123,7 +115,7 @@ export default function AnalysisResult({ result, imageBase64, selectedLocation, 
           <h2 style={{ margin: 0 }}>No Pollution Detected</h2>
         </div>
         <div className={styles.imagePreviewSmall}>
-           <img src={imageBase64} alt="Analyzed" />
+          <img src={imageBase64} alt="Analyzed" />
         </div>
         <p style={{ color: "var(--text-secondary)", marginTop: "20px" }}>{result.description}</p>
         <button className="btn btn-secondary" onClick={onClear} style={{ marginTop: "24px", width: "100%" }}>
@@ -136,88 +128,90 @@ export default function AnalysisResult({ result, imageBase64, selectedLocation, 
   return (
     <div className={styles.resultGrid}>
       <div className={`${styles.imagePreview} glass-strong`}>
-         <img src={imageBase64} alt="Analyzed" />
-         <div className={styles.confidenceOverlay}>
-           AI Confidence: {(result.confidence * 100).toFixed(1)}%
-         </div>
+        <img src={imageBase64} alt="Analyzed" />
+        <div className={styles.confidenceOverlay}>
+          AI Confidence: {(result.confidence * 100).toFixed(1)}%
+        </div>
       </div>
 
       <div className={`${styles.resultDetails} glass`}>
-         <div className={styles.resultHeader}>
-           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-             {getIcon(result.severity)}
-             <span className={`badge ${getBadgeClass(result.severity)}`}>
-               Severity {result.severity}/5
-             </span>
-           </div>
-           <h2 style={{ marginTop: "12px", textTransform: "capitalize" }}>{result.pollution_type.replace('_', ' ')} Detected</h2>
-         </div>
+        <div className={styles.resultHeader}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            {getIcon(result.severity)}
+            <span className={`badge ${getBadgeClass(result.severity)}`}>
+              Severity {result.severity}/5
+            </span>
+          </div>
+          <h2 style={{ marginTop: "12px", textTransform: "capitalize" }}>
+            {result.pollution_type.replace("_", " ")} Detected
+          </h2>
+        </div>
 
-         <div className={styles.detailSection}>
-           <h4>Description</h4>
-           <p>{result.description}</p>
-         </div>
+        <div className={styles.detailSection}>
+          <h4>Description</h4>
+          <p>{result.description}</p>
+        </div>
 
-         <div className={styles.detailSection}>
-           <h4>Estimated Area</h4>
-           <div className="mono" style={{ background: "var(--bg-card)", padding: "8px 12px", borderRadius: "var(--radius-sm)", display: "inline-block" }}>
-             {result.affected_area}
-           </div>
-         </div>
+        <div className={styles.detailSection}>
+          <h4>Estimated Area</h4>
+          <div className="mono" style={{ background: "var(--bg-card)", padding: "8px 12px", borderRadius: "var(--radius-sm)", display: "inline-block" }}>
+            {result.affected_area}
+          </div>
+        </div>
 
-         <div className={styles.detailSection}>
-           <h4>Recommended Action</h4>
-           <p style={{ color: "var(--slate-600)" }}>{result.recommended_action}</p>
-         </div>
+        <div className={styles.detailSection}>
+          <h4>Recommended Action</h4>
+          <p style={{ color: "var(--slate-600)" }}>{result.recommended_action}</p>
+        </div>
 
-         <div className={styles.detailSection}>
-           <h4>Incident Location</h4>
-           <p className={styles.locationHint}>Use your current location or click the map to place a pin.</p>
-           <div className={styles.locationActions}>
-             <button
-               className="btn btn-secondary"
-               type="button"
-               onClick={useCurrentLocation}
-               disabled={locating}
-             >
-               <FiMapPin /> {locating ? "Locating..." : "Use Current Location"}
-             </button>
-           </div>
-           <div className={styles.locationMapWrap}>
-             <LocationPickerMap value={selectedLocation} onChange={onLocationChange} />
-           </div>
-           <p className={styles.locationCoords}>
-             {selectedLocation
-               ? `Pinned at ${selectedLocation.lat.toFixed(5)}, ${selectedLocation.lng.toFixed(5)}`
-               : "No location selected yet."}
-           </p>
-         </div>
+        <div className={styles.detailSection}>
+          <h4>Incident Location</h4>
+          <p className={styles.locationHint}>Use your current location or click the map to place a pin.</p>
+          <div className={styles.locationActions}>
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={useCurrentLocation}
+              disabled={locating}
+            >
+              <FiMapPin /> {locating ? "Locating..." : "Use Current Location"}
+            </button>
+          </div>
+          <div className={styles.locationMapWrap}>
+            <LocationPickerMap value={selectedLocation} onChange={onLocationChange} />
+          </div>
+          <p className={styles.locationCoords}>
+            {selectedLocation
+              ? `Pinned at ${selectedLocation.lat.toFixed(5)}, ${selectedLocation.lng.toFixed(5)}`
+              : "No location selected yet."}
+          </p>
+        </div>
 
-         <div style={{ background: "rgba(16, 185, 129, 0.1)", border: "1px solid var(--teal)", padding: "12px", borderRadius: "6px", marginBottom: "16px" }}>
-           <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--teal)", fontWeight: "600", marginBottom: "4px" }}>
-             <FiAward size={18} />
-             Points Earned
-           </div>
-           <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--text-primary)" }}>
-             Submit this report to earn <strong>10 points</strong>
-           </p>
-           <p style={{ margin: "6px 0 0 0", fontSize: "0.85rem", color: "var(--text-secondary)" }}>
-             Running total: <strong>{userPoints}</strong> points • Redeemable for fuel subsidy vouchers & gear discounts
-           </p>
-         </div>
+        <div style={{ background: "rgba(16, 185, 129, 0.1)", border: "1px solid var(--teal)", padding: "12px", borderRadius: "6px", marginBottom: "16px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--teal)", fontWeight: "600", marginBottom: "4px" }}>
+            <FiAward size={18} />
+            Points Earned
+          </div>
+          <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--text-primary)" }}>
+            Submit this report to earn <strong>10 points</strong>
+          </p>
+          <p style={{ margin: "6px 0 0 0", fontSize: "0.85rem", color: "var(--text-secondary)" }}>
+            Running total: <strong>{userPoints}</strong> points • Redeemable for fuel subsidy vouchers & gear discounts
+          </p>
+        </div>
 
-         <div className={styles.actions}>
-           <button 
-             className="btn btn-primary" 
-             style={{ flex: 1 }}
-             onClick={handleAddToMap}
-           >
-             <FiMapPin /> Add to Map
-           </button>
-           <button className="btn btn-secondary" onClick={onClear}>
-             <FiRefreshCw /> Scan Next
-           </button>
-         </div>
+        <div className={styles.actions}>
+          <button
+            className="btn btn-primary"
+            style={{ flex: 1 }}
+            onClick={handleAddToMap}
+          >
+            <FiMapPin /> Add to Map
+          </button>
+          <button className="btn btn-secondary" onClick={onClear}>
+            <FiRefreshCw /> Scan Next
+          </button>
+        </div>
       </div>
     </div>
   );

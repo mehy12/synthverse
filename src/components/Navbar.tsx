@@ -10,10 +10,9 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Live Map", href: "/map", icon: <FiMap className={styles.icon} /> },
-    // Hidden for progress demo — unhide when ready to present full product
-    // { name: "AI Detector", href: "/detect", icon: <FiCamera className={styles.icon} /> },
-    // { name: "Tracer", href: "/tracer", icon: <FiTrendingUp className={styles.icon} /> },
-    // { name: "Biodiversity", href: "/biodiversity", icon: <FiActivity className={styles.icon} /> },
+    { name: "AI Detector", href: "/detect", icon: <FiCamera className={styles.icon} /> },
+    { name: "Tracer", href: "/tracer", icon: <FiTrendingUp className={styles.icon} /> },
+    { name: "Biodiversity", href: "/biodiversity", icon: <FiActivity className={styles.icon} /> },
   ];
 
   return (

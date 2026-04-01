@@ -19,7 +19,7 @@ interface TracerMapProps {
 }
 
 // Particle Animator Sub-component
-function ParticleAnimator({ report, targetLng, targetLat }: { report: any, targetLng: number, targetLat: number }) {
+function ParticleAnimator({ report, targetLng, targetLat }: { report: any; targetLng: number; targetLat: number }) {
   const map = useMap();
   const markersRef = useRef<L.CircleMarker[]>([]);
   const animationRef = useRef<number | undefined>(undefined);
@@ -27,11 +27,19 @@ function ParticleAnimator({ report, targetLng, targetLat }: { report: any, targe
   useEffect(() => {
     if (!report) return;
 
-    // Center map slightly offset for the demo
-    map.flyTo([report.latitude, report.longitude], 12, { duration: 1.5 });
+    // Center view so both the detection and target are comfortably in frame
+    if (Number.isFinite(targetLat) && Number.isFinite(targetLng)) {
+      const bounds = L.latLngBounds(
+        [report.latitude, report.longitude],
+        [targetLat, targetLng]
+      );
+      map.fitBounds(bounds, { padding: [140, 140] });
+    } else {
+      map.flyTo([report.latitude, report.longitude], 10, { duration: 1.5 });
+    }
 
     // Initialize markers
-    const numParticles = 30;
+    const numParticles = 28;
     const particlesData = Array.from({length: numParticles}).map(() => ({
       lng: report.longitude + (Math.random() - 0.5) * 0.002,
       lat: report.latitude + (Math.random() - 0.5) * 0.002,
@@ -47,10 +55,10 @@ function ParticleAnimator({ report, targetLng, targetLat }: { report: any, targe
     particlesData.forEach(p => {
       const m = L.circleMarker([p.lat, p.lng], {
         radius: 3,
-        color: 'rgba(0, 210, 211, 0.2)',
-        fillColor: 'rgba(0, 210, 211, 0.8)',
+        color: "rgba(56, 189, 248, 0.15)",
+        fillColor: "rgba(56, 189, 248, 0.9)",
         fillOpacity: 1,
-        weight: 1
+        weight: 1,
       }).addTo(map);
       markersRef.current.push(m);
     });
@@ -98,10 +106,26 @@ function ParticleAnimator({ report, targetLng, targetLat }: { report: any, targe
 }
 
 const shipIcon = L.divIcon({
-  html: '<div style="font-size: 24px; filter: drop-shadow(0 0 10px #ef4444); display: flex; align-items: center; justify-content: center; transform: translateY(-10px);">🚢</div>',
+  html:
+    '<div style="display:flex;align-items:center;justify-content:center;transform:translateY(-6px);">' +
+    // Wake
+    '<div style="position:absolute;width:40px;height:18px;border-radius:999px;background:radial-gradient(circle at 10% 50%,rgba(59,130,246,0.55),transparent 60%);"></div>' +
+    // Hull
+    '<div style="position:relative;width:30px;height:18px;overflow:visible;">' +
+    '<div style="position:absolute;bottom:0;left:0;right:0;height:10px;border-radius:0 0 10px 10px;background:linear-gradient(90deg,#1f2937,#020617);"></div>' +
+    // Bow triangle
+    '<div style="position:absolute;bottom:0;right:-6px;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:6px solid #020617;"></div>' +
+    // Deck
+    '<div style="position:absolute;bottom:8px;left:4px;right:4px;height:6px;border-radius:4px 4px 0 0;background:#e5e7eb;border:1px solid rgba(15,23,42,0.55);"></div>' +
+    // Bridge block
+    '<div style="position:absolute;bottom:12px;left:8px;width:12px;height:7px;border-radius:3px;background:#ffffff;border:1px solid rgba(15,23,42,0.6);"></div>' +
+    // Mast
+    '<div style="position:absolute;bottom:17px;left:13px;width:2px;height:6px;background:#ef4444;border-radius:999px;"></div>' +
+    '</div>' +
+    '</div>',
   className: "transparent-icon",
-  iconSize: [30, 30],
-  iconAnchor: [15, 15]
+  iconSize: [40, 28],
+  iconAnchor: [20, 20],
 });
 
 export default function TracerMap({ selectedReport }: TracerMapProps) {
@@ -168,15 +192,25 @@ export default function TracerMap({ selectedReport }: TracerMapProps) {
 
         {selectedReport && (
           <>
+            {/* Outer glow ring for detection point */}
+            <CircleMarker
+              center={[selectedReport.latitude, selectedReport.longitude]}
+              radius={14}
+              pathOptions={{
+                color: "rgba(251, 191, 36, 0.0)",
+                weight: 0,
+                fillColor: "rgba(251, 191, 36, 0.25)",
+                fillOpacity: 0.9,
+              }}
+            />
             <CircleMarker
               center={[selectedReport.latitude, selectedReport.longitude]}
               radius={8}
               pathOptions={{
-                color: "var(--amber)",
+                color: "#fbbf24",
                 weight: 2,
-                fillColor: "var(--amber)",
-                fillOpacity: 0.5,
-                className: "animate-pulse"
+                fillColor: "#f97316",
+                fillOpacity: 0.9,
               }}
             />
             {/* Universally render ship marker at target coordinates so particles always hit something visible */}

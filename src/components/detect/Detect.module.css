@@ -235,3 +235,33 @@
     flex-direction: column;
   }
 }
+
+@media (max-width: 768px) {
+  .container {
+    padding: 24px 16px;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .uploadArea {
+    height: auto;
+    min-height: 260px;
+    padding: 20px 16px;
+  }
+
+  .analyzingCard,
+  .resultCard {
+    padding: 20px 16px;
+  }
+
+  .imagePreview {
+    max-height: 220px;
+  }
+}
