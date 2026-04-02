@@ -2,32 +2,37 @@
   position: relative;
   width: 100%;
   height: calc(100vh - var(--nav-height));
-  background: var(--slate-100);
+  background: var(--slate-900);
+  /* Darker base for map contrast */
   overflow: hidden;
 }
 
-/* Layer Panel - Sharp Edges, White Bg */
+/* Glassmorphic Layer Panel */
 .layerPanel {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 24px;
+  right: 24px;
   z-index: 1000;
-  width: 240px;
+  width: 280px;
   padding: 20px;
   background: #ffffff;
   border: 1px solid var(--border-strong);
   box-shadow: var(--shadow-md);
   border-radius: 0 !important;
+  /* Force Sharp */
   backdrop-filter: none !important;
 }
 
 .panelTitle {
-  margin-bottom: 16px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  margin-bottom: 20px;
+  font-size: 0.7rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--slate-500);
+  letter-spacing: 0.1em;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .layerToggle {
@@ -37,64 +42,80 @@
   margin-bottom: 12px;
   cursor: pointer;
   user-select: none;
-  font-size: 0.9rem;
-  color: var(--slate-700);
-  padding: 4px 0;
+  font-size: 0.88rem;
+  color: #334155;
+  padding: 8px 12px;
+  border-radius: 12px;
+  transition: background 0.2s;
 }
 
-.layerToggle:last-child { margin-bottom: 0; }
+.layerToggle:last-child {
+  margin-bottom: 0;
+}
 
-.layerToggle input { display: none; }
+.layerToggle input {
+  display: none;
+}
 
 .checkmark {
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--slate-300);
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e2e8f0;
   background: #ffffff;
   position: relative;
   transition: all 0.2s;
   border-radius: 0 !important;
+  /* Square checkbox */
 }
 
-.layerToggle input:checked + .checkmark {
-  background: var(--slate-900);
-  border-color: var(--slate-900);
+.layerToggle input:checked+.checkmark {
+  background: #0ea5e9;
+  border-color: #0ea5e9;
+  box-shadow: 0 0 12px rgba(14, 165, 233, 0.3);
 }
 
-.layerToggle input:checked + .checkmark::after {
-  content: "✔";
+.layerToggle input:checked+.checkmark::after {
+  content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #ffffff;
-  font-size: 10px;
+  top: 4px;
+  left: 7px;
+  width: 3px;
+  height: 7px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
-.label { font-weight: 500; }
+.label {
+  font-weight: 500;
+}
 
-/* Legend - Sharp Edges, White Bg */
+/* Legend - Glassmorphic */
 .legend {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 24px;
+  right: 24px;
   z-index: 1000;
-  padding: 16px;
-  background: #ffffff;
-  border: 1px solid var(--border-strong);
-  box-shadow: var(--shadow-md);
-  border-radius: 0 !important;
-  width: 200px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  width: 260px;
 }
 
 .legendItem {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   font-size: 0.8rem;
-  margin-bottom: 8px;
-  color: var(--slate-700);
-  font-weight: 500;
+  margin-bottom: 10px;
+  color: #475569;
+  font-weight: 600;
 }
 
-.legendItem:last-child { margin-bottom: 0; }
+.legendItem:last-child {
+  margin-bottom: 0;
+}

@@ -181,8 +181,8 @@ function getPositionAtProgress(
       // Unit perpendicular vector (rotated 90°)
       const perpLat = -dlng / segLen;
       const perpLng = dlat / segLen;
-      // Drift magnitude: ~0.004 degrees (~400m), varies by segment index
-      const driftAmplitude = 0.004 + (i % 3) * 0.001;
+      // Drift magnitude: ~0.00015 degrees (~15m), varies by segment index
+      const driftAmplitude = 0.00015 + (i % 3) * 0.00005;
       // Two overlapping sine waves for a more organic feel
       const wave = Math.sin(segProgress * Math.PI * 2) * driftAmplitude
                  + Math.sin(segProgress * Math.PI * 5 + i * 1.7) * driftAmplitude * 0.3;
@@ -268,7 +268,7 @@ function getDangerZoneLabel(lat: number, lng: number, zones: ZoneProfile[]): str
 
 // ─── Hook ───────────────────────────────────────────────────────────────────
 
-const TRAIL_DURATION_MS = 10 * 60 * 1000; // 10 minutes of trail
+const TRAIL_DURATION_MS = 20 * 60 * 1000; // 20 minutes of trail for persistent pollution mapping
 const SENSOR_UPDATE_MS = 5000; // sensor update every 5s
 const HISTORY_MAX = 12; // keep last 12 readings for sparklines (60s at 5s interval)
 

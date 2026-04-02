@@ -122,33 +122,70 @@ export default function BuoyLayer({ buoy, selected = false, onSelect }: BuoyLaye
           offset={[0, -14]}
           opacity={1}
           className="buoy-tooltip"
+          sticky
         >
           <div style={{
-            background: "rgba(255,255,255,0.95)",
-            backdropFilter: "blur(8px)",
-            padding: "8px 12px",
-            borderRadius: "6px",
-            border: "1px solid rgba(14,165,233,0.4)",
-            color: "#334155",
-            boxShadow: "0 8px 16px rgba(0,0,0,0.12)",
-            minWidth: "160px",
+            background: "rgba(255, 255, 255, 0.92)",
+            backdropFilter: "blur(12px) saturate(180%)",
+            padding: "12px 14px",
+            borderRadius: "12px",
+            border: "1px solid rgba(255, 255, 255, 0.4)",
+            color: "#1e293b",
+            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
+            minWidth: "190px",
+            fontFamily: "'Inter', sans-serif",
           }}>
-            <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#0c4a6e", marginBottom: "4px", display: "flex", justifyContent: "space-between" }}>
-              <span>🚢 {buoy.name}</span>
-              <span style={{ color: healthColor(buoy.sensors.healthScore) }}>{buoy.sensors.healthScore}/100</span>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+              <span style={{ fontWeight: 800, fontSize: "0.85rem", color: "#0f172a", letterSpacing: "-0.01em" }}>
+                {buoy.name}
+              </span>
+              <div style={{ 
+                background: buoy.sensors.healthScore < 70 ? "rgba(239, 68, 68, 0.1)" : "rgba(16, 185, 129, 0.1)",
+                color: healthColor(buoy.sensors.healthScore),
+                padding: "2px 6px",
+                borderRadius: "4px",
+                fontSize: "0.65rem",
+                fontWeight: 700,
+                border: `1px solid ${healthColor(buoy.sensors.healthScore)}33`
+              }}>
+                {buoy.sensors.healthScore < 70 ? "POLLUTED" : "HEALTHY"}
+              </div>
             </div>
-            <div style={{ fontSize: "0.7rem", color: "#64748b", marginBottom: "6px" }}>
-              📍 {buoy.currentZoneLabel}
+
+            <div style={{ fontSize: "0.72rem", color: "#64748b", marginBottom: "10px", display: "flex", alignItems: "center", gap: "4px" }}>
+              <span style={{ opacity: 0.8 }}>📍</span> {buoy.currentZoneLabel}
             </div>
-            <div style={{ fontSize: "0.7rem", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px" }}>
-              <div>pH: <strong>{buoy.sensors.pH}</strong></div>
-              <div>DO: <strong>{buoy.sensors.dissolvedO2}</strong></div>
-              <div>Turb: <strong>{buoy.sensors.turbidity}</strong> NTU</div>
-              <div>Temp: <strong>{buoy.sensors.temperature}</strong>°C</div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "4px" }}>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <span style={{ fontSize: "0.6rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase" }}>pH Level</span>
+                <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#334155" }}>{buoy.sensors.pH}</span>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <span style={{ fontSize: "0.6rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase" }}>Dissolved O₂</span>
+                <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#334155" }}>{buoy.sensors.dissolvedO2}</span>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <span style={{ fontSize: "0.6rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase" }}>Turbidity</span>
+                <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#334155" }}>{buoy.sensors.turbidity} <span style={{fontSize: "0.6rem", fontWeight: 500}}>NTU</span></span>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <span style={{ fontSize: "0.6rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase" }}>Temp</span>
+                <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#334155" }}>{buoy.sensors.temperature}°C</span>
+              </div>
             </div>
+
             {!selected && (
-              <div style={{ marginTop: "6px", fontSize: "0.65rem", textAlign: "center", color: "#0ea5e9", borderTop: "1px solid #e2e8f0", paddingTop: "4px" }}>
-                Click to monitor
+              <div style={{ 
+                marginTop: "10px", 
+                fontSize: "0.68rem", 
+                textAlign: "center", 
+                color: "#14b8a6", 
+                fontWeight: 600,
+                paddingTop: "8px",
+                borderTop: "1px solid rgba(0,0,0,0.05)"
+              }}>
+                Tap to view analytics →
               </div>
             )}
           </div>

@@ -403,6 +403,9 @@ function WaterHealthProbe(props: {
 export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProps) {
   const [baseLayer, setBaseLayer] = useState<BaseLayer>("light");
   const [showHeatmap, setShowHeatmap] = useState(true);
+  const [showAllPaths, setShowAllPaths] = useState(false);
+  const [showRiverMouths, setShowRiverMouths] = useState(true);
+  const [showCoastalZones, setShowCoastalZones] = useState(true);
   const [enableProbe, setEnableProbe] = useState(false);
   const [probeSnapshot, setProbeSnapshot] = useState<{ lat: number; lng: number; data: WaterHealthSnapshot } | null>(null);
   const [zoom, setZoom] = useState(11);
@@ -430,10 +433,10 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
       id: "harbor-patrol",
       name: "Harbor Patrol Unit",
       waypoints: [
-        { lat: 9.96, lng: 76.20, label: "Harbor Mouth" },
-        { lat: 9.94, lng: 76.19, label: "South Harbor" },
-        { lat: 9.91, lng: 76.18, label: "Outer Channel" },
-        { lat: 9.94, lng: 76.19, label: "South Harbor" }, // retrace
+        { lat: 9.940, lng: 76.245, label: "South Terminal" },
+        { lat: 9.955, lng: 76.240, label: "Willingdon Port" },
+        { lat: 9.970, lng: 76.242, label: "Fort Kochi Outer" },
+        { lat: 9.955, lng: 76.240, label: "Willingdon Port" }, // retrace
       ],
       zones: BUOY_ALPHA_ZONES,
       startOffset: 0.35,
@@ -442,10 +445,10 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
       id: "offshore-sentinel",
       name: "Offshore Sentinel",
       waypoints: [
-        { lat: 10.04, lng: 76.14, label: "Cherai Beach" },
-        { lat: 10.08, lng: 76.12, label: "Offshore Cherai" },
-        { lat: 10.12, lng: 76.13, label: "Munambam Approach" },
-        { lat: 10.08, lng: 76.12, label: "Offshore Cherai" }, // retrace
+        { lat: 10.040, lng: 76.180, label: "Vypeen Offshore" },
+        { lat: 10.020, lng: 76.180, label: "Coastal Corridor" },
+        { lat: 10.000, lng: 76.190, label: "Puthuvype Approach" },
+        { lat: 10.020, lng: 76.180, label: "Coastal Corridor" }, // retrace
       ],
       zones: BUOY_ALPHA_ZONES,
       startOffset: 0.6,
@@ -454,10 +457,10 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
       id: "backwater-flow",
       name: "Backwater Flow Monitor",
       waypoints: [
-        { lat: 9.82, lng: 76.20, label: "Kumbalangi Coast" },
-        { lat: 9.78, lng: 76.18, label: "Aroor Approach" },
-        { lat: 9.76, lng: 76.17, label: "Offshore South" },
-        { lat: 9.78, lng: 76.18, label: "Aroor Approach" }, // retrace
+        { lat: 9.870, lng: 76.260, label: "South Vembanad" },
+        { lat: 9.890, lng: 76.255, label: "Deep Lake Center" },
+        { lat: 9.910, lng: 76.250, label: "Aroor Waters" },
+        { lat: 9.890, lng: 76.255, label: "Deep Lake Center" }, // retrace
       ],
       zones: BUOY_ALPHA_ZONES,
       startOffset: 0.15,
@@ -466,10 +469,10 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
       id: "vembanad-core",
       name: "Vembanad Core Node",
       waypoints: [
-        { lat: 9.85, lng: 76.23, label: "Nettoor Port" },
-        { lat: 9.88, lng: 76.24, label: "Kumbalam Open" },
-        { lat: 9.92, lng: 76.25, label: "Panangad Channel" },
-        { lat: 9.88, lng: 76.24, label: "Kumbalam Open" }, // retrace
+        { lat: 9.820, lng: 76.265, label: "Kumbalam Lake" },
+        { lat: 9.840, lng: 76.270, label: "Nettoor Basin" },
+        { lat: 9.860, lng: 76.265, label: "Panangad Waters" },
+        { lat: 9.840, lng: 76.270, label: "Nettoor Basin" }, // retrace
       ],
       zones: BUOY_ALPHA_ZONES,
       startOffset: 0.8,
@@ -478,10 +481,10 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
       id: "periyar-scout",
       name: "Periyar Estuary Scout",
       waypoints: [
-        { lat: 10.10, lng: 76.19, label: "River Mouth" },
-        { lat: 10.08, lng: 76.20, label: "Estuary Zone" },
-        { lat: 10.06, lng: 76.21, label: "Inland Inlet" },
-        { lat: 10.08, lng: 76.20, label: "Estuary Zone" }, // retrace
+        { lat: 10.070, lng: 76.220, label: "Kadamakkudy Estuary" },
+        { lat: 10.090, lng: 76.215, label: "Varapuzha River" },
+        { lat: 10.110, lng: 76.210, label: "Periyar Channel" },
+        { lat: 10.090, lng: 76.215, label: "Varapuzha River" }, // retrace
       ],
       zones: BUOY_ALPHA_ZONES,
       startOffset: 0.4,
@@ -490,10 +493,10 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
       id: "bolgatty-unit",
       name: "Bolgatty Channel Unit",
       waypoints: [
-        { lat: 9.99, lng: 76.19, label: "West Coast Ferry" },
-        { lat: 10.02, lng: 76.18, label: "Mulavukad Channel" },
-        { lat: 10.05, lng: 76.17, label: "North Beach Channel" },
-        { lat: 10.02, lng: 76.18, label: "Mulavukad Channel" }, // retrace
+        { lat: 10.000, lng: 76.235, label: "Bolgatty Palace" },
+        { lat: 10.020, lng: 76.230, label: "Chitrapuzha Link" },
+        { lat: 10.040, lng: 76.225, label: "High Court Harbor" },
+        { lat: 10.020, lng: 76.230, label: "Chitrapuzha Link" }, // retrace
       ],
       zones: BUOY_ALPHA_ZONES,
       startOffset: 0.25,
@@ -502,10 +505,10 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
       id: "edakochi-inland",
       name: "Edakochi Inland Sensor",
       waypoints: [
-        { lat: 9.90, lng: 76.21, label: "Thevara Coast" },
-        { lat: 9.87, lng: 76.20, label: "Kundannoor Outer" },
-        { lat: 9.84, lng: 76.19, label: "Kumbalangi Coast" },
-        { lat: 9.87, lng: 76.20, label: "Kundannoor Outer" }, // retrace
+        { lat: 9.920, lng: 76.245, label: "Thevara Estuary" },
+        { lat: 9.930, lng: 76.242, label: "Kundannoor Channel" },
+        { lat: 9.940, lng: 76.240, label: "Tripunithura Inlet" },
+        { lat: 9.930, lng: 76.242, label: "Kundannoor Channel" }, // retrace
       ],
       zones: BUOY_ALPHA_ZONES,
       startOffset: 0.55,
@@ -514,10 +517,10 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
       id: "deep-sea",
       name: "Deep Sea Transponder",
       waypoints: [
-        { lat: 10.00, lng: 76.05, label: "Arabian Sea North" },
-        { lat: 9.90, lng: 76.06, label: "Shipping Channel" },
-        { lat: 9.80, lng: 76.07, label: "Arabian Sea South" },
-        { lat: 9.90, lng: 76.06, label: "Shipping Channel" }, // retrace
+        { lat: 9.950, lng: 76.100, label: "Arabian Sea Flow" },
+        { lat: 9.920, lng: 76.100, label: "Deep Shipping Lane" },
+        { lat: 9.890, lng: 76.100, label: "Offshore Shelf" },
+        { lat: 9.920, lng: 76.100, label: "Deep Shipping Lane" }, // retrace
       ],
       zones: BUOY_ALPHA_ZONES,
       startOffset: 0.05,
@@ -526,6 +529,12 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
 
   const allBuoys = useBuoyFleet(buoyConfigs);
   const selectedBuoy = allBuoys.find((b) => b.id === selectedBuoyId) || null;
+
+  const fleetStats = useMemo(() => {
+    const total = allBuoys.length;
+    const polluted = allBuoys.filter(b => b.sensors.healthScore < 70).length;
+    return { total, polluted };
+  }, [allBuoys]);
 
   const handleBuoySelect = (id: string) => {
     setSelectedBuoyId((prev) => (prev === id ? null : id));
@@ -749,7 +758,7 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
         <WaterHealthProbe enabled={enableProbe} snapshot={probeSnapshot} onProbe={handleProbe} />
 
         {/* River mouth pollution channels */}
-        {RIVER_MOUTHS.map((river) => (
+        {showRiverMouths && RIVER_MOUTHS.map((river) => (
           <Marker
             key={river.name}
             position={[river.lat, river.lng]}
@@ -797,7 +806,7 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
         ))}
 
         {/* Fishing zones with live water quality circles */}
-        {liveZones.map((zone) => {
+        {showCoastalZones && liveZones.map((zone) => {
           const liveQuality = zone.qualityScore;
           const qualityColor = getWaterQualityColor(liveQuality);
           const qualityStatus = getWaterQualityStatus(liveQuality);
@@ -932,7 +941,7 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
           <BuoyLayer
             key={buoy.id}
             buoy={buoy}
-            selected={buoy.id === selectedBuoyId}
+            selected={showAllPaths || buoy.id === selectedBuoyId}
             onSelect={handleBuoySelect}
           />
         ))}
@@ -948,7 +957,34 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
 
       {/* Layer toggle */}
       <div className={styles.layerPanel}>
-        <h3 className={styles.panelTitle}>Map Layers</h3>
+        <div style={{ 
+          marginBottom: 16, 
+          padding: "12px", 
+          background: "rgba(14, 165, 233, 0.05)", 
+          border: "1px solid rgba(14, 165, 233, 0.2)", 
+          borderRadius: "12px" 
+        }}>
+          <p style={{ fontSize: "0.75rem", color: "#0369a1", fontWeight: 700, margin: "0 0 4px 0", textTransform: "uppercase" }}>
+            Fleet Status
+          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-primary)" }}>{fleetStats.total}</div>
+              <div style={{ fontSize: "0.6rem", color: "var(--text-secondary)", fontWeight: 600 }}>NODES ONLINE</div>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: "1.2rem", fontWeight: 800, color: fleetStats.polluted > 0 ? "var(--red)" : "var(--teal)" }}>
+                {fleetStats.polluted}
+              </div>
+              <div style={{ fontSize: "0.6rem", color: "var(--text-secondary)", fontWeight: 600 }}>IN POLLUTION</div>
+            </div>
+          </div>
+        </div>
+
+        <h3 className={styles.panelTitle}>
+          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#0ea5e9", boxShadow: "0 0 8px #0ea5e9" }} />
+          Map Layers
+        </h3>
 
         <div style={{ marginBottom: 16 }}>
           <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", margin: "0 0 8px 0", fontWeight: "600" }}>
@@ -992,6 +1028,21 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
             <span className={styles.checkmark}></span>
             <span className={styles.label}>IoT Hazard Zones</span>
           </label>
+          <label className={styles.layerToggle} style={{ marginTop: 4, marginBottom: 0 }}>
+            <input type="checkbox" checked={showRiverMouths} onChange={(e) => setShowRiverMouths(e.target.checked)} />
+            <span className={styles.checkmark}></span>
+            <span className={styles.label}>Pollution Channels</span>
+          </label>
+          <label className={styles.layerToggle} style={{ marginTop: 4, marginBottom: 0 }}>
+            <input type="checkbox" checked={showCoastalZones} onChange={(e) => setShowCoastalZones(e.target.checked)} />
+            <span className={styles.checkmark}></span>
+            <span className={styles.label}>Coastal & Island Zones</span>
+          </label>
+          <label className={styles.layerToggle} style={{ marginTop: 4, marginBottom: 0 }}>
+            <input type="checkbox" checked={showAllPaths} onChange={(e) => setShowAllPaths(e.target.checked)} />
+            <span className={styles.checkmark}></span>
+            <span className={styles.label}>Show All Fleet Paths</span>
+          </label>
           <label className={styles.layerToggle} style={{ marginTop: 4 }}>
             <input type="checkbox" checked={enableProbe} onChange={(e) => setEnableProbe(e.target.checked)} />
             <span className={styles.checkmark}></span>
@@ -1022,94 +1073,42 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
           Legend
         </h4>
 
-        <div style={{ marginBottom: "12px", borderBottom: "1px solid var(--slate-200)", paddingBottom: "10px" }}>
-          <p style={{ margin: "0 0 6px 0", fontSize: "0.8rem", fontWeight: "600", color: "var(--text-primary)" }}>
+        <div style={{ marginBottom: "16px", borderBottom: "1px solid rgba(0,0,0,0.05)", paddingBottom: "12px" }}>
+          <p style={{ margin: "0 0 10px 0", fontSize: "0.75rem", fontWeight: 800, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>
             River Mouths
           </p>
-          <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "10px",
-                  height: "10px",
-                  background: "#DC2626",
-                  borderRadius: "50%",
-                }}
-              />
-              Critical
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "10px",
-                  height: "10px",
-                  background: "#EA580C",
-                  borderRadius: "50%",
-                }}
-              />
-              High
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "10px",
-                  height: "10px",
-                  background: "#F59E0B",
-                  borderRadius: "50%",
-                }}
-              />
-              Medium
-            </div>
+          <div className={styles.legendItem}>
+            <span className={styles.legendIndicator} style={{ color: "#DC2626" }} />
+            Critical Level
+          </div>
+          <div className={styles.legendItem}>
+            <span className={styles.legendIndicator} style={{ color: "#EA580C" }} />
+            High Pollution
+          </div>
+          <div className={styles.legendItem}>
+            <span className={styles.legendIndicator} style={{ color: "#F59E0B" }} />
+            Medium Impact
           </div>
         </div>
 
         <div>
-          <p style={{ margin: "0 0 6px 0", fontSize: "0.8rem", fontWeight: "600", color: "var(--text-primary)" }}>
-            Live Fishing Zones
+          <p style={{ margin: "0 0 10px 0", fontSize: "0.75rem", fontWeight: 800, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+            Fleet Indicators
           </p>
-          <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "10px",
-                  height: "10px",
-                  background: "#10B981",
-                  borderRadius: "50%",
-                }}
-              />
-              Good or stable water
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "10px",
-                  height: "10px",
-                  background: "#F59E0B",
-                  borderRadius: "50%",
-                }}
-              />
-              Moderate activity
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "10px",
-                  height: "10px",
-                  background: "#DC2626",
-                  borderRadius: "50%",
-                }}
-              />
-              High current pressure
-            </div>
-            <div style={{ marginTop: "8px", fontSize: "0.7rem", color: "var(--slate-400)" }}>
-              Polls Open-Meteo marine current data every 5 minutes.
-            </div>
+          <div className={styles.legendItem}>
+            <span className={styles.legendIndicator} style={{ color: "#10B981" }} />
+            Healthy Zone
+          </div>
+          <div className={styles.legendItem}>
+            <span className={styles.legendIndicator} style={{ color: "#F59E0B" }} />
+            Moderate Activity
+          </div>
+          <div className={styles.legendItem}>
+            <span className={styles.legendIndicator} style={{ color: "#DC2626" }} />
+            Pollution Detected
+          </div>
+          <div style={{ marginTop: "12px", fontSize: "0.65rem", color: "#94a3b8", lineHeight: 1.4 }}>
+            System updates every 5s • Processing 9 high-precision IoT nodes.
           </div>
         </div>
       </div>
