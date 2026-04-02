@@ -1,0 +1,266 @@
+[
+  {
+    "id": "log-001",
+    "hash": "a3f7e2c1d9b4",
+    "type": "report_filed",
+    "title": "Oil discharge detected near Periyar River Mouth",
+    "guardianId": "GRD-7A3F-E291",
+    "zone": "Kochi Coast",
+    "latitude": 10.10,
+    "longitude": 76.22,
+    "status": "resolved",
+    "severity": 4,
+    "timestamp": "2026-03-31T14:20:00Z",
+    "actions": [
+      { "type": "ai_trace", "detail": "Source traced to upstream industrial discharge — 94.2% confidence", "timestamp": "2026-03-31T14:25:00Z" },
+      { "type": "authority_notified", "detail": "Kerala SPCB alert dispatched with evidence package", "timestamp": "2026-03-31T14:30:00Z" },
+      { "type": "credits_issued", "detail": "75 Guardian Credits awarded to reporter", "timestamp": "2026-03-31T14:32:00Z" },
+      { "type": "resolved", "detail": "Discharge source shut down by authorities", "timestamp": "2026-04-01T09:00:00Z" }
+    ]
+  },
+  {
+    "id": "log-002",
+    "hash": "b8d4f5a9e170",
+    "type": "report_filed",
+    "title": "Plastic debris field spotted near Vypeen Island",
+    "guardianId": "GRD-4E8D-B135",
+    "zone": "Kochi Coast",
+    "latitude": 10.03,
+    "longitude": 76.23,
+    "status": "investigating",
+    "severity": 3,
+    "timestamp": "2026-03-30T08:15:00Z",
+    "actions": [
+      { "type": "ai_trace", "detail": "Dispersion model suggests municipal origin — Edapally Canal", "timestamp": "2026-03-30T08:20:00Z" },
+      { "type": "authority_notified", "detail": "Kochi Municipal Corporation notified", "timestamp": "2026-03-30T08:25:00Z" },
+      { "type": "credits_issued", "detail": "25 Guardian Credits awarded", "timestamp": "2026-03-30T08:22:00Z" }
+    ]
+  },
+  {
+    "id": "log-003",
+    "hash": "c2e6a8d3f412",
+    "type": "report_filed",
+    "title": "Severe oil slick in Arabian Sea shipping lane",
+    "guardianId": "GRD-2B5C-F912",
+    "zone": "Arabian Sea North",
+    "latitude": 19.5,
+    "longitude": 69.5,
+    "status": "authority_notified",
+    "severity": 5,
+    "timestamp": "2026-03-28T06:30:00Z",
+    "actions": [
+      { "type": "ai_trace", "detail": "Reverse current model identified vessel JBU OPAL (MMSI: 352002324) as probable source", "timestamp": "2026-03-28T06:35:00Z" },
+      { "type": "authority_notified", "detail": "Indian Coast Guard ICG-Mumbai alerted with AIS evidence", "timestamp": "2026-03-28T06:40:00Z" },
+      { "type": "credits_issued", "detail": "75 Guardian Credits awarded", "timestamp": "2026-03-28T06:38:00Z" }
+    ]
+  },
+  {
+    "id": "log-004",
+    "hash": "d5f1b7c9a836",
+    "type": "report_filed",
+    "title": "Chemical plume expanding from offshore platform",
+    "guardianId": "GRD-6D4E-A723",
+    "zone": "Bay of Bengal North",
+    "latitude": 19.0,
+    "longitude": 88.0,
+    "status": "investigating",
+    "severity": 4,
+    "timestamp": "2026-03-26T04:30:00Z",
+    "actions": [
+      { "type": "ai_trace", "detail": "Chemical signature matches industrial effluent — triangulated with satellite data", "timestamp": "2026-03-26T04:40:00Z" },
+      { "type": "credits_issued", "detail": "25 Guardian Credits awarded", "timestamp": "2026-03-26T04:35:00Z" }
+    ]
+  },
+  {
+    "id": "log-005",
+    "hash": "e9a3c4d7f258",
+    "type": "report_filed",
+    "title": "Algal bloom growth off Visakhapatnam coast",
+    "guardianId": "GRD-1F8A-C356",
+    "zone": "Bay of Bengal Central",
+    "latitude": 16.0,
+    "longitude": 85.0,
+    "status": "resolved",
+    "severity": 3,
+    "timestamp": "2026-03-31T03:15:00Z",
+    "actions": [
+      { "type": "ai_trace", "detail": "Nutrient run-off from municipal outfall identified", "timestamp": "2026-03-31T03:20:00Z" },
+      { "type": "authority_notified", "detail": "Vizag Municipal Corp + CPCB notified", "timestamp": "2026-03-31T03:25:00Z" },
+      { "type": "resolved", "detail": "Outfall diversion completed", "timestamp": "2026-04-01T16:00:00Z" },
+      { "type": "credits_issued", "detail": "75 Guardian Credits awarded", "timestamp": "2026-03-31T03:22:00Z" }
+    ]
+  },
+  {
+    "id": "log-006",
+    "hash": "f7b2d5e8a194",
+    "type": "compliance_verified",
+    "title": "FACT Industrial Park — quarterly compliance verified",
+    "guardianId": "GRD-9C1B-D478",
+    "zone": "Kochi Industrial",
+    "latitude": 9.95,
+    "longitude": 76.28,
+    "status": "resolved",
+    "severity": 0,
+    "timestamp": "2026-03-31T10:00:00Z",
+    "actions": [
+      { "type": "credits_issued", "detail": "100 Guardian Credits awarded for compliance", "timestamp": "2026-03-31T10:05:00Z" }
+    ]
+  },
+  {
+    "id": "log-007",
+    "hash": "a1c8e3f6d472",
+    "type": "report_filed",
+    "title": "Abandoned trawl nets drifting in Lakshadweep Sea",
+    "guardianId": "GRD-3C2D-E847",
+    "zone": "Lakshadweep Sea",
+    "latitude": 10.5,
+    "longitude": 73.0,
+    "status": "investigating",
+    "severity": 3,
+    "timestamp": "2026-03-30T08:00:00Z",
+    "actions": [
+      { "type": "ai_trace", "detail": "Ghost gear drift model projects entanglement risk for 12 species", "timestamp": "2026-03-30T08:10:00Z" },
+      { "type": "credits_issued", "detail": "25 Guardian Credits awarded", "timestamp": "2026-03-30T08:05:00Z" }
+    ]
+  },
+  {
+    "id": "log-008",
+    "hash": "b4d9f1a7e635",
+    "type": "report_filed",
+    "title": "Bilge water dumping from vessel near Gulf of Mannar",
+    "guardianId": "GRD-8B7F-D194",
+    "zone": "Indian Ocean",
+    "latitude": 7.5,
+    "longitude": 78.5,
+    "status": "authority_notified",
+    "severity": 4,
+    "timestamp": "2026-03-29T05:45:00Z",
+    "actions": [
+      { "type": "ai_trace", "detail": "AIS match: MAERSK HANOI (MMSI: 477610400) — 89.7% bilge discharge probability", "timestamp": "2026-03-29T05:50:00Z" },
+      { "type": "authority_notified", "detail": "Indian Coast Guard Tuticorin notified", "timestamp": "2026-03-29T05:55:00Z" },
+      { "type": "credits_issued", "detail": "75 Guardian Credits awarded", "timestamp": "2026-03-29T05:52:00Z" }
+    ]
+  },
+  {
+    "id": "log-009",
+    "hash": "c6e2a5d8f913",
+    "type": "cleanup_event",
+    "title": "Fort Kochi Beach Cleanup — 400kg waste collected",
+    "guardianId": "GRD-9C1B-D478",
+    "zone": "Kochi Coast",
+    "latitude": 9.965,
+    "longitude": 76.2415,
+    "status": "resolved",
+    "severity": 0,
+    "timestamp": "2026-03-20T08:00:00Z",
+    "actions": [
+      { "type": "credits_issued", "detail": "60 Guardian Credits awarded for corporate cleanup event", "timestamp": "2026-03-20T12:00:00Z" }
+    ]
+  },
+  {
+    "id": "log-010",
+    "hash": "d8f4b1c7a296",
+    "type": "report_filed",
+    "title": "Sewage discharge near Chellanam fishing zone",
+    "guardianId": "GRD-7A3F-E291",
+    "zone": "Kochi Coast",
+    "latitude": 9.81,
+    "longitude": 76.27,
+    "status": "resolved",
+    "severity": 3,
+    "timestamp": "2026-03-25T16:30:00Z",
+    "actions": [
+      { "type": "ai_trace", "detail": "Municipal sewage line overflow confirmed", "timestamp": "2026-03-25T16:35:00Z" },
+      { "type": "authority_notified", "detail": "Kochi Water Authority notified", "timestamp": "2026-03-25T16:40:00Z" },
+      { "type": "resolved", "detail": "Overflow repaired within 18 hours", "timestamp": "2026-03-26T10:30:00Z" },
+      { "type": "credits_issued", "detail": "75 Guardian Credits awarded", "timestamp": "2026-03-25T16:38:00Z" }
+    ]
+  },
+  {
+    "id": "log-011",
+    "hash": "e1a9c3d5f748",
+    "type": "report_filed",
+    "title": "Unidentified hydrocarbon patch in Bay of Bengal",
+    "guardianId": "GRD-5A6E-F438",
+    "zone": "Bay of Bengal South",
+    "latitude": 12.0,
+    "longitude": 83.0,
+    "status": "investigating",
+    "severity": 5,
+    "timestamp": "2026-03-27T11:20:00Z",
+    "actions": [
+      { "type": "ai_trace", "detail": "Dark slick spanning 5km — suspected illegal discharge from EAGLE VALENCE", "timestamp": "2026-03-27T11:30:00Z" },
+      { "type": "authority_notified", "detail": "ICG Chennai + CPCB alerted with satellite imagery", "timestamp": "2026-03-27T11:35:00Z" },
+      { "type": "credits_issued", "detail": "25 Guardian Credits awarded", "timestamp": "2026-03-27T11:25:00Z" }
+    ]
+  },
+  {
+    "id": "log-012",
+    "hash": "f3b7d2e6a581",
+    "type": "biodiversity_alert",
+    "title": "Coral bleaching early warning — Gulf of Mannar Sector 4",
+    "guardianId": "SYSTEM",
+    "zone": "Gulf of Mannar",
+    "latitude": 9.15,
+    "longitude": 79.12,
+    "status": "investigating",
+    "severity": 4,
+    "timestamp": "2026-03-29T00:00:00Z",
+    "actions": [
+      { "type": "ai_trace", "detail": "SST anomaly +2.1°C sustained for 14 days — bleaching threshold exceeded", "timestamp": "2026-03-29T00:05:00Z" },
+      { "type": "authority_notified", "detail": "Gulf of Mannar Marine National Park authority notified", "timestamp": "2026-03-29T00:10:00Z" }
+    ]
+  },
+  {
+    "id": "log-013",
+    "hash": "a5c1d8e4f327",
+    "type": "report_filed",
+    "title": "Chemical discharge near Mumbai industrial corridor",
+    "guardianId": "GRD-0D9C-B562",
+    "zone": "Mumbai Coast",
+    "latitude": 19.0,
+    "longitude": 72.9,
+    "status": "authority_notified",
+    "severity": 4,
+    "timestamp": "2026-03-28T22:15:00Z",
+    "actions": [
+      { "type": "ai_trace", "detail": "Matched to Mumbai Chemical Works — 47 prior pollution flags, RED compliance", "timestamp": "2026-03-28T22:20:00Z" },
+      { "type": "authority_notified", "detail": "Maharashtra SPCB + CPCB notified", "timestamp": "2026-03-28T22:25:00Z" },
+      { "type": "credits_issued", "detail": "75 Guardian Credits awarded", "timestamp": "2026-03-28T22:22:00Z" }
+    ]
+  },
+  {
+    "id": "log-014",
+    "hash": "b9d6f2a8e413",
+    "type": "report_filed",
+    "title": "Dense floating plastic near Mangalore coast",
+    "guardianId": "GRD-6D4E-A723",
+    "zone": "Karnataka Coast",
+    "latitude": 12.85,
+    "longitude": 74.88,
+    "status": "investigating",
+    "severity": 3,
+    "timestamp": "2026-03-30T12:45:00Z",
+    "actions": [
+      { "type": "ai_trace", "detail": "Dispersion matches Mangalore Sewage Network outfall point", "timestamp": "2026-03-30T12:50:00Z" },
+      { "type": "credits_issued", "detail": "25 Guardian Credits awarded", "timestamp": "2026-03-30T12:48:00Z" }
+    ]
+  },
+  {
+    "id": "log-015",
+    "hash": "c4e8a1d7f695",
+    "type": "buoy_alert",
+    "title": "IoT Buoy Alpha — critical water health at Periyar Estuary",
+    "guardianId": "SYSTEM",
+    "zone": "Kochi Coast",
+    "latitude": 9.86,
+    "longitude": 76.21,
+    "status": "investigating",
+    "severity": 4,
+    "timestamp": "2026-04-01T02:15:00Z",
+    "actions": [
+      { "type": "ai_trace", "detail": "pH 6.8, turbidity 68 NTU, dissolved O₂ 3.8 mg/L — danger zone entered", "timestamp": "2026-04-01T02:15:00Z" },
+      { "type": "authority_notified", "detail": "Automated alert to nearest Coast Guard patrol", "timestamp": "2026-04-01T02:20:00Z" }
+    ]
+  }
+]

@@ -1,5 +1,5 @@
 /* ================================================================
-   NeptuneTrace — Design System
+   OceanSentinel — Design System
    Professional White theme with sharp edges
    ================================================================ */
 
@@ -25,8 +25,29 @@
   --red: #dc2626;
   --red-dark: #b91c1c;
   --teal: #0d9488;
+  --teal-light: #14b8a6;
+  --teal-dark: #0f766e;
   --amber: #d97706;
+  --amber-light: #f59e0b;
   --emerald: #059669;
+  --emerald-light: #10b981;
+  --purple: #7c3aed;
+  --purple-light: #8b5cf6;
+  --coral: #ef4444;
+  --coral-light: #f87171;
+
+  /* Guardian system */
+  --guardian-gold: #b45309;
+  --guardian-silver: #64748b;
+  --guardian-bronze: #92400e;
+  --shield-green: #059669;
+
+  /* Ocean dark reference (for components that need it) */
+  --ocean-950: #020617;
+  --ocean-900: #0a1628;
+  --ocean-800: #0f2035;
+  --ocean-700: #162d4a;
+  --ocean-600: #1e3a5f;
 
   /* Severity scale */
   --severity-1: #059669;
@@ -50,6 +71,9 @@
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-glow-teal: 0 0 12px rgba(13, 148, 136, 0.15);
+  --shadow-glow-blue: 0 0 12px rgba(37, 99, 235, 0.15);
+  --shadow-glow-red: 0 0 12px rgba(220, 38, 38, 0.15);
 
   /* Typography */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -81,7 +105,6 @@
 
 html {
   font-size: 16px;
-  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -89,14 +112,9 @@ body {
   font-family: var(--font-sans);
   background: var(--bg-primary);
   color: var(--text-primary);
-  line-height: 1.5;
+  line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
-}
-
-/* Remove animated background */
-body::before {
-  display: none !important;
 }
 
 a {
@@ -128,28 +146,38 @@ ul, ol {
 
 /* ── Typography ──────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
-  line-height: 1.25;
-  color: var(--slate-900);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
 }
 
-h1 { font-size: 2.25rem; }
-h2 { font-size: 1.875rem; }
-h3 { font-size: 1.5rem; }
-h4 { font-size: 1.125rem; }
+h1 { font-size: 2.5rem; letter-spacing: -0.03em; }
+h2 { font-size: 1.875rem; letter-spacing: -0.02em; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.0625rem; }
 
 .mono {
   font-family: var(--font-mono);
 }
 
-/* ── Clean Card ──────────────────────────────────────────────── */
-.glass, .glass-strong {
-  background: var(--bg-card);
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+.text-gradient {
+  background: linear-gradient(135deg, var(--teal) 0%, var(--blue) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Glass Cards ─────────────────────────────────────────────── */
+.glass {
+  background: #ffffff;
   border: 1px solid var(--border-subtle);
-  border-radius: 0 !important;
   box-shadow: var(--shadow-sm);
+}
+
+.glass-strong {
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-md);
 }
 
 /* ── Buttons ─────────────────────────────────────────────────── */
@@ -158,9 +186,8 @@ h4 { font-size: 1.125rem; }
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 8px 16px;
-  border-radius: 0; /* Sharp Edges */
-  font-weight: 500;
+  padding: 10px 20px;
+  font-weight: 600;
   font-size: 0.875rem;
   transition: all 0.2s var(--ease-standard);
   white-space: nowrap;
@@ -177,128 +204,161 @@ h4 { font-size: 1.125rem; }
 }
 
 .btn-secondary {
-  background: white;
+  background: #ffffff;
   border: 1px solid var(--border-strong);
-  color: var(--slate-700);
+  color: var(--text-primary);
 }
 
 .btn-secondary:hover {
   background: var(--slate-50);
-  border-color: var(--slate-400);
 }
+
+.btn-sm { padding: 6px 14px; font-size: 0.8rem; }
+.btn-lg { padding: 14px 28px; font-size: 1rem; }
 
 /* ── Badges ──────────────────────────────────────────────────── */
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 2px 8px;
-  border-radius: 0; /* Sharp Edges */
+  padding: 3px 10px;
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
   border: 1px solid transparent;
 }
 
-.badge-teal { background: var(--slate-100); color: var(--teal); border-color: var(--slate-200); }
-.badge-coral { background: var(--slate-100); color: var(--red); border-color: var(--slate-200); }
-.badge-amber { background: var(--slate-100); color: var(--amber); border-color: var(--slate-200); }
+.badge-teal { background: rgba(13, 148, 136, 0.08); color: var(--teal); border-color: rgba(13, 148, 136, 0.2); }
+.badge-coral { background: rgba(239, 68, 68, 0.08); color: var(--coral); border-color: rgba(239, 68, 68, 0.2); }
+.badge-amber { background: rgba(217, 119, 6, 0.08); color: var(--amber); border-color: rgba(217, 119, 6, 0.2); }
+.badge-emerald { background: rgba(5, 150, 105, 0.08); color: var(--emerald); border-color: rgba(5, 150, 105, 0.2); }
+.badge-purple { background: rgba(124, 58, 237, 0.08); color: var(--purple); border-color: rgba(124, 58, 237, 0.2); }
+.badge-blue { background: rgba(37, 99, 235, 0.08); color: var(--blue); border-color: rgba(37, 99, 235, 0.2); }
 
-/* ── Severity Indicator ──────────────────────────────────────── */
-.severity-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 0; /* Square dots for sharp look */
-  display: inline-block;
-}
-
+/* ── Severity ────────────────────────────────────────────────── */
+.severity-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 .severity-1 { background: var(--severity-1); }
 .severity-2 { background: var(--severity-2); }
 .severity-3 { background: var(--severity-3); }
 .severity-4 { background: var(--severity-4); }
 .severity-5 { background: var(--severity-5); }
 
-/* ── Simplified Marker ────────────────────────────────────────── */
+/* ── Radar / Marker ──────────────────────────────────────────── */
 .radar-blip-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 16px;
-  height: 16px;
+  display: flex; justify-content: center; align-items: center;
+  width: 20px; height: 20px;
 }
-
 .radar-blip-core {
-  width: 10px;
-  height: 10px;
-  background-color: var(--red);
-  border: 2px solid white;
-  z-index: 2;
+  width: 12px; height: 12px;
+  background-color: var(--red); border: 2px solid white; border-radius: 50%;
+  z-index: 2; box-shadow: 0 0 8px var(--red);
 }
-
-/* Remove ring animation for cleaner look */
 .radar-blip-ring {
-  display: none !important;
+  position: absolute; width: 24px; height: 24px; border-radius: 50%;
+  border: 2px solid var(--red); animation: radarPulse 2s ease-out infinite;
+}
+@keyframes radarPulse {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
 }
 
-/* ── Utility Classes ─────────────────────────────────────────── */
+/* ── Animations ──────────────────────────────────────────────── */
 .animate-slide-up {
-  /* Reduce motion for cleaner UX */
-  opacity: 1 !important;
-  transform: none !important;
+  animation: slideUp 0.4s var(--ease-standard) forwards;
+  opacity: 0;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Scrollbar ───────────────────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 8px;
+.animate-fade-in {
+  animation: fadeIn 0.5s var(--ease-standard) forwards;
+  opacity: 0;
 }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-::-webkit-scrollbar-track {
+.animate-pulse { animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.6; } }
+
+.stagger-item:nth-child(1) { animation-delay: 0.05s; }
+.stagger-item:nth-child(2) { animation-delay: 0.1s; }
+.stagger-item:nth-child(3) { animation-delay: 0.15s; }
+.stagger-item:nth-child(4) { animation-delay: 0.2s; }
+
+/* ── Skeleton Loader ─────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, var(--slate-100) 25%, var(--slate-200) 50%, var(--slate-100) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ── Guardian System ─────────────────────────────────────────── */
+.guardian-card {
   background: var(--slate-50);
+  border: 1px solid var(--border-subtle);
+  padding: 16px;
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--slate-300);
+.credit-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  background: rgba(217, 119, 6, 0.08);
+  color: var(--guardian-gold);
+  border: 1px solid rgba(217, 119, 6, 0.2);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--slate-400);
+.zk-hash {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--teal);
+  background: rgba(13, 148, 136, 0.06);
+  padding: 2px 8px;
+  border: 1px solid rgba(13, 148, 136, 0.15);
 }
 
-/* ── Leaflet Overrides ────────────────────────────────────────── */
-.leaflet-popup-content-wrapper {
-  background: white !important;
-  border: 1px solid var(--slate-300) !important;
-  border-radius: 0 !important;
-  color: var(--slate-900) !important;
-  box-shadow: var(--shadow-md) !important;
+/* ── Timeline Bar ────────────────────────────────────────────── */
+.timeline-bar {
+  position: relative;
+  height: 4px;
+  background: var(--slate-200);
+  overflow: hidden;
 }
 
-.leaflet-popup-tip {
-  background: white !important;
-  border: 1px solid var(--slate-300) !important;
-}
-
-.leaflet-container {
-  font-family: var(--font-sans) !important;
-  background: var(--slate-100) !important;
-}
-
-/* ── IoT Buoy Animations ────────────────────────────────────── */
+/* ── IoT Buoy ────────────────────────────────────────────────── */
 @keyframes buoyPulse {
   0% { transform: scale(1); opacity: 0.7; }
   50% { transform: scale(1.8); opacity: 0; }
   100% { transform: scale(1); opacity: 0; }
 }
 
-/* Make the buoy tooltip seamless — remove leaflet's default chrome */
 .buoy-tooltip.leaflet-tooltip {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   padding: 0 !important;
 }
+.buoy-tooltip.leaflet-tooltip::before { display: none !important; }
 
-.buoy-tooltip.leaflet-tooltip::before {
-  display: none !important;
+/* ── Leaflet Overrides ───────────────────────────────────────── */
+.leaflet-popup-content-wrapper {
+  border-radius: 0 !important;
+  box-shadow: var(--shadow-md) !important;
 }
+.leaflet-container { font-family: var(--font-sans) !important; }
 
+/* ── Scrollbar ───────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--slate-100); }
+::-webkit-scrollbar-thumb { background: var(--slate-300); }
+::-webkit-scrollbar-thumb:hover { background: var(--slate-400); }
+
+/* ── Utility ─────────────────────────────────────────────────── */
+.icon { width: 1.2em; height: 1.2em; }

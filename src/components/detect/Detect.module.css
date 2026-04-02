@@ -1,98 +1,53 @@
 .container {
-  max-width: 1200px;
+  max-width: 700px;
   margin: 0 auto;
-  padding: 40px 24px;
-  min-height: calc(100vh - var(--nav-height));
-  display: flex;
-  flex-direction: column;
+  padding: 40px 20px 80px;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
 }
 
 .subtitle {
   color: var(--text-secondary);
-  font-size: 1.1rem;
-  max-width: 600px;
-  margin: 16px auto 0;
-  line-height: 1.6;
+  font-size: 1rem;
+  margin-top: 8px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.iconWrapper {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
 }
 
 .content {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-
-.uploadArea {
-  width: 100%;
-  max-width: 600px;
-  height: 400px;
-  border: 2px dashed var(--border-subtle);
-  border-radius: var(--radius-xl);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-.dragActive {
-  border-color: var(--teal);
-  background: rgba(0, 210, 211, 0.05);
-}
-
-.uploadLabel {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  cursor: pointer;
-}
-
-.uploadIcon {
-  font-size: 3rem;
-  color: var(--teal);
-  margin-bottom: 16px;
-}
-
-.uploadLabel h3 {
-  font-size: 1.5rem;
-  color: var(--text-primary);
-}
-
-.uploadLabel p {
-  color: var(--text-secondary);
+  gap: 20px;
 }
 
 .analyzingCard {
-  width: 100%;
-  max-width: 600px;
   padding: 32px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   text-align: center;
-  border-color: var(--teal);
 }
 
 .imagePreview {
-  width: 100%;
-  max-height: 300px;
-  border-radius: var(--radius-md);
-  overflow: hidden;
   position: relative;
-  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+  max-height: 300px;
 }
 
 .imagePreview img {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
-  background: var(--ocean-950);
+  object-fit: cover;
+  max-height: 300px;
 }
 
 .scanningLine {
@@ -100,15 +55,35 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: var(--teal);
-  box-shadow: 0 0 20px 4px var(--teal);
-  animation: scan 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--teal), transparent);
+  animation: scanMove 2s ease-in-out infinite;
 }
 
-@keyframes scan {
-  0% { transform: translateY(-10px); }
+@keyframes scanMove {
+  0% { transform: translateY(0); }
   100% { transform: translateY(300px); }
+}
+
+.resultCard {
+  padding: 24px;
+}
+
+.resultGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.imagePreviewSmall {
+  max-height: 200px;
+  overflow: hidden;
+}
+
+.imagePreviewSmall img {
+  width: 100%;
+  object-fit: cover;
+  max-height: 200px;
 }
 
 .confidenceOverlay {
@@ -116,152 +91,111 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(2, 6, 23, 0.8);
-  backdrop-filter: blur(8px);
-  padding: 8px 16px;
-  font-family: var(--font-mono);
+  padding: 8px 12px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  font-size: 0.8rem;
   font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--teal);
-  text-align: center;
-  border-top: 1px solid rgba(0, 210, 211, 0.3);
-}
-
-.resultGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  width: 100%;
-  max-width: 1000px;
+  font-family: var(--font-mono);
 }
 
 .resultDetails {
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  padding: 24px;
 }
 
 .resultHeader {
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 24px;
+  margin-bottom: 20px;
+}
+
+.detailSection {
+  margin-bottom: 16px;
 }
 
 .detailSection h4 {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 700;
   text-transform: uppercase;
-  color: var(--text-secondary);
   letter-spacing: 0.05em;
-  margin-bottom: 8px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
 }
 
 .detailSection p {
-  color: var(--text-primary);
-  line-height: 1.6;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
 }
 
 .locationHint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
   margin-bottom: 10px;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
 }
 
 .locationActions {
-  display: flex;
-  gap: 10px;
   margin-bottom: 12px;
 }
 
 .locationMapWrap {
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  overflow: hidden;
+  margin-bottom: 8px;
 }
 
 .locationCoords {
-  margin-top: 10px;
-  font-family: var(--font-mono);
   font-size: 0.8rem;
-  color: var(--text-secondary);
-}
-
-.mapLoading {
-  height: 240px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
 }
 
 .actions {
   display: flex;
-  gap: 16px;
-  margin-top: auto;
+  gap: 10px;
+  margin-top: 8px;
 }
 
-.resultCard {
+.mapLoading {
   width: 100%;
-  max-width: 600px;
-  padding: 32px;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--slate-50);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.uploadArea {
+  padding: 48px 32px;
+  text-align: center;
+  border: 2px dashed var(--slate-300);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.uploadArea:hover,
+.dragActive {
+  border-color: var(--teal);
+}
+
+.uploadLabel {
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
+  gap: 8px;
 }
 
-.imagePreviewSmall {
-  width: 200px;
-  height: 150px;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  border: 1px solid var(--border-subtle);
+.uploadIcon {
+  font-size: 2.5rem;
+  color: var(--slate-400);
+  margin-bottom: 8px;
 }
 
-.imagePreviewSmall img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.uploadArea h3 {
+  font-size: 1.1rem;
+  margin-bottom: 4px;
 }
 
-@media (max-width: 900px) {
-  .resultGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .locationActions {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 768px) {
-  .container {
-    padding: 24px 16px;
-  }
-
-  .subtitle {
-    font-size: 0.95rem;
-  }
-
-  .content {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .uploadArea {
-    height: auto;
-    min-height: 260px;
-    padding: 20px 16px;
-  }
-
-  .analyzingCard,
-  .resultCard {
-    padding: 20px 16px;
-  }
-
-  .imagePreview {
-    max-height: 220px;
-  }
+.uploadArea p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }

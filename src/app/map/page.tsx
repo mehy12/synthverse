@@ -121,7 +121,7 @@ export default function MapPage() {
 
                 • Kochi Coast
               </div>
-              <h1 style={{ fontSize: "1.05rem", margin: 0, fontWeight: 600 }}>NeptuneTrace Marine Intelligence</h1>
+              <h1 style={{ fontSize: "1.05rem", margin: 0, fontWeight: 600 }}>OceanSentinel Marine Intelligence</h1>
               <p
                 style={{
                   margin: "6px 0 0 0",
@@ -136,7 +136,7 @@ export default function MapPage() {
 
             <div style={{ display: "flex", flexDirection: "column", gap: 8, minWidth: 150 }}>
               <Link
-                href="/detect"
+                href="/report"
                 className="btn btn-primary btn-sm"
                 style={{
                   display: "flex",
@@ -146,11 +146,11 @@ export default function MapPage() {
                   whiteSpace: "nowrap",
                 }}
               >
-                <FiCamera /> Scan Water
+                🛡 File Report
               </Link>
               <Link
-                href="/tracer"
-                className="btn btn-secondary btn-sm glass"
+                href="/detect"
+                className="btn btn-secondary btn-sm"
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -159,7 +159,7 @@ export default function MapPage() {
                   whiteSpace: "nowrap",
                 }}
               >
-                <FiTrendingUp /> Run Reverse Trace
+                <FiCamera /> AI Scan
               </Link>
             </div>
           </div>

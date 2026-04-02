@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createReport, deleteReport, listReports } from "@/lib/db";
+import { createReport, deleteReport, listReports, findNearbyReport } from "@/lib/db";
 
 export async function GET() {
   try {
@@ -28,6 +28,24 @@ export async function POST(request: NextRequest) {
 
     if (typeof latitude !== "number" || typeof longitude !== "number" || !type) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    // ── Duplicate detection ─────────────────────────────────
+    // Reject reports within 500m of an existing report filed in the last 24h.
+    // This prevents spam while still allowing follow-up reports at the same
+    // location after the cooldown window expires.
+    const duplicate = await findNearbyReport(latitude, longitude, 500);
+    if (duplicate) {
+      return NextResponse.json(
+        {
+          error: "DUPLICATE_LOCATION",
+          message: `A report already exists within 500m of this location (filed ${new Date(
+            duplicate.timestamp
+          ).toLocaleString()}). Wait 24 hours or choose a different location.`,
+          existingReportId: duplicate.id,
+        },
+        { status: 409 }
+      );
     }
 
     const record = await createReport({

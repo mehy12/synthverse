@@ -899,7 +899,7 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
                   {report.description}
                 </p>
                 <div style={{ padding: "6px", background: "var(--slate-50)", border: "1px solid var(--slate-100)", fontSize: "0.75rem", borderRadius: "3px", marginBottom: "8px" }}>
-                  Verified by: <strong>NeptuneGuard AI</strong>
+                  Verified by: <strong>OceanSentinel AI</strong>
                 </div>
                 {report.isUserReport && (
                   <button

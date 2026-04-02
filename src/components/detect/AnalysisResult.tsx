@@ -2,9 +2,10 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { FiAlertCircle, FiCheckCircle, FiInfo, FiMapPin, FiRefreshCw, FiAward } from "react-icons/fi";
+import { FiAlertCircle, FiCheckCircle, FiInfo, FiMapPin, FiRefreshCw, FiAward, FiShield, FiActivity, FiTrendingUp } from "react-icons/fi";
 import styles from "./Detect.module.css";
-import { addPoints, getUserPoints } from "@/lib/points";
+import { earnCredits, getCreditBalance, REPORT_REWARD, VERIFIED_BONUS } from "@/lib/guardian";
+import Link from "next/link";
 
 const LocationPickerMap = dynamic(() => import("./LocationPickerMap"), {
   ssr: false,
@@ -34,11 +35,10 @@ interface Props {
 
 export default function AnalysisResult({ result, imageBase64, selectedLocation, onLocationChange, onClear }: Props) {
   const [locating, setLocating] = useState(false);
-  const [userPoints, setUserPoints] = useState(0);
+  const [creditBalance, setCreditBalance] = useState(0);
 
   useEffect(() => {
-    const points = getUserPoints();
-    setUserPoints(points.totalPoints);
+    setCreditBalance(getCreditBalance());
   }, []);
 
   const getBadgeClass = (severity: number) => {
@@ -86,10 +86,11 @@ export default function AnalysisResult({ result, imageBase64, selectedLocation, 
         console.error("Failed to sync report to NeonDB", await res.text());
       }
 
-      const updatedPoints = addPoints(10);
-      setUserPoints(updatedPoints.totalPoints);
+      const updatedProfile = earnCredits(`AI-verified report: ${result.pollution_type}`, REPORT_REWARD, "report");
+      earnCredits("AI verification bonus — Gemini Vision confirmed", VERIFIED_BONUS, "trace_bonus");
+      setCreditBalance(updatedProfile.creditBalance + VERIFIED_BONUS);
 
-      alert(`✓ Report submitted! You earned 10 points. Total: ${updatedPoints.totalPoints} pts`);
+      alert(`✓ Report submitted as anonymous Guardian! You earned ${REPORT_REWARD + VERIFIED_BONUS} Guardian Credits.`);
     } catch (error) {
       console.error(error);
       alert("Report saved locally, but syncing to the server failed.");
@@ -202,17 +203,26 @@ export default function AnalysisResult({ result, imageBase64, selectedLocation, 
           </p>
         </div>
 
-        <div style={{ background: "rgba(16, 185, 129, 0.1)", border: "1px solid var(--teal)", padding: "12px", borderRadius: "6px", marginBottom: "16px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--teal)", fontWeight: "600", marginBottom: "4px" }}>
+        <div style={{ background: "rgba(20, 184, 166, 0.1)", border: "1px solid rgba(20, 184, 166, 0.3)", padding: "12px", borderRadius: "var(--radius-md)", marginBottom: "16px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--teal-light)", fontWeight: "600", marginBottom: "4px" }}>
             <FiAward size={18} />
-            Points Earned
+            Guardian Credits
           </div>
           <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--text-primary)" }}>
-            Submit this report to earn <strong>10 points</strong>
+            Submit report to earn <strong>{REPORT_REWARD + VERIFIED_BONUS}</strong> Guardian Credits
           </p>
           <p style={{ margin: "6px 0 0 0", fontSize: "0.85rem", color: "var(--text-secondary)" }}>
-            Running total: <strong>{userPoints}</strong> points • Redeemable for fuel subsidy vouchers & gear discounts
+            Current balance: <strong className="credit-badge">{creditBalance}</strong> credits
           </p>
+        </div>
+
+        <div style={{ display: "flex", gap: "8px", marginBottom: "16px", flexWrap: "wrap" }}>
+          <Link href="/tracer" className="btn btn-secondary btn-sm" style={{ flex: 1 }}>
+            <FiTrendingUp /> Run Reverse Trace
+          </Link>
+          <Link href="/biodiversity" className="btn btn-secondary btn-sm" style={{ flex: 1 }}>
+            <FiActivity /> Predict Biodiversity Impact
+          </Link>
         </div>
 
         <div className={styles.actions}>
@@ -221,7 +231,7 @@ export default function AnalysisResult({ result, imageBase64, selectedLocation, 
             style={{ flex: 1 }}
             onClick={handleAddToMap}
           >
-            <FiMapPin /> Add to Map
+            <FiShield /> Submit Anonymous Report
           </button>
           <button className="btn btn-secondary" onClick={onClear}>
             <FiRefreshCw /> Scan Next

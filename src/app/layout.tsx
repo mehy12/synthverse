@@ -10,13 +10,16 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "NeptuneTrace — Marine Pollution Intelligence",
+  title: "OceanSentinel — Marine Ecosystem Intelligence Platform",
   description:
-    "Detect pollution, trace its source, predict biodiversity impact. Real-time marine intelligence for the Gulf of Mannar.",
+    "Anonymous threat reporting, AI root-cause tracing, biodiversity loss forecasting, and government-credit rewards. Turning oceanic stakeholders into active guardians.",
   keywords: [
     "marine pollution",
     "ocean monitoring",
-    "biodiversity",
+    "anonymous reporting",
+    "guardian credits",
+    "biodiversity forecast",
+    "pollution tracing",
     "Gulf of Mannar",
     "environmental intelligence",
   ],
@@ -28,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={inter.variable} data-scroll-behavior="smooth">
       <body>
         <Navbar />
         <main style={{ paddingTop: "var(--nav-height)" }}>{children}</main>

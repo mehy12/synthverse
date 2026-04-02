@@ -1,0 +1,98 @@
+{
+  "profiles": [
+    {
+      "id": "fisherman",
+      "guardianId": "GRD-7A3F-E291",
+      "name": "Rajesh Kumar",
+      "role": "Coastal Fisherman",
+      "avatar": "🎣",
+      "location": "Chellanam, Kochi",
+      "creditBalance": 1245,
+      "totalReports": 34,
+      "verifiedReports": 28,
+      "memberSince": "2025-11-15",
+      "tier": "Gold Guardian",
+      "earningHistory": [
+        { "id": "e1", "action": "Verified pollution report — oil discharge near Periyar Mouth", "credits": 25, "date": "2026-03-31T14:20:00Z", "type": "report" },
+        { "id": "e2", "action": "AI-confirmed source trace — linked to upstream factory", "credits": 50, "date": "2026-03-31T14:25:00Z", "type": "trace_bonus" },
+        { "id": "e3", "action": "Clean zone fishing activity — Fort Kochi zone", "credits": 15, "date": "2026-03-30T06:30:00Z", "type": "clean_zone" },
+        { "id": "e4", "action": "Verified report — plastic debris field near Vypeen", "credits": 25, "date": "2026-03-29T08:15:00Z", "type": "report" },
+        { "id": "e5", "action": "Weekly active guardian bonus", "credits": 30, "date": "2026-03-28T00:00:00Z", "type": "weekly_bonus" },
+        { "id": "e6", "action": "Report corroborated by 2 other guardians", "credits": 40, "date": "2026-03-27T11:30:00Z", "type": "corroboration" },
+        { "id": "e7", "action": "Verified report — sewage outfall near Munambam", "credits": 25, "date": "2026-03-26T16:45:00Z", "type": "report" },
+        { "id": "e8", "action": "Clean zone fishing — Puthuvype zone", "credits": 15, "date": "2026-03-25T05:00:00Z", "type": "clean_zone" }
+      ],
+      "redemptions": [
+        { "id": "r1", "title": "Priority Fishing License — Clean Zone A", "category": "PM Matsya Sampada Yojana", "cost": 500, "status": "available", "icon": "🎫" },
+        { "id": "r2", "title": "Subsidized Diesel Voucher (50L)", "category": "Fuel Subsidy", "cost": 300, "status": "available", "icon": "⛽" },
+        { "id": "r3", "title": "Fishing Equipment Grant Application", "category": "PM Matsya Sampada Yojana", "cost": 800, "status": "available", "icon": "🔧" },
+        { "id": "r4", "title": "GPS Fish Finder Device", "category": "Equipment Grant", "cost": 1200, "status": "locked", "icon": "📡" }
+      ]
+    },
+    {
+      "id": "industry",
+      "guardianId": "GRD-9C1B-D478",
+      "name": "Priya Sharma",
+      "role": "CSR Compliance Officer",
+      "avatar": "🏭",
+      "location": "FACT Industrial Park, Kochi",
+      "creditBalance": 890,
+      "totalReports": 12,
+      "verifiedReports": 10,
+      "memberSince": "2026-01-08",
+      "tier": "Silver Guardian",
+      "earningHistory": [
+        { "id": "e1", "action": "Quarterly effluent treatment compliance verified", "credits": 100, "date": "2026-03-31T10:00:00Z", "type": "compliance" },
+        { "id": "e2", "action": "Voluntary discharge monitoring data shared", "credits": 40, "date": "2026-03-28T09:15:00Z", "type": "transparency" },
+        { "id": "e3", "action": "Sponsored 2 IoT buoy deployments", "credits": 75, "date": "2026-03-25T12:00:00Z", "type": "sponsorship" },
+        { "id": "e4", "action": "Reported upstream vendor violation", "credits": 25, "date": "2026-03-22T14:30:00Z", "type": "report" },
+        { "id": "e5", "action": "Beach cleanup CSR event — 400kg waste collected", "credits": 60, "date": "2026-03-20T08:00:00Z", "type": "cleanup" },
+        { "id": "e6", "action": "Monthly compliance data submission", "credits": 40, "date": "2026-03-01T10:00:00Z", "type": "compliance" }
+      ],
+      "redemptions": [
+        { "id": "r1", "title": "Green Rating Certificate (Public Badge)", "category": "Environmental Rating", "cost": 400, "status": "redeemed", "icon": "🏆" },
+        { "id": "r2", "title": "Fast-Track Environmental Clearance", "category": "MoEFCC Partnership", "cost": 600, "status": "available", "icon": "⚡" },
+        { "id": "r3", "title": "CSR Compliance Certificate", "category": "Corporate Governance", "cost": 350, "status": "available", "icon": "📜" },
+        { "id": "r4", "title": "Public Guardian Leaderboard Feature", "category": "Brand Visibility", "cost": 200, "status": "available", "icon": "📊" }
+      ]
+    },
+    {
+      "id": "citizen",
+      "guardianId": "GRD-4E8D-B135",
+      "name": "Arjun Menon",
+      "role": "Environmental Citizen",
+      "avatar": "👤",
+      "location": "Ernakulam, Kochi",
+      "creditBalance": 420,
+      "totalReports": 8,
+      "verifiedReports": 6,
+      "memberSince": "2026-02-20",
+      "tier": "Bronze Guardian",
+      "earningHistory": [
+        { "id": "e1", "action": "Verified report — chemical discharge near Edapally Canal", "credits": 25, "date": "2026-03-30T17:00:00Z", "type": "report" },
+        { "id": "e2", "action": "Photo evidence AI-confirmed — severity 4/5", "credits": 50, "date": "2026-03-30T17:05:00Z", "type": "trace_bonus" },
+        { "id": "e3", "action": "Beach cleanup participation — Fort Kochi", "credits": 20, "date": "2026-03-28T07:00:00Z", "type": "cleanup" },
+        { "id": "e4", "action": "Verified report — plastic debris at Cherai Beach", "credits": 25, "date": "2026-03-25T10:30:00Z", "type": "report" },
+        { "id": "e5", "action": "Referred 2 new guardians", "credits": 30, "date": "2026-03-22T12:00:00Z", "type": "referral" }
+      ],
+      "redemptions": [
+        { "id": "r1", "title": "Swachh Bharat Points (500 pts)", "category": "Swachh Bharat Mission", "cost": 200, "status": "available", "icon": "🇮🇳" },
+        { "id": "r2", "title": "Beach Cleanup NGO Volunteer Badge", "category": "NGO Partnership", "cost": 100, "status": "redeemed", "icon": "🏅" },
+        { "id": "r3", "title": "Public Guardian Leaderboard Entry", "category": "Community", "cost": 150, "status": "available", "icon": "📊" },
+        { "id": "r4", "title": "Tree Plantation Certificate (10 mangroves)", "category": "Afforestation", "cost": 300, "status": "available", "icon": "🌿" }
+      ]
+    }
+  ],
+  "leaderboard": [
+    { "rank": 1, "guardianId": "GRD-7A3F-E291", "credits": 1245, "reports": 34, "tier": "Gold" },
+    { "rank": 2, "guardianId": "GRD-2B5C-F912", "credits": 1180, "reports": 29, "tier": "Gold" },
+    { "rank": 3, "guardianId": "GRD-9C1B-D478", "credits": 890, "reports": 12, "tier": "Silver" },
+    { "rank": 4, "guardianId": "GRD-6D4E-A723", "credits": 780, "reports": 22, "tier": "Silver" },
+    { "rank": 5, "guardianId": "GRD-1F8A-C356", "credits": 650, "reports": 18, "tier": "Silver" },
+    { "rank": 6, "guardianId": "GRD-4E8D-B135", "credits": 420, "reports": 8, "tier": "Bronze" },
+    { "rank": 7, "guardianId": "GRD-3C2D-E847", "credits": 380, "reports": 11, "tier": "Bronze" },
+    { "rank": 8, "guardianId": "GRD-8B7F-D194", "credits": 310, "reports": 9, "tier": "Bronze" },
+    { "rank": 9, "guardianId": "GRD-5A6E-F438", "credits": 245, "reports": 7, "tier": "Bronze" },
+    { "rank": 10, "guardianId": "GRD-0D9C-B562", "credits": 190, "reports": 5, "tier": "Bronze" }
+  ]
+}
