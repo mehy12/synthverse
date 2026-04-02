@@ -1050,21 +1050,6 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
           </label>
         </div>
 
-        <div style={{ marginTop: "18px" }}>
-          <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", margin: "0 0 8px 0", fontWeight: "600" }}>
-            ACTIVE LAYERS:
-          </p>
-          <ul style={{ margin: 0, paddingLeft: "16px", fontSize: "0.75rem", color: "var(--text-secondary)" }}>
-            <li>River Mouth Pollution Channels (5)</li>
-            <li>Live Fishing Zone Marine Estimates (5)</li>
-            <li>Citizen Anomaly Reports</li>
-            <li>{showHeatmap ? "IoT Hazard Zones" : "Hazard Zones hidden"}</li>
-            <li>{enableProbe ? "Water Health Probe" : "Probe off"}</li>
-          </ul>
-          <p style={{ margin: "10px 0 0 0", fontSize: "0.7rem", color: "var(--slate-400)" }}>
-            Last updated: {new Date(liveUpdatedAt).toLocaleString()} • {liveSource}
-          </p>
-        </div>
       </div>
 
       {/* Legend */}

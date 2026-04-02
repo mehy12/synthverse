@@ -94,7 +94,7 @@
 .legend {
   position: absolute;
   bottom: 24px;
-  right: 24px;
+  left: 24px;
   z-index: 1000;
   padding: 20px;
   background: rgba(255, 255, 255, 0.85);
