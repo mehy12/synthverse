@@ -4,6 +4,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Suspense, useState } from "react";
 import { Activity } from "lucide-react";
+import LiveReportPanel from "@/components/reporting/LiveReportPanel";
 
 const MapView = dynamic(() => import("@/components/map/MapView"), {
   ssr: false,
@@ -51,52 +52,80 @@ export default function MapPage() {
     liveUpdatedAt: string;
   } | null>(null);
 
-
   return (
-    <div style={{ height: "calc(100vh - var(--nav-height))", position: "relative", display: "flex" }}>
-      {/* ── Left Panel ─────────────────────────────────────── */}
-      <div style={{
-        width: 400,
-        minWidth: 400,
-        height: "100%",
-        background: "var(--white)",
-        borderRight: "1px solid var(--border)",
-        overflowY: "auto",
+    <div
+      style={{
+        height: "calc(100vh - var(--nav-height))",
+        position: "relative",
         display: "flex",
-        flexDirection: "column",
-        zIndex: 1200,
-      }}>
+      }}
+    >
+      {/* ── Left Panel ─────────────────────────────────────── */}
+      <div
+        style={{
+          width: 400,
+          minWidth: 400,
+          height: "100%",
+          background: "var(--white)",
+          borderRight: "1px solid var(--border)",
+          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
+          zIndex: 1200,
+        }}
+      >
         {/* Top context section */}
-        <div style={{ padding: "20px", borderBottom: "1px solid var(--border)" }}>
-          <div style={{
-            fontSize: "0.65rem",
-            textTransform: "uppercase",
-            letterSpacing: "0.12em",
-            color: "var(--text-muted)",
-            fontWeight: 700,
-            marginBottom: "12px",
-          }}>
+        <div
+          style={{ padding: "20px", borderBottom: "1px solid var(--border)" }}
+        >
+          <div
+            style={{
+              fontSize: "0.65rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              color: "var(--text-muted)",
+              fontWeight: 700,
+              marginBottom: "12px",
+            }}
+          >
             COMMAND CENTER
           </div>
 
           <div style={{ marginBottom: "12px" }}>
-            <span className="badge badge-teal" style={{ marginRight: 6 }}>📍 Kochi Metro</span>
+            <span className="badge badge-teal" style={{ marginRight: 6 }}>
+              📍 Odisha Corridor
+            </span>
           </div>
 
-          <h2 style={{ fontSize: "1.1rem", margin: 0, fontWeight: 700, color: "var(--text-heading)", marginBottom: "8px" }}>
-            FloodMind Urban Intelligence
+          <h2
+            style={{
+              fontSize: "1.1rem",
+              margin: 0,
+              fontWeight: 700,
+              color: "var(--text-heading)",
+              marginBottom: "8px",
+            }}
+          >
+            FloodMind Odisha Water Intelligence
           </h2>
-          <p style={{
-            margin: 0,
-            fontSize: "0.82rem",
-            color: "var(--text-secondary)",
-            lineHeight: 1.5,
-          }}>
-            Flood sensor data, evacuation zones, and citizen anomaly reports in a single operational view.
+          <p
+            style={{
+              margin: 0,
+              fontSize: "0.82rem",
+              color: "var(--text-secondary)",
+              lineHeight: 1.5,
+            }}
+          >
+            Flood sensor data, evacuation zones, imaginary water pipelines, and
+            citizen anomaly reports in a single operational view.
           </p>
 
           <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
-            <Link href="/analytics" className="btn btn-primary btn-sm" style={{ flex: 1, justifyContent: "center" }}>
+            <Link
+              href="/analytics"
+              className="btn btn-primary btn-sm"
+              style={{ flex: 1, justifyContent: "center" }}
+            >
               <Activity size={14} strokeWidth={1.5} /> Trigger Simulation
             </Link>
             <button
@@ -109,45 +138,57 @@ export default function MapPage() {
             </button>
           </div>
 
-          <div style={{
-            display: "flex",
-            gap: 6,
-            marginTop: 12,
-            flexWrap: "wrap",
-          }}>
-            <span style={{
-              padding: "4px 10px",
-              borderRadius: "var(--radius-full)",
-              background: "var(--teal-50)",
-              color: "var(--teal-700)",
-              fontSize: "0.7rem",
-              fontWeight: 600,
-            }}>
+          <div
+            style={{
+              display: "flex",
+              gap: 6,
+              marginTop: 12,
+              flexWrap: "wrap",
+            }}
+          >
+            <span
+              style={{
+                padding: "4px 10px",
+                borderRadius: "var(--radius-full)",
+                background: "var(--teal-50)",
+                color: "var(--teal-700)",
+                fontSize: "0.7rem",
+                fontWeight: 600,
+              }}
+            >
               Evacuation Zones: 5
             </span>
-            <span style={{
-              padding: "4px 10px",
-              borderRadius: "var(--radius-full)",
-              background: "var(--teal-50)",
-              color: "var(--teal-700)",
-              fontSize: "0.7rem",
-              fontWeight: 600,
-            }}>
+            <span
+              style={{
+                padding: "4px 10px",
+                borderRadius: "var(--radius-full)",
+                background: "var(--teal-50)",
+                color: "var(--teal-700)",
+                fontSize: "0.7rem",
+                fontWeight: 600,
+              }}
+            >
               Sensor Reports: Live
             </span>
           </div>
         </div>
 
+        <LiveReportPanel
+          onSubmitted={() => setRefreshKey((value) => value + 1)}
+        />
+
         {/* Live Feed section */}
         <div style={{ padding: "16px 20px", flex: 1 }}>
-          <div style={{
-            fontSize: "0.65rem",
-            textTransform: "uppercase",
-            letterSpacing: "0.12em",
-            color: "var(--text-muted)",
-            fontWeight: 700,
-            marginBottom: "12px",
-          }}>
+          <div
+            style={{
+              fontSize: "0.65rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              color: "var(--text-muted)",
+              fontWeight: 700,
+              marginBottom: "12px",
+            }}
+          >
             LIVE FEED
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -155,7 +196,11 @@ export default function MapPage() {
               <button
                 key={item.id}
                 type="button"
-                onClick={() => window.dispatchEvent(new CustomEvent("neptune:focus-feed", { detail: item }))}
+                onClick={() =>
+                  window.dispatchEvent(
+                    new CustomEvent("neptune:focus-feed", { detail: item }),
+                  )
+                }
                 style={{
                   width: "100%",
                   textAlign: "left",
@@ -168,14 +213,50 @@ export default function MapPage() {
                   transition: "border-color 0.2s",
                 }}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
-                  <strong style={{ fontSize: "0.84rem", color: "var(--text-heading)" }}>{item.title}</strong>
-                  <span style={{ fontSize: "0.68rem", color: "var(--text-muted)", whiteSpace: "nowrap" }}>{item.meta}</span>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 10,
+                    alignItems: "center",
+                  }}
+                >
+                  <strong
+                    style={{
+                      fontSize: "0.84rem",
+                      color: "var(--text-heading)",
+                    }}
+                  >
+                    {item.title}
+                  </strong>
+                  <span
+                    style={{
+                      fontSize: "0.68rem",
+                      color: "var(--text-muted)",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {item.meta}
+                  </span>
                 </div>
-                <div style={{ marginTop: 4, fontSize: "0.78rem", color: "var(--text-secondary)", lineHeight: 1.45 }}>
+                <div
+                  style={{
+                    marginTop: 4,
+                    fontSize: "0.78rem",
+                    color: "var(--text-secondary)",
+                    lineHeight: 1.45,
+                  }}
+                >
                   {item.detail}
                 </div>
-                <div style={{ marginTop: 6, fontSize: "0.72rem", color: "var(--teal)", fontWeight: 600 }}>
+                <div
+                  style={{
+                    marginTop: 6,
+                    fontSize: "0.72rem",
+                    color: "var(--teal)",
+                    fontWeight: 600,
+                  }}
+                >
                   Click to learn more
                 </div>
               </button>
@@ -184,22 +265,29 @@ export default function MapPage() {
         </div>
 
         {/* Bottom status */}
-        <div style={{
-          padding: "12px 20px",
-          borderTop: "1px solid var(--border)",
-          fontSize: "0.68rem",
-          color: "var(--text-muted)",
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-        }}>
-          <span style={{
-            width: 6,
-            height: 6,
-            borderRadius: "var(--radius-full)",
-            background: "var(--safe)",
-          }} />
-          <span>Flood sensor feed • refreshing every 5 minutes • {summary?.source ?? "API status: Healthy"}</span>
+        <div
+          style={{
+            padding: "12px 20px",
+            borderTop: "1px solid var(--border)",
+            fontSize: "0.68rem",
+            color: "var(--text-muted)",
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
+          <span
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: "var(--radius-full)",
+              background: "var(--safe)",
+            }}
+          />
+          <span>
+            Flood sensor feed • refreshing every 5 minutes •{" "}
+            {summary?.source ?? "API status: Healthy"}
+          </span>
         </div>
       </div>
 

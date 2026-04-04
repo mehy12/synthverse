@@ -1,0 +1,24 @@
+{
+  "model_name": "random_forest",
+  "rows_total": 660,
+  "rows_odisha": 660,
+  "features": [
+    "water_bodies_count",
+    "coastal_exposure",
+    "pre_monsoon_water_table_m_bgl",
+    "post_monsoon_water_table_m_bgl",
+    "seasonal_rise_m",
+    "monsoon_rainfall_mm",
+    "river_proximity_km",
+    "urban_drainage_stress",
+    "wetland_buffer_index"
+  ],
+  "target": "flood_risk_score",
+  "metrics": {
+    "mae": 1.6770772255329534,
+    "rmse": 2.1291914263081493,
+    "r2": 0.8998778853057763
+  },
+  "model_file": "C:\\Users\\mibo2\\OneDrive\\Documents\\BGS\\heh\\advaya\\scripts\\ml\\artifacts\\odisha_flood_model.joblib",
+  "feature_importance_file": "C:\\Users\\mibo2\\OneDrive\\Documents\\BGS\\heh\\advaya\\scripts\\ml\\artifacts\\odisha_feature_importance.csv"
+}
