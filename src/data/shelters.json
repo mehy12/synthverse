@@ -1,0 +1,22 @@
+[
+  { "id": "sh-1", "name": "Bhubaneswar Cyclone Shelter (Aiginia)", "lat": 20.2412, "lng": 85.8076, "capacity": 2000, "type": "cyclone_shelter", "district": "Khurda", "governmentVerified": true, "elevation": "high" },
+  { "id": "sh-2", "name": "Cuttack District Shelters Complex", "lat": 20.5095, "lng": 85.8983, "capacity": 1500, "type": "cyclone_shelter", "district": "Cuttack", "governmentVerified": true, "elevation": "medium" },
+  { "id": "sh-3", "name": "Puri Government High School", "lat": 19.8074, "lng": 85.8315, "capacity": 800, "type": "school", "district": "Puri", "governmentVerified": true, "elevation": "medium" },
+  { "id": "sh-4", "name": "Sambalpur District HQ Shelter", "lat": 21.4666, "lng": 83.9712, "capacity": 1200, "type": "cyclone_shelter", "district": "Sambalpur", "governmentVerified": true, "elevation": "high" },
+  { "id": "sh-5", "name": "Berhampur Multi-Purpose Shelter", "lat": 19.3132, "lng": 84.7930, "capacity": 1800, "type": "cyclone_shelter", "district": "Ganjam", "governmentVerified": true, "elevation": "high" },
+  { "id": "sh-6", "name": "Paradeep Port Emergency Shelter", "lat": 20.2875, "lng": 86.6127, "capacity": 600, "type": "government_building", "district": "Jagatsinghpur", "governmentVerified": true, "elevation": "medium" },
+  { "id": "sh-7", "name": "Rourkela Steel City Shelter", "lat": 22.2604, "lng": 84.8536, "capacity": 2200, "type": "cyclone_shelter", "district": "Sundargarh", "governmentVerified": true, "elevation": "high" },
+  { "id": "sh-8", "name": "Balasore District Cyclone Refuge", "lat": 21.4934, "lng": 86.9322, "capacity": 1600, "type": "cyclone_shelter", "district": "Balasore", "governmentVerified": true, "elevation": "high" },
+  { "id": "sh-9", "name": "Bolangir Government College Campus", "lat": 20.7025, "lng": 83.4896, "capacity": 1000, "type": "school", "district": "Balangir", "governmentVerified": true, "elevation": "high" },
+  { "id": "sh-10", "name": "Koraput District Hospital Shelter", "lat": 18.8095, "lng": 82.7115, "capacity": 700, "type": "hospital", "district": "Koraput", "governmentVerified": true, "elevation": "high" },
+  { "id": "sh-11", "name": "Jeypore Relief Camp", "lat": 18.8530, "lng": 82.5718, "capacity": 900, "type": "cyclone_shelter", "district": "Koraput", "governmentVerified": true, "elevation": "high" },
+  { "id": "sh-12", "name": "Rayagada Emergency Shelter", "lat": 19.1710, "lng": 83.4130, "capacity": 800, "type": "cyclone_shelter", "district": "Rayagada", "governmentVerified": true, "elevation": "medium" },
+  { "id": "sh-13", "name": "Bhubaneswar AIIMS Campus Refuge", "lat": 20.1960, "lng": 85.8152, "capacity": 500, "type": "hospital", "district": "Khurda", "governmentVerified": true, "elevation": "medium" },
+  { "id": "sh-14", "name": "Kendrapara Coastal Shelter", "lat": 20.5097, "lng": 86.4248, "capacity": 1100, "type": "cyclone_shelter", "district": "Kendrapara", "governmentVerified": true, "elevation": "high" },
+  { "id": "sh-15", "name": "Dhamra Port Cyclone Bunker", "lat": 20.8978, "lng": 86.8780, "capacity": 400, "type": "cyclone_shelter", "district": "Bhadrak", "governmentVerified": true, "elevation": "medium" },
+  { "id": "sh-16", "name": "Phulbani Elevated School Camp", "lat": 20.4736, "lng": 84.2336, "capacity": 600, "type": "school", "district": "Kandhamal", "governmentVerified": true, "elevation": "high" },
+  { "id": "sh-17", "name": "Sundargarh District Cyclone Shelter", "lat": 22.1177, "lng": 84.0304, "capacity": 1300, "type": "cyclone_shelter", "district": "Sundargarh", "governmentVerified": true, "elevation": "high" },
+  { "id": "sh-18", "name": "Chilika Lakeside Emergency Camp", "lat": 19.7285, "lng": 85.3250, "capacity": 700, "type": "government_building", "district": "Puri", "governmentVerified": true, "elevation": "medium" },
+  { "id": "sh-19", "name": "Dhenkanal Highland Shelter", "lat": 20.6606, "lng": 85.5985, "capacity": 900, "type": "cyclone_shelter", "district": "Dhenkanal", "governmentVerified": true, "elevation": "high" },
+  { "id": "sh-20", "name": "Jajpur Road Emergency Hub", "lat": 20.8580, "lng": 86.0045, "capacity": 1100, "type": "government_building", "district": "Jajpur", "governmentVerified": true, "elevation": "medium" }
+]

@@ -205,7 +205,7 @@ export async function POST(request: NextRequest) {
     const coordinateFlagged = nearbyIncludingThisReport >= 2;
     const flagReason = coordinateFlagged
       ? `${nearbyIncludingThisReport} reports within 500m in 24h`
-      : null;
+      : undefined;
 
     const record = await createReport({
       latitude,

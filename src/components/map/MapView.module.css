@@ -181,3 +181,87 @@
   width: 160px;
   padding: 12px 16px;
 }
+
+/* Power Flow Animation */
+@keyframes powerFlow {
+  from {
+    stroke-dashoffset: 40;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+:global(.power-line-flow) {
+  stroke-dasharray: 10, 10;
+  animation: powerFlow 2s linear infinite;
+}
+
+:global(.power-node-pulse) {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    r: 4;
+    opacity: 1;
+  }
+  50% {
+    r: 8;
+    opacity: 0.5;
+  }
+  100% {
+    r: 4;
+    opacity: 1;
+  }
+}
+
+:global(.sewage-line-flow) {
+  stroke-dasharray: 6, 12;
+  animation: sewageFlow 4s linear infinite;
+}
+
+@keyframes sewageFlow {
+  from {
+    stroke-dashoffset: 36;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+:global(.sewage-node-marker) {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Safe Zone System */
+@keyframes zoneRedPulse {
+  0% { stroke-width: 2.5; stroke-opacity: 1; }
+  50% { stroke-width: 5; stroke-opacity: 0.5; }
+  100% { stroke-width: 2.5; stroke-opacity: 1; }
+}
+
+:global(.zone-red-pulse) {
+  animation: zoneRedPulse 2s ease-in-out infinite;
+}
+
+@keyframes shelterTargetFlash {
+  0% { r: 10; opacity: 1; }
+  50% { r: 14; opacity: 0.7; }
+  100% { r: 10; opacity: 1; }
+}
+
+:global(.shelter-target-pulse) {
+  animation: shelterTargetFlash 1.5s ease-in-out infinite;
+}
+
+@keyframes routeFlowAnim {
+  from { stroke-dashoffset: 48; }
+  to { stroke-dashoffset: 0; }
+}
+
+:global(.route-flow-anim) {
+  stroke-dasharray: 12, 8;
+  animation: routeFlowAnim 1.5s linear infinite;
+}

@@ -613,7 +613,7 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
             </button>
             <button
               type="button"
-              onClick={resetCapture}
+              onClick={() => resetCapture()}
               className="btn btn-secondary btn-sm"
               style={{ flex: 1, justifyContent: "center" }}
               disabled={!capturedImage}

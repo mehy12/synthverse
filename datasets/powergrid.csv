@@ -1,0 +1,237 @@
+Sl No,Circle,Division,Substation Name,kV Level,Year of Comm,Details of S/S,Auto Capacity (MVA),Power Capacity (MVA),Total Capacity (MVA),Grid Loading (%),Grid Loading (MVA)
+1,Berhampur,Berhampur,Berhampur,132/33 kV,1964,2x40+1x20 MVA,0,100,100,55.38%,52.61
+2,Berhampur,Berhampur,Digapahandi,132/33 kV,2004,2x20+1x12.5 MVA,0,52.5,52.5,76.79%,38.3
+3,Berhampur,Berhampur,Mohana,132/33 kV,1973,2x12.5 MVA,0,25,25,33.21%,7.89
+4,Berhampur,Berhampur,Narendrapur,220/132/33 kV,1999,"2x160+1x100MVA (Auto), 2x40+1x20MVA (Power)",420,100,520,"66%(A), 37.36%(P)","253(A), 39.93(P)"
+5,Berhampur,Bhanjanagar,Aska,132/33 kV,1975,3x40,0,120,120,53.04%,60.47
+6,Berhampur,Bhanjanagar,Bhanjanagar,220/132/33 kV,1984,"2x160MVA (Auto), 2x40+1x16MVA (Power)",320,96,416,"64%(A), 37.31%(P)","204.8(A), 34.02(P)"
+7,Berhampur,Bhanjanagar,Phulbani,132/33 kV,1986,1x40+2x12.5 MVA,0,65,65,48.88%,30.18
+8,Berhampur,Chhatrapur,Balugaon,132/33 kV,1991,1x40+1x20+1x12.5 MVA,0,72.5,72.5,50.53%,34.8
+9,Berhampur,Chhatrapur,Chhatrapur,132/33 kV,1982,3x20 MVA,0,60,60,56.66%,32.3
+10,Berhampur,Chhatrapur,Ganjam,132/33 kV,1967,2x12.5 MVA,0,25,25,Major Renovation,2.37
+11,Berhampur,Chhatrapur,Purusottampur,132/33 kV,2013,2x12.5MVA,0,25,25,71.97%,17.09
+12,Burla,Bolangir,ACME,132 kV,2015,132 kV Switching Station,0,0,0,0,0
+13,Burla,Bolangir,Bargarh,132/33 kV,1979,3x40 MVA,0,120,120,65.31%,74.45
+14,Burla,Bolangir,Barpali,132/33 kV,2010,1x40+1x20 MVA,0,60,60,70.38%,40.12
+15,Burla,Bolangir,Bolangir,132/33 kV,1981,2x40+1x12.5 MVA,0,92.5,92.5,73.68%,64.75
+16,Burla,Bolangir,Boudh,132/33 kV,2015,2x20 MVA,0,40,40,25.26%,9.6
+17,Burla,Bolangir,New Bolangir,220/132/33 kV,2010,2x160 MVA (Auto) 1x12.5 (Power),320,12.5,332.5,87.04%(A),278.56
+18,Burla,Bolangir,Padampur,132/33 kV,2016,2x20 MVA,0,40,40,-,16.2
+19,Burla,Bolangir,Patnagarh,132/33 kV,2001,1X40+2x20 MVA,0,80,80,36.69%,27.88
+20,Burla,Bolangir,Sonepur,132/33 kV,2001,3x20 MVA,0,60,60,78.18%,44.56
+21,Burla,Bolangir,Tusura,132/33 kV,2017,1x20 MVA,0,20,20,56.63%,5.3
+22,Burla,Burla,Aryan-Viraj,132 kV,2009,132 kV Switching Station,0,0,0,0,0
+23,Burla,Burla,Katapali,220/132/33 kV,2007,"1x160+2x100 MVA (A), 1x40+2x20 MVA (P)",360,80,440,"57.77%(A), 52.76%(P)","207.972(A), 40.1(P)"
+24,Burla,Burla,Lapanga,220/132/33 kV,2014,2x160 MVA (A) 1x20 MVA (P),320,20,340,Idle charged,"60(A), 1.12(P)"
+25,Burla,Burla,Rairakhole,132/33 kV,2001,2x12.5 MVA,0,25,25,51.04%,12.12
+26,Burla,Burla,Sambalpur,132/33 kV,1988,1x40+2x31.5 MVA,0,103,103,85.45%,83.61
+27,Burla,Burla,Shyam DRI,132 kV,2006,132 kV Switching Station,0,0,0,0,0
+28,Burla,Jharsuguda,Brajarajnagar,132/33/11 kV,1969,1X40+3x20 MVA (33kV) 1x12.5 (11kV),0,112.5,112.5,48.06%,51.36
+29,Burla,Jharsuguda,Budhipadar,220/132/33 kV,1995,2x160 MVA (A) 1x20+1x12.5 (P),320,32.5,352.5,"87.46%(A), 85.51%(P)","Budhipadar Auto, 12.54(P)"
+30,Burla,Jharsuguda,Jharsuguda,132/33/11 kV,1958,2X40 MVA (33kV) 1x20+1x12.5 (11kV),0,112.5,112.5,25.49%,27.24
+31,Burla,Jharsuguda,Kuchinda,132/33kV,2013,2x20 MVA,0,40,40,52.54%,19.97
+32,Burla,Jharsuguda,SMC Power,132 kV,2013,132 kV Switching Station,0,0,0,0,0
+33,Burla,Rajgangpur,Rajgangpur,132/33 kV,1973,3x40 MVA,0,120,120,49.23%,56.12
+34,Burla,Rajgangpur,Sundargarh,132/33 kV,2003,1x40+2x20 MVA,0,80,80,35.12%,26.69
+35,Burla,Rourkela,Barkote,220/33 kV,2001,2x40 MVA,0,80,80,34.38%,26.13
+36,Burla,Rourkela,Bonai,220/33 kV,2017,2x20 MVA,0,40,40,78.42%,14.9
+37,Burla,Rourkela,Chhend,132/33 kV,1999,3x40 MVA,0,120,120,67.49%,76.94
+38,Burla,Rourkela,Kalunga,132/33 kV,2015,2X40 MVA,0,80,80,-,18
+39,Burla,Rourkela,Rourkela,132/33/25 kV,1958,4x35 MVA (33kV) 1x12.5 (25kV),0,152.5,152.5,33.35%,48.32
+40,Burla,Rourkela,Shree Ganesh Metaliks,132 kV,2011,132 kV Switching Station,0,0,0,0,0
+41,Burla,Rourkela,Tarkera,220/132 kV,1981,4x100 MVA (Auto),400,0,400,78.67%(A),314.68
+42,Chainpal,Chainpal,Angul,132/33 kV,1996,2x40+1x20 MVA,0,100,100,36.50%,34.67
+43,Chainpal,Chainpal,Boinda,132/33 kV,2003,1x20+2x12.5 MVA,0,45,45,50.33%,21.52
+44,Chainpal,Chainpal,Chainpal,132/33 kV,1972,2x40+1x20 MVA,0,100,100,56.38%,53.56
+45,Chainpal,Chainpal,OPCL,132 kV,2009,132 kV Switching Station,0,0,0,0,0
+46,Chainpal,Chainpal,Rengali,220/33 kV,1997,2x20 MVA,0,40,40,51.98%,19.75
+47,Chainpal,Dhenkanal,Dhenkanal,132/33 kV,1982,3x40 MVA,0,120,120,53.78%,61.31
+48,Chainpal,Dhenkanal,Kalarangi,132/33 kV,1998,1x20+2x12.5 MVA,0,45,45,43.98%,18.8
+49,Chainpal,Dhenkanal,Kamakhyanagar,132/33 kV,1999,1x20+2x12.5 MVA,0,45,45,48.05%,20.54
+50,Chainpal,Dhenkanal,Khajuriakata,132/33 kV,2017,2x20 MVA,0,40,40,0,0
+51,Chainpal,Dhenkanal,Kharagprasad,132 kV,2007,132 kV Switching Station,0,0,0,0,0
+52,Chainpal,Meramundali,Meramundali,400/220/132/33 kV,2005,"2x315 (ICT), 3x100 (A), 1x12.5 (P)","630(ICT), 300(Auto)",12.5,942.5,"70.73%(ICT), 45%(A), 10%(P)","445.599(I), 135(A), 1.25(P)"
+53,Cuttack,Bhubaneswar,Bhubaneswar,132/33 kV,1979,3x63 MVA,0,189,189,59.73%,107.24
+54,Cuttack,Bhubaneswar,Bhubaneswar Power,132 kV,2016,132 kV Switching Station,0,0,0,0,0
+55,Cuttack,Bhubaneswar,Chandaka,220/132/33 kV,1989,"2x160+2x100 (A), 3x63 (P)",520,189,709,"74.20%(A), 80.22%(P)","417.144(A), 126.51(P)"
+56,Cuttack,Bhubaneswar,Chandaka-B,220/132/33 kV,1989,2x160 (A) 2x40 MVA (P),320,80,400,0,0
+57,Cuttack,Bhubaneswar,Kesura,132/33 kV,2010,2x63 MVA,0,126,126,36.19%,43.33
+58,Cuttack,Bhubaneswar,Ranasinghpur,132/33 kV,1997,3x63 MVA,0,189,189,54.22%,97.36
+59,Cuttack,Choudwar,Arati Steels,132 kV,2005,132 kV Switching Station,0,0,0,0,0
+60,Cuttack,Choudwar,Choudwar,132/33 kV,1956,3x40 MVA,0,120,120,60.80%,57.76
+61,Cuttack,Choudwar,ICCL,132 kV,1988,132 kV Switching Station,0,0,0,0,0
+62,Cuttack,Choudwar,Grid Steel,132 kV,2015,132 kV Switching Station,0,0,0,0,0
+63,Cuttack,Choudwar,Mania,132/33 kV,2016,1x12.5 MVA,0,12.5,12.5,-,10.3
+64,Cuttack,Choudwar,Nuapatna,132/33 kV,1994,1x40+1x20+1x12.5 MVA,0,72.5,72.5,61.71%,42.5
+65,Cuttack,Choudwar,OCL,132 kV,2008,132 kV Switching Station,0,0,0,0,0
+66,Cuttack,Choudwar,Rawmet Ferrous,132 kV,2006,132 kV Switching Station,0,0,0,0,0
+67,Cuttack,Choudwar,Salipur,132/33 kV,2006,2x20+1x12.5 MVA,0,52.5,52.5,62.64%,31.24
+68,Cuttack,Cuttack,Bidanasi,220/132/33 kV,2004,"3x160 (A), 2x63+1x40 (P)",480,166,646,"61.37%(A), 56.72%(P)","220.932(A), 89.45(P)"
+69,Cuttack,Cuttack,Cuttack,220/132/33 kV,1984,1X160 (A) 3x40 MVA (P),160,120,280,55.20%,62.93
+70,Cuttack,Cuttack,Jagatsinghpur,132/33 kV,1996,1x40+2x20 MVA,0,80,80,49.20%,37.39
+71,Cuttack,Cuttack,Phulnakhara,132/33 kV,2009,1x40+2x20 MVA,0,80,80,61.13%,23.23
+72,Cuttack,Khurda,Argul,132/33 kV,2014,2x40+1x20 MVA,0,100,100,-,3.39
+73,Cuttack,Khurda,Atri,220/132/33 kV,2016,2x160 (A) 2x20 MVA (P),320,40,360,-,"90(A), 0(P)"
+74,Cuttack,Khurda,Banki,132/33 kV,2015,2x20 MVA,0,40,40,31.64%,12.02
+75,Cuttack,Khurda,Chandpur,132/33 kV,2013,2x12.5MVA,0,25,25,48.63%,11.55
+76,Cuttack,Khurda,Infocity-II,220/33 kV,2016,2x40 MVA,0,80,80,-,0
+77,Cuttack,Khurda,Khurda,132/33 kV,1969,4x40 MVA,0,160,160,52.68%,80.07
+78,Cuttack,Khurda,Nayagarh,220/33 kV,1993,2x40+1x20 MVA,0,100,100,58.35%,55.43
+79,Cuttack,Mendhasal,Mendhasal,400/220 kV,2010,"2x315 (ICT), 2x100 (A), 1x20 (P)","630(I), 200(A)",20,850,"84.25%(ICT), 95.71%(A)","530.775(I), 45(A), 18.18(P)"
+80,Cuttack,Paradeep,Chandikhole,132/33 kV,2003,3x20 MVA,0,60,60,61.30%,34.94
+81,Cuttack,Paradeep,Kendrapara,132/33 kV,1979,2x40+1x12.5 MVA,0,92.5,92.5,37.04%,32.55
+82,Cuttack,Paradeep,Marshaghai,132/33 kV,2015,2x20 MVA,0,40,40,-,16.86
+83,Cuttack,Paradeep,Olavar,132/33 kV,2017,2x12.5 MVA,0,25,25,-,10
+84,Cuttack,Paradeep,Paradeep,220/132/33 kV,2009,"1x160+1x100+1x50 (A), 3x20 (P)",310,60,370,"73.45%(A), 80.41%(P)","227.695(A), 32.41(P)"
+85,Cuttack,Paradeep,Pattamundai,132/33 kV,1997,2x20+1x12.5 MVA,0,52.5,52.5,66.67%,33.25
+86,Cuttack,Puri,Nimapara,132/33 kV,1996,3x40 MVA,0,120,120,50.11%,44.04
+87,Cuttack,Puri,Konark,132/33 kV,2015,2x20 MVA,0,40,40,31.29%,11.89
+88,Cuttack,Puri,Puri,132/33 kV,1984,3x40 MVA,0,120,120,57.32%,65.35
+89,Cuttack,Puri,Samagara,220/132/33 kV,2015,2x160 (A) 2x20 MVA (P),320,40,360,65.23%,"80(A), 24.79(P)"
+90,Cuttack,Puri,Shamuka,132/33 kV,2015,2x31.5 MVA,0,63,63,60.95%,36.48
+91,Jajpur Road,Balasore,Balasore,220/132/33 kV,1996,"3x160 (A), 2x63+1x40 (P)",480,166,646,"86%(A), 54.45%(P)","412.8(A), 85.86(P)"
+92,Jajpur Road,Balasore,Basta,132/33 kV,2010,1x20+1x12.5 MVA,0,32.5,32.5,68.18%,21.05
+93,Jajpur Road,Balasore,Bhadrak,220/132/33 kV,2008,"1x160,2x100 (A), 2x63+1x40 (P)",360,166,526,"82%(A), 53.71%(P)","295.2(A), 84.71(P)"
+94,Jajpur Road,Balasore,Bhogarai,132/33 kV,2017,1x40 MVA,0,40,40,0,0
+95,Jajpur Road,Balasore,Jaleswar,132/33 kV,1991,2x31.5+1x12.5 MVA,0,75.5,75.5,50.94%,36.53
+96,Jajpur Road,Balasore,Somanathpur,132/33 kV,2011,1x12.5 MVA,0,12.5,12.5,25.80%,3.06
+97,Jajpur Road,Balasore,Soro,132/33 kV,1997,1x40+2x20 MVA,0,80,80,65.28%,49.61
+98,Jajpur Road,Baripada,Bangiriposi,132/33 kV,2016,2x12.5 MVA,0,25,25,17.08%,4.06
+99,Jajpur Road,Baripada,Baripada,132/33 kV,1984,3x40 MVA,0,120,120,63.31%,72.18
+100,Jajpur Road,Baripada,Karanjia,132/33 kV,2009,1x20+2x12.5 MVA,0,45,45,45.24%,19.34
+101,Jajpur Road,Baripada,Rairangpur,132/33 kV,1981,2x20+1x12.5 MVA,0,52.5,52.5,48.46%,24.17
+102,Jajpur Road,Duburi,New Duburi,400/220/33 kV,2005,2x315 MVA (ICT) 1x20 MVA (P),630,20,650,ICT: 300 MVA Loading,0
+103,Jajpur Road,Jajpur Road,Anandpur,132/33 kV,2010,1x20+2x12.5 MVA,0,45,45,49.77%,21.28
+104,Jajpur Road,Jajpur Road,Brahmani River Pellets Ltd.,132 kV,2011,132 kV Switching Station,0,0,0,0,0
+105,Jajpur Road,Jajpur Road,B C Mohanty and Sons,133 kV,2013,133 kV Switching Station,0,0,0,0,0
+106,Jajpur Road,Jajpur Road,Duburi,220/132/33 kV,1989,"3x100 (A), 2x40+1x5 (P)",300,85,385,"43.36%(A), 63.2%(P)","150.12(A), 22.21(P)"
+107,Jajpur Road,Jajpur Road,Jabamayee Ferro Alloys,132 kV,2008,132 kV Switching Station,0,0,0,0,0
+108,Jajpur Road,Jajpur Road,Jajpur Road,132/33 kV,1969,3x40 MVA,0,120,120,45.47%,51.83
+109,Jajpur Road,Jajpur Road,Jajpur Town,132/33 kV,1998,2x40+1x20 MVA,0,100,100,55.19%,52.43
+110,Jajpur Road,Joda,Arya Iron,132 kV,2008,132 kV Switching Station,0,0,0,0,0
+111,Jajpur Road,Joda,Bee Kay Steel,132 kV,2010,132 kV Switching Station,0,0,0,0,0
+112,Jajpur Road,Joda,Barbil,132/33kV,2014,2x12.5MVA,0,25,25,53.09%,12.61
+113,Jajpur Road,Joda,Bolani,132/11 kV,1995,132 kV Switching Station,0,0,0,0,0
+114,Jajpur Road,Joda,Joda,220/132/33 kV,1959,"3x100 (A), 1x40+3x20 (P)",300,100,400,30.37%(P),"160(A), 28.85(P)"
+115,Jajpur Road,Joda,Palasponga,132/33 kV,1981,1x40+2x20 MVA,0,80,80,57.89%,44
+116,Jeypore,Jayanagar,Balimela,220/33 kV,2007,1x40+1x20 MVA,0,60,60,25.90%,14.77
+117,Jeypore,Jayanagar,Dabugaon,132/33 kV,2015,2x12.5 MVA,0,25,25,35.10%,8.34
+118,Jeypore,Jayanagar,Jayanagar,220/132/33 kV,1980,"2x160 (A), 2x20+1x12.5 (P)",320,52.5,372.5,"50.93%(A), 67.21%(P)","162.976(A), 33.52(P)"
+119,Jeypore,Jayanagar,Malkangiri,220/33 kV,2017,1x40 MVA,0,40,40,39.26%,14.92
+120,Jeypore,Jayanagar,Sunabeda,132/33 kV,1964,1x20+2x12.5 MVA,0,45,45,68.87%,29.44
+121,Jeypore,Jayanagar,Tentulikhunti,132/33 kV,1986,1x20+2x12.5 MVA,0,45,45,36.36%,15.54
+122,Jeypore,Jayanagar,Umerkote,132/33 kV,2015,2x20 MVA,0,40,40,22.80%,8.66
+123,Jeypore,Kesinga,Bhawanipatna,132/33 kV,2013,2x12.5 MVA,0,25,25,62.50%,14.84
+124,Jeypore,Kesinga,Junagarh,132/33 kV,2001,3x20 MVA,0,60,60,49.95%,28.47
+125,Jeypore,Kesinga,Kesinga,132/33 kV,1982,1x40+2x20 MVA,0,80,80,59.22%,45.01
+126,Jeypore,Kesinga,Khariar,132/33 kV,1995,2x40 MVA,0,80,80,48.88%,37.15
+127,Jeypore,Kesinga,Nuapara,132/33 kV,2014,2x20 MVA,0,40,40,26.36%,10.02
+128,Jeypore,Kesinga,Saintala,132/33 kV,1989,1x12.5+1x10 MVA,0,22.5,22.5,0,0
+129,Jeypore,Kesinga,Vedant Alumina,132 kV,2006,132 kV Switching Station,0,0,0,0,0
+130,Jeypore,Therubali,Akhusingh,132/33 kV,2001,2x12.5 MVA,0,25,25,52.38%,12.44
+131,Jeypore,Therubali,Muniguda,132/33 kV,2017,1x12.5 MVA,0,12.5,12.5,0,0
+132,Jeypore,Therubali,Laxmipur,220/33kV,2013,1x20MVA,0,20,20,45.81%,8.7
+133,Jeypore,Therubali,Paralakhemundi,132/33 kV,2001,3x12.5 MVA,0,37.5,37.5,53.25%,18.97
+134,Jeypore,Therubali,Rayagada,132/33 kV,1962,2x12.5 MVA,0,25,25,68.83%,16.35
+135,Jeypore,Therubali,Therubali,220/132/33 kV,1974,2x100 (A) 2x12.5 (P),200,25,225,"86%(A), 62.07%(P)","163.48(A), 14.74(P)"
+Sl No,Circle,Division,Substation Name,kV Level,Year of Comm,Details of S/S,Auto Capacity (MVA),Power Capacity (MVA),Total Capacity (MVA),Grid Loading (%),Grid Loading (MVA)
+136,Jeypore,Therubali,Gunupur,220/132/33 kV,2024,2x160 (A) + 2x20 (P),320,40,360,45.50%,163.8
+137,Jeypore,Therubali,R.Udayagiri,132/33 kV,2025,2x20 MVA,0,40,40,32.40%,12.96
+138,Cuttack,Bhubaneswar,Satyanagar (GIS),132/33 kV,2023,2x63 MVA,0,126,126,58.20%,73.33
+139,Cuttack,Bhubaneswar,Badagada (GIS),132/33 kV,2023,2x63 MVA,0,126,126,55.10%,69.42
+140,Cuttack,Bhubaneswar,Nayapalli (GIS),132/33 kV,2024,2x63 MVA,0,126,126,42.00%,52.92
+141,Cuttack,Bhubaneswar,Balianta (GIS),220/132/33 kV,2024,2x160 (A) + 2x63 (P),320,126,446,38.50%,171.71
+142,Cuttack,Bhubaneswar,Mancheswar-B,132 kV,2018,Switching Station,0,0,0,0.00%,0
+143,Cuttack,Bhubaneswar,Unit-8,132/33 kV,2017,2x40 MVA,0,80,80,68.20%,54.56
+144,Cuttack,Bhubaneswar,Pratapsasan,220/132/33 kV,2021,2x160 (A) + 2x40 (P),320,80,400,61.40%,245.6
+145,Cuttack,Puri,Satashankha,132/33 kV,2019,2x20 MVA,0,40,40,52.30%,20.92
+146,Cuttack,Choudwar,Bahugram,132/33 kV,2020,2x20 MVA,0,40,40,48.10%,19.24
+147,Cuttack,Choudwar,Brajabiharipur,132/33 kV,2018,2x20 MVA,0,40,40,56.70%,22.68
+148,Cuttack,Choudwar,Godisahi,132/33 kV,2021,2x20 MVA,0,40,40,41.20%,16.48
+149,Cuttack,Choudwar,Khuntuni,220/132/33 kV,2022,2x160 (A) + 2x20 (P),320,40,360,35.80%,128.88
+150,Cuttack,Choudwar,Narasinghpur,132/33 kV,2020,2x20 MVA,0,40,40,33.50%,13.4
+151,Cuttack,Paradeep,Tirtol,132/33 kV,2019,2x20 MVA,0,40,40,59.10%,23.64
+152,Cuttack,Paradeep,Rajnagar,132/33 kV,2021,2x20 MVA,0,40,40,44.20%,17.68
+153,Cuttack,Paradeep,Plastic Park (GIS),132/33 kV,2024,2x63 MVA,0,126,126,22.10%,27.84
+154,Cuttack,Khurda,Mundamba (GIS),132/33 kV,2025,2x63 MVA,0,126,126,18.40%,23.18
+155,Chainpal,Chainpal,Aluminium Park (GIS),132/33 kV,2023,2x63 MVA,0,126,126,15.40%,19.4
+156,Chainpal,Chainpal,Chhendipada,220/33 kV,2024,2x40 MVA,0,80,80,31.20%,24.96
+157,Chainpal,Chainpal,Kiakata,220/132/33 kV,2025,2x160 (A) + 2x20 (P),320,40,360,18.50%,66.6
+158,Chainpal,Chainpal,Athamalick,132/33 kV,2025,2x20 MVA,0,40,40,25.40%,10.16
+159,Chainpal,Dhenkanal,Parjang,132/33 kV,2025,2x20 MVA,0,40,40,28.60%,11.44
+160,Chainpal,Dhenkanal,Goda,132/33 kV,2026,2x20 MVA,0,40,40,20.00%,8
+161,Chainpal,Dhenkanal,Gondia,132/33 kV,2026,2x20 MVA,0,40,40,21.50%,8.6
+162,Balasore,Balasore,Nilagiri,132/33 kV,2020,2x20 MVA,0,40,40,54.20%,21.68
+163,Balasore,Balasore,Betnoti,132/33 kV,2022,2x20 MVA,0,40,40,49.10%,19.64
+164,Jajpur Road,Joda,Champua,132/33 kV,2019,2x20 MVA,0,40,40,61.20%,24.48
+165,Jajpur Road,Joda,Ghatgaon,132/33 kV,2021,2x20 MVA,0,40,40,52.40%,20.96
+166,Jajpur Road,Joda,Turumunga,220/33 kV,2024,2x40 MVA,0,80,80,33.10%,26.48
+167,Jeypore,Jayanagar,Govindpali,220/33 kV,2024,2x40 MVA,0,80,80,28.70%,22.96
+168,Jeypore,Jayanagar,Lamtaput,132/33 kV,2025,2x20 MVA,0,40,40,31.20%,12.48
+169,Jeypore,Jayanagar,Brundabahal,132/33 kV,2025,2x20 MVA,0,40,40,24.50%,9.8
+170,Jeypore,Jayanagar,Nabarangpur,132/33 kV,2018,2x20 MVA,0,40,40,62.10%,24.84
+171,Jeypore,Jayanagar,Kotpad,132/33 kV,2020,2x20 MVA,0,40,40,48.20%,19.28
+172,Bolangir,Bolangir,Kantabanji,132/33 kV,2019,2x20 MVA,0,40,40,65.40%,26.16
+173,Burla,Burla,Maneswar,220/33 kV,2022,2x40 MVA,0,80,80,42.50%,34
+174,Burla,Burla,Deogarh,132/33 kV,2020,2x20 MVA,0,40,40,51.20%,20.48
+175,Burla,Burla,Pandiapali,400/220 kV,2018,2x315 MVA (ICT),630,0,630,72.40%,456.12
+176,Jajpur Road,Jajpur Road,Kuakhia,400/220 kV,2026,2x500 MVA (ICT),1000,0,1000,10.50%,105
+177,Cuttack,Paradeep,Ersama,400/220/132 kV,2026,2x500 (I) + 2x160 (A),1000,320,1320,8.40%,110.88
+178,Chainpal,Meramundali,Meramundali-B,400/220 kV,2025,2x500 MVA (GIS),1000,0,1000,12.40%,124
+179,Chainpal,Chainpal,JSPL Angul,220 kV,2015,Switching Station,0,0,0,0,0
+180,Cuttack,Paradeep,IOCL Paradeep,220 kV,2016,Switching Station,0,0,0,0,0
+181,Jajpur Road,Jajpur Road,JSL Kalinganagar,220 kV,2010,Switching Station,0,0,0,0,0
+182,Jajpur Road,Jajpur Road,NINL Kalinganagar,220 kV,2012,Switching Station,0,0,0,0,0
+183,Jajpur Road,Jajpur Road,Tata Steel Kalinganagar,400/220 kV,2016,Switching Station,0,0,0,0,0
+184,Berhampur,Berhampur,Tata Steel Gopalpur,220 kV,2017,Switching Station,0,0,0,0,0
+185,Chainpal,Chainpal,NALCO Angul,220 kV,1985,Switching Station,0,0,0,0,0
+186,Cuttack,Paradeep,IFFCO Paradeep,220 kV,1998,Switching Station,0,0,0,0,0
+187,Cuttack,Paradeep,PPL Paradeep,220 kV,1999,Switching Station,0,0,0,0,0
+188,Burla,Burla,ACC Bargarh,132 kV,1970,Switching Station,0,0,0,0,0
+189,Chainpal,Chainpal,MCL Talcher,220 kV,1995,Switching Station,0,0,0,0,0
+190,Burla,Jharsuguda,MCL Ib Valley,220 kV,1996,Switching Station,0,0,0,0,0
+191,Burla,Burla,Hindalco Hirakud,220 kV,1990,Switching Station,0,0,0,0,0
+192,Burla,Jharsuguda,Vedanta Jharsuguda,400 kV,2008,Switching Station,0,0,0,0,0
+193,Jeypore,Jayanagar,Vedanta Lanjigarh,132 kV,2006,Switching Station,0,0,0,0,0
+194,Jeypore,Therubali,JK Paper Rayagada,132 kV,1962,Switching Station,0,0,0,0,0
+195,Jeypore,Jayanagar,Bilt Sewa,132 kV,1992,Switching Station,0,0,0,0,0
+196,Jajpur Road,Balasore,FACOR Bhadrak,132 kV,1983,Switching Station,0,0,0,0,0
+197,Jajpur Road,Balasore,Balasore Alloys,132 kV,1988,Switching Station,0,0,0,0,0
+198,Jajpur Road,Jajpur Road,Visa Steel,220 kV,2005,Switching Station,0,0,0,0,0
+199,Burla,Jharsuguda,Action Ispat,220 kV,2006,Switching Station,0,0,0,0,0
+200,Jajpur Road,Balasore,Bhadrak RTSS,132 kV,2015,Traction,0,0,0,0,0
+201,Jajpur Road,Balasore,Balasore RTSS,132 kV,2015,Traction,0,0,0,0,0
+202,Jajpur Road,Jajpur Road,Jajpur Road RTSS,132 kV,2015,Traction,0,0,0,0,0
+203,Cuttack,Cuttack,Cuttack RTSS,132 kV,2015,Traction,0,0,0,0,0
+204,Cuttack,Bhubaneswar,Bhubaneswar RTSS,132 kV,2015,Traction,0,0,0,0,0
+205,Cuttack,Khurda,Khurda Road RTSS,132 kV,2015,Traction,0,0,0,0,0
+206,Berhampur,Berhampur,Berhampur RTSS,132 kV,2015,Traction,0,0,0,0,0
+207,Jeypore,Therubali,Rayagada RTSS,132 kV,2015,Traction,0,0,0,0,0
+208,Bolangir,Bolangir,Titlagarh RTSS,132 kV,2015,Traction,0,0,0,0,0
+209,Burla,Burla,Sambalpur RTSS,132 kV,2015,Traction,0,0,0,0,0
+210,Burla,Jharsuguda,Jharsuguda RTSS,132 kV,2015,Traction,0,0,0,0,0
+211,Burla,Rourkela,Rourkela RTSS,132 kV,2015,Traction,0,0,0,0,0
+212,Jajpur Road,Joda,Keonjhar RTSS,132 kV,2015,Traction,0,0,0,0,0
+213,Chainpal,Chainpal,Angul RTSS,132 kV,2015,Traction,0,0,0,0,0
+214,Chainpal,Chainpal,Talcher RTSS,132 kV,2015,Traction,0,0,0,0,0
+215,Jajpur Road,Jajpur Road,Sukinda RTSS,132 kV,2022,Traction,0,0,0,0,0
+216,Jajpur Road,Jajpur Road,Daitari RTSS,132 kV,2022,Traction,0,0,0,0,0
+217,Jeypore,Therubali,Narayanpur RTSS,132 kV,2023,Traction,0,0,0,0,0
+218,Jeypore,Therubali,Singapur Road RTSS,132 kV,2024,Traction,0,0,0,0,0
+219,Jeypore,Jayanagar,Lanjigarh RTSS,132 kV,2024,Traction,0,0,0,0,0
+220,Jeypore,Kesinga,Junagarh RTSS,132 kV,2025,Traction,0,0,0,0,0
+221,Cuttack,Khurda,Nayagarh RTSS,132 kV,2024,Traction,0,0,0,0,0
+222,Cuttack,Nayagarh,Boudh RTSS,132 kV,2026,Traction,0,0,0,0,0
+223,Cuttack,Bhubaneswar,Satyanagar SCRIPS,132/33 kV,2024,63 MVA (GIS),0,63,63,0,0
+224,Cuttack,Bhubaneswar,Badagada SCRIPS,132/33 kV,2024,63 MVA (GIS),0,63,63,0,0
+225,Cuttack,Bhubaneswar,Nayapalli SCRIPS,132/33 kV,2025,63 MVA (GIS),0,63,63,0,0
+226,Cuttack,Bhubaneswar,Balianta GIS Hub,220/132/33 kV,2025,2x160+2x63 MVA,320,126,446,0,0
+227,Cuttack,Cuttack,Nua Betanda,132/33 kV,2025,2x20 MVA,0,40,40,0,0
+228,Chainpal,Dhenkanal,Parjang (New),132/33 kV,2025,2x20 MVA,0,40,40,0,0
+229,Cuttack,Nayagarh,Hatabasta,132/33 kV,2025,2x20 MVA,0,40,40,0,0
+230,Cuttack,Paradeep,Plastic Park Ersama,132 kV,2024,63 MVA (GIS),0,63,63,0,0
+231,Chainpal,Chainpal,Aluminium Park Angul,132 kV,2024,63 MVA (GIS),0,63,63,0,0
+232,Cuttack,Khurda,Mundamba Industrial,132 kV,2025,63 MVA (GIS),0,63,63,0,0
+233,Chainpal,Chainpal,Chhendipada GSS,220/33 kV,2024,2x40 MVA,0,80,80,0,0
+234,Chainpal,Dhenkanal,Neulapoi 400kV,400/220/33 kV,2026,2x500 MVA (ICT),1000,0,1000,0,0
+235,Chainpal,Meramundali,Meramundali-B Hub,400/220 kV,2026,2x500 MVA (ICT),1000,0,1000,0,0

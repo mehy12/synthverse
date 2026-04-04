@@ -20,6 +20,10 @@ import styles from "./MapView.module.css";
 import cachedCurrentVectors from "@/data/current-vectors.json";
 import { Maximize2, Minimize2 } from "lucide-react";
 import HeatmapLayer from "./HeatmapLayer";
+import Digital3DTwin from "./Digital3DTwin";
+import powerGridNodes from "@/data/power-grid-locations.json";
+import sewageGridNodes from "@/data/sewage-grid-locations.json";
+import SafeZoneOverlay from "./SafeZoneOverlay";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -191,6 +195,171 @@ const ODISHA_WATERWAYS = [
     description: "Coastal water edge highlighted for orientation.",
   },
 ];
+
+// Extended water bodies - basins, channels, wetlands
+const ODISHA_WATER_BASINS = [
+  {
+    name: "Mahanadi Basin",
+    kind: "basin",
+    color: "#1E40AF",
+    polygon: [
+      [21.8, 83.5],
+      [22.0, 84.0],
+      [21.5, 85.5],
+      [20.5, 85.5],
+      [20.0, 84.5],
+      [20.5, 83.5],
+    ] as [number, number][],
+    description: "Primary floodplain and water collection basin",
+  },
+  {
+    name: "Brahmani-Baitarani Basin",
+    kind: "basin",
+    color: "#0C4A6E",
+    polygon: [
+      [21.5, 85.5],
+      [22.5, 86.0],
+      [22.0, 87.0],
+      [21.0, 86.5],
+      [20.5, 85.8],
+    ] as [number, number][],
+    description: "Eastern delta basin and confluence zone",
+  },
+  {
+    name: "Subarnarekha Wetlands",
+    kind: "wetland",
+    color: "#164E63",
+    polygon: [
+      [22.0, 86.5],
+      [22.3, 87.0],
+      [22.1, 87.5],
+      [21.8, 87.2],
+    ] as [number, number][],
+    description: "Northern wetland preservation zone",
+  },
+];
+
+// Irrigation and drainage channels
+const ODISHA_IRRIGATION_CHANNELS = [
+  {
+    name: "Upper Mahanadi Canal",
+    color: "#3B82F6",
+    opacity: 0.6,
+    line: [
+      [21.8, 83.8],
+      [21.5, 84.5],
+      [21.2, 85.0],
+      [20.9, 85.3],
+    ] as [number, number][],
+  },
+  {
+    name: "Lower Mahanadi Canal",
+    color: "#2563EB",
+    opacity: 0.6,
+    line: [
+      [20.9, 85.3],
+      [20.6, 85.8],
+      [20.4, 86.2],
+      [20.2, 86.5],
+    ] as [number, number][],
+  },
+  {
+    name: "Brahmani Irrigation Network",
+    color: "#1D4ED8",
+    opacity: 0.6,
+    line: [
+      [22.0, 85.5],
+      [21.5, 85.8],
+      [21.0, 86.2],
+      [20.8, 86.5],
+    ] as [number, number][],
+  },
+  {
+    name: "Eastern Drainage Main",
+    color: "#1E40AF",
+    opacity: 0.5,
+    line: [
+      [21.5, 86.0],
+      [21.2, 86.5],
+      [20.9, 87.0],
+      [20.6, 87.3],
+    ] as [number, number][],
+  },
+];
+
+// Sewage grid network generation based on real geocoded nodes
+const SEWAGE_NETWORK = (() => {
+  // Use a smaller subset for the "visual" web to ensure high performance
+  const connections: any[] = [];
+  const nodes = sewageGridNodes as any[];
+  const distThreshold = 0.012; // ~1.2km approx in degrees
+
+  for (let i = 0; i < nodes.length; i += 2) { 
+    const a = nodes[i];
+    let found = 0;
+    for (let j = i + 1; j < nodes.length && found < 2; j++) {
+      const b = nodes[j];
+      const dLat = Math.abs(a.lat - b.lat);
+      const dLon = Math.abs(a.lon - b.lon);
+      
+      if (dLat < distThreshold && dLon < distThreshold) {
+        connections.push({
+          id: `sewage-${a.id}-${b.id}`,
+          from: a,
+          to: b
+        });
+        found++;
+      }
+    }
+  }
+  return connections;
+})();
+
+// Power grid network generation based on geocoded data
+const GRID_NETWORK = (() => {
+  const circles: Record<string, any[]> = {};
+  powerGridNodes.forEach((node) => {
+    if (!circles[node.circle]) circles[node.circle] = [];
+    circles[node.circle].push(node);
+  });
+
+  const connections: any[] = [];
+  Object.entries(circles).forEach(([circleName, nodes]) => {
+    // Sort nodes to create a "serial" path within each circle
+    const sorted = [...nodes].sort((a, b) => a.lng - b.lng);
+    for (let i = 0; i < sorted.length - 1; i++) {
+      connections.push({
+        id: `link-${circleName}-${i}`,
+        from: sorted[i],
+        to: sorted[i + 1],
+        color: "#FCD34D", // Gold/Amber for power flow
+        width: 2,
+      });
+    }
+    
+    // Cross-connecting divisions to create "spiderweb" effect
+    const divisions: Record<string, any[]> = {};
+    nodes.forEach(n => {
+      if (!divisions[n.division]) divisions[n.division] = [];
+      divisions[n.division].push(n);
+    });
+    
+    const divCenters = Object.values(divisions).map(d => d[0]);
+    if (divCenters.length > 1) {
+      for (let i = 0; i < divCenters.length - 1; i++) {
+        connections.push({
+          id: `trunk-${circleName}-${i}`,
+          from: divCenters[i],
+          to: divCenters[i+1],
+          color: "#F59E0B", // Deeper orange for trunk
+          width: 3,
+        });
+      }
+    }
+  });
+
+  return connections;
+})();
 
 const LIVE_CURRENT_DATA = cachedCurrentVectors as {
   metadata: { source: string; region: string; date: string };
@@ -728,10 +897,16 @@ export default function MapView({
 }: MapViewProps) {
   const [baseLayer, setBaseLayer] = useState<BaseLayer>("light");
   const [showHeatmap, setShowHeatmap] = useState(true);
+  const [show3DTwin, setShow3DTwin] = useState(false);
   const [showAllPaths, setShowAllPaths] = useState(false);
   const [showWaterways, setShowWaterways] = useState(true);
   const [showFloodChannels, setShowFloodChannels] = useState(true);
   const [showEvacZones, setShowEvacZones] = useState(true);
+  const [showWaterBasins, setShowWaterBasins] = useState(true);
+  const [showIrrigationChannels, setShowIrrigationChannels] = useState(true);
+  const [showSewageLines, setShowSewageLines] = useState(false);
+  const [showPowerGrid, setShowPowerGrid] = useState(false);
+  const [showSafeZones, setShowSafeZones] = useState(false);
   const [enableProbe, setEnableProbe] = useState(false);
   const [probeSnapshot, setProbeSnapshot] = useState<any | null>(null);
   const zoom = 12;
@@ -1009,7 +1184,30 @@ export default function MapView({
         <BoundsEnforcer />
         <MapFocusController focusTarget={focusTarget} />
 
+        {show3DTwin && (
+          <Digital3DTwin
+            data={heatmapPoints.map((p) => ({
+              lat: p.lat,
+              lng: p.lng,
+              height: Math.max(40, Math.min(100, (p.riskScore || 0) * 100)),
+              severity:
+                (p.riskScore || 0) > 0.8
+                  ? "critical"
+                  : (p.riskScore || 0) > 0.6
+                    ? "high"
+                    : (p.riskScore || 0) > 0.4
+                      ? "medium"
+                      : "low",
+              label: p.district || "Hotspot",
+              riskScore: p.riskScore || 0,
+            }))}
+          />
+        )}
+
         <HeatmapLayer points={heatmapPoints} visible={showHeatmap} />
+
+        {/* Safe Zone Intelligence Overlay */}
+        <SafeZoneOverlay visible={showSafeZones} />
 
         {showHeatmap &&
           hotspotPoints.map((hotspot, index) => (
@@ -1085,7 +1283,7 @@ export default function MapView({
         {/* Odisha rivers and water bodies */}
         {showWaterways &&
           ODISHA_WATERWAYS.map((waterway) => {
-            if (waterway.kind === "lake") {
+            if (waterway.kind === "lake" && waterway.polygon) {
               return (
                 <Polygon
                   key={waterway.name}
@@ -1157,7 +1355,7 @@ export default function MapView({
             return (
               <Polyline
                 key={waterway.name}
-                positions={waterway.line}
+                positions={waterway.line!}
                 pathOptions={{
                   color: waterway.color,
                   weight: 11,
@@ -1167,7 +1365,7 @@ export default function MapView({
                 }}
               >
                 <Polyline
-                  positions={waterway.line}
+                  positions={waterway.line!}
                   pathOptions={{
                     color: waterway.color,
                     weight: 4,
@@ -1301,6 +1499,248 @@ export default function MapView({
             </Popup>
           </Polyline>
         ))}
+
+        {/* Water Basins and Wetlands */}
+        {showWaterBasins &&
+          ODISHA_WATER_BASINS.map((basin) => (
+            <Polygon
+              key={basin.name}
+              positions={basin.polygon}
+              pathOptions={{
+                color: basin.color,
+                weight: 2,
+                opacity: 0.7,
+                fillColor: basin.color,
+                fillOpacity: 0.08,
+              }}
+            >
+              <Tooltip
+                direction="top"
+                offset={[0, -8]}
+                opacity={1}
+                sticky
+                className="custom-popup"
+              >
+                <div style={{ minWidth: "160px", padding: "2px 0" }}>
+                  <div
+                    style={{
+                      fontSize: "0.76rem",
+                      fontWeight: 700,
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    {basin.name}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "0.68rem",
+                      color: "var(--text-secondary)",
+                      marginTop: 2,
+                    }}
+                  >
+                    {basin.kind}
+                  </div>
+                </div>
+              </Tooltip>
+              <Popup className="custom-popup">
+                <div style={{ minWidth: "200px", padding: "8px" }}>
+                  <h4
+                    style={{
+                      margin: "0 0 6px 0",
+                      fontSize: "0.9rem",
+                      fontWeight: 700,
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    {basin.name}
+                  </h4>
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: "0.8rem",
+                      color: "var(--text-secondary)",
+                    }}
+                  >
+                    {basin.description}
+                  </p>
+                </div>
+              </Popup>
+            </Polygon>
+          ))}
+
+        {/* Irrigation Channels */}
+        {showIrrigationChannels &&
+          ODISHA_IRRIGATION_CHANNELS.map((channel) => (
+            <Polyline
+              key={channel.name}
+              positions={channel.line}
+              pathOptions={{
+                color: channel.color,
+                weight: 3,
+                opacity: channel.opacity,
+                dashArray: "6 4",
+                lineCap: "round",
+              }}
+            >
+              <Tooltip
+                direction="top"
+                offset={[0, -8]}
+                opacity={1}
+                sticky
+                className="custom-popup"
+              >
+                <div style={{ minWidth: "170px", padding: "2px 0" }}>
+                  <div
+                    style={{
+                      fontSize: "0.76rem",
+                      fontWeight: 700,
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    {channel.name}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "0.68rem",
+                      color: "var(--text-secondary)",
+                      marginTop: 2,
+                    }}
+                  >
+                    Irrigation / Drainage
+                  </div>
+                </div>
+              </Tooltip>
+              <Popup className="custom-popup">
+                <div style={{ minWidth: "200px", padding: "8px" }}>
+                  <h4
+                    style={{
+                      margin: "0 0 6px 0",
+                      fontSize: "0.9rem",
+                      fontWeight: 700,
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    {channel.name}
+                  </h4>
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: "0.8rem",
+                      color: "var(--text-secondary)",
+                    }}
+                  >
+                    Water distribution and drainage infrastructure
+                  </p>
+                </div>
+              </Popup>
+            </Polyline>
+          ))}
+
+        {/* Sewage Grid Network */}
+        {showSewageLines && (
+          <Fragment>
+            {/* Lines */}
+            {SEWAGE_NETWORK.map((link) => (
+              <Polyline
+                key={link.id}
+                positions={[
+                  [link.from.lat, link.from.lon],
+                  [link.to.lat, link.to.lon],
+                ]}
+                pathOptions={{
+                  color: "#0891B2",
+                  weight: 1.5,
+                  opacity: 0.5,
+                  className: "sewage-line-flow",
+                }}
+              />
+            ))}
+            
+            {/* Nodes (Only at high zoom) */}
+            {zoom > 10 && sewageGridNodes.slice(0, 1000).map((node: any) => (
+              <CircleMarker
+                key={`sg-${node.id}`}
+                center={[node.lat, node.lon]}
+                radius={2}
+                pathOptions={{
+                  color: "#0E7490",
+                  fillColor: "#22D3EE",
+                  fillOpacity: 1,
+                  weight: 1,
+                  className: "sewage-node-marker"
+                }}
+              >
+                <Tooltip direction="top" offset={[0, -2]} className="custom-popup">
+                  <div style={{ fontSize: "0.7rem", fontWeight: 700 }}>
+                    {node.name || `Drain Node ${node.id.slice(-4)}`}
+                  </div>
+                  <div style={{ fontSize: "0.6rem" }}>Kind: {node.kind}</div>
+                </Tooltip>
+              </CircleMarker>
+            ))}
+          </Fragment>
+        )}
+
+        {/* Power Grid Visualization */}
+        {showPowerGrid && (
+          <Fragment>
+            {/* Connections (Spiderweb) */}
+            {GRID_NETWORK.map((link) => (
+              <Polyline
+                key={link.id}
+                positions={[
+                  [link.from.lat, link.from.lng],
+                  [link.to.lat, link.to.lng],
+                ]}
+                pathOptions={{
+                  color: link.color,
+                  weight: link.width,
+                  opacity: 0.6,
+                  className: "power-line-flow",
+                }}
+              />
+            ))}
+
+            {/* Substations (Nodes) */}
+            {powerGridNodes.map((node: any) => (
+              <CircleMarker
+                key={`ss-${node.id}`}
+                center={[node.lat, node.lng]}
+                radius={6}
+                pathOptions={{
+                  color: "#FFFFFF",
+                  fillColor: "#F59E0B",
+                  fillOpacity: 1,
+                  weight: 2,
+                  className: "power-node-pulse",
+                }}
+              >
+                <Tooltip
+                  direction="top"
+                  offset={[0, -8]}
+                  className="custom-popup"
+                >
+                  <div style={{ fontWeight: 700 }}>{node.name}</div>
+                  <div style={{ fontSize: "0.7rem" }}>{node.kv} · {node.capacity} MVA</div>
+                </Tooltip>
+                <Popup className="custom-popup">
+                  <div style={{ minWidth: "200px", padding: "8px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+                      <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#F59E0B" }} />
+                      <span style={{ fontWeight: 700 }}>{node.name} Substation</span>
+                    </div>
+                    <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
+                      <p><strong>Circle:</strong> {node.circle}</p>
+                      <p><strong>Voltage:</strong> {node.kv}</p>
+                      <p><strong>Capacity:</strong> {node.capacity} MVA</p>
+                      <p><strong>Loading:</strong> {node.loading}</p>
+                    </div>
+                  </div>
+                </Popup>
+              </CircleMarker>
+            ))}
+          </Fragment>
+        )}
 
         {/* River mouth pollution channels */}
         {showFloodChannels &&
@@ -1911,6 +2351,18 @@ export default function MapView({
               <span className={styles.checkmark}></span>
               <span className={styles.label}>Flood Sensor Zones</span>
             </label>
+            <label
+              className={styles.layerToggle}
+              style={{ marginTop: 4, marginBottom: 0 }}
+            >
+              <input
+                type="checkbox"
+                checked={show3DTwin}
+                onChange={(e) => setShow3DTwin(e.target.checked)}
+              />
+              <span className={styles.checkmark}></span>
+              <span className={styles.label}>3D Digital Twin</span>
+            </label>
             <div style={{ marginTop: 8, marginBottom: 2 }}>
               <label
                 htmlFor="rain-scenario"
@@ -1996,6 +2448,68 @@ export default function MapView({
               />
               <span className={styles.checkmark}></span>
               <span className={styles.label}>Show All Fleet Paths</span>
+            </label>
+            <label
+              className={styles.layerToggle}
+              style={{ marginTop: 4, marginBottom: 0 }}
+            >
+              <input
+                type="checkbox"
+                checked={showWaterBasins}
+                onChange={(e) => setShowWaterBasins(e.target.checked)}
+              />
+              <span className={styles.checkmark}></span>
+              <span className={styles.label}>Water Basins & Wetlands</span>
+            </label>
+            <label
+              className={styles.layerToggle}
+              style={{ marginTop: 4, marginBottom: 0 }}
+            >
+              <input
+                type="checkbox"
+                checked={showIrrigationChannels}
+                onChange={(e) => setShowIrrigationChannels(e.target.checked)}
+              />
+              <span className={styles.checkmark}></span>
+              <span className={styles.label}>Irrigation & Drainage</span>
+            </label>
+            <label
+              className={styles.layerToggle}
+              style={{ marginTop: 4, marginBottom: 0 }}
+            >
+              <input
+                type="checkbox"
+                checked={showSewageLines}
+                onChange={(e) => setShowSewageLines(e.target.checked)}
+              />
+              <span className={styles.checkmark}></span>
+              <span className={styles.label}>Sewage Lines (Spider Web)</span>
+            </label>
+            <label
+              className={styles.layerToggle}
+              style={{ marginTop: 4, marginBottom: 0 }}
+            >
+              <input
+                type="checkbox"
+                checked={showPowerGrid}
+                onChange={(e) => setShowPowerGrid(e.target.checked)}
+              />
+              <span className={styles.checkmark}></span>
+              <span className={styles.label}>Power Grid (Spider Web)</span>
+            </label>
+            <label
+              className={styles.layerToggle}
+              style={{ marginTop: 4, marginBottom: 0 }}
+            >
+              <input
+                type="checkbox"
+                checked={showSafeZones}
+                onChange={(e) => setShowSafeZones(e.target.checked)}
+              />
+              <span className={styles.checkmark}></span>
+              <span className={styles.label} style={{ color: showSafeZones ? "#EF4444" : undefined }}>
+                {showSafeZones ? "🚨" : ""} Safe Zone Simulator
+              </span>
             </label>
             <label className={styles.layerToggle} style={{ marginTop: 4 }}>
               <input
@@ -2127,6 +2641,66 @@ export default function MapView({
               }}
             >
               System updates every 5s • Processing 9 nodes.
+            </div>
+          </div>
+
+          {/* Power Grid Legend */}
+          <div style={{ marginTop: 16, borderTop: "1px solid rgba(0,0,0,0.05)", paddingTop: "12px" }}>
+            <p
+              style={{
+                margin: "0 0 10px 0",
+                fontSize: "0.75rem",
+                fontWeight: 800,
+                color: "#64748b",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
+              Power Grid
+            </p>
+            <div className={styles.legendItem}>
+              <span
+                className={styles.legendIndicator}
+                style={{ color: "#F59E0B" }}
+              />
+              Substation Node
+            </div>
+            <div className={styles.legendItem}>
+              <span
+                className={styles.legendIndicator}
+                style={{ color: "#FCD34D", borderRadius: "1px", height: "2px", width: "12px" }}
+              />
+              Power Flow Line
+            </div>
+          </div>
+
+          {/* Sewage Grid Legend */}
+          <div style={{ marginTop: 16, borderTop: "1px solid rgba(0,0,0,0.05)", paddingTop: "12px" }}>
+            <p
+              style={{
+                margin: "0 0 10px 0",
+                fontSize: "0.75rem",
+                fontWeight: 800,
+                color: "#64748b",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
+              Sewage Grid
+            </p>
+            <div className={styles.legendItem}>
+              <span
+                className={styles.legendIndicator}
+                style={{ color: "#22D3EE" }}
+              />
+              Drain/Node
+            </div>
+            <div className={styles.legendItem}>
+              <span
+                className={styles.legendIndicator}
+                style={{ color: "#0891B2", borderRadius: "1px", height: "2px", width: "12px" }}
+              />
+              Drainage Flow
             </div>
           </div>
 
