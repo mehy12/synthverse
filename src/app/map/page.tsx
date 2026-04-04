@@ -2,11 +2,9 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Suspense, useEffect, useState } from "react";
-import { FiCamera, FiTrendingUp, FiMaximize2, FiMinimize2 } from "react-icons/fi";
+import { Suspense, useState } from "react";
+import { Activity } from "lucide-react";
 
-// Dynamically import the map component with SSR disabled
-// as Mapbox/Leaflet depends on window/browser APIs
 const MapView = dynamic(() => import("@/components/map/MapView"), {
   ssr: false,
   loading: () => (
@@ -29,7 +27,7 @@ const MapView = dynamic(() => import("@/components/map/MapView"), {
         }}
         className="animate-pulse"
       >
-        Initializing Live Map Engine...
+        Initializing Command Center...
       </span>
     </div>
   ),
@@ -53,304 +51,163 @@ export default function MapPage() {
     liveUpdatedAt: string;
   } | null>(null);
 
-  const [isMobile, setIsMobile] = useState(false);
-  const [isSummaryCollapsed, setIsSummaryCollapsed] = useState(false);
-  const [isFeedCollapsed, setIsFeedCollapsed] = useState(false);
-
-  useEffect(() => {
-    const update = () => {
-      if (typeof window === "undefined") return;
-      setIsMobile(window.innerWidth <= 768);
-    };
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
 
   return (
-    <div style={{ height: "calc(100vh - var(--nav-height))", position: "relative" }}>
-      <Suspense fallback={<div>Loading Map...</div>}>
-        <MapView refreshKey={refreshKey} onSummaryChange={setSummary} />
-      </Suspense>
-
-      {/* Top overlays: context card + live feed card */}
-      <div
-        style={{
-          position: "absolute",
-          top: isMobile ? 12 : 18,
-          left: isMobile ? "50%" : 24,
-          transform: isMobile ? "translateX(-50%)" : undefined,
-          zIndex: 1200,
-          display: "flex",
-          flexDirection: "column",
-          gap: isMobile ? 10 : 12,
-          alignItems: "flex-start",
-          maxWidth: isMobile ? "calc(100vw - 24px)" : 440,
-          width: isMobile ? "calc(100vw - 24px)" : undefined,
-        }}
-      >
-        {/* Context + primary actions card */}
-        <div
-          style={{
-            width: "100%",
-            padding: isMobile ? "12px 14px" : "14px 18px",
-            borderRadius: isMobile ? "18px" : "14px",
-            background: isMobile ? "rgba(255, 255, 255, 0.88)" : "rgba(255, 255, 255, 0.9)",
-            backdropFilter: isMobile ? "blur(18px)" : "blur(14px)",
-            border: "1px solid var(--border-strong)",
-            color: "var(--text-primary)",
-            boxShadow: isMobile ? "0 18px 45px rgba(15,23,42,0.32)" : "0 16px 40px rgba(15,23,42,0.18)",
-            transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-            overflow: "hidden",
-          }}
-        >
-          <div 
-            style={{ 
-              display: "flex", 
-              justifyContent: "space-between", 
-              gap: 16, 
-              alignItems: "center", 
-              cursor: isMobile ? "default" : "pointer", 
-              userSelect: "none" 
-            }}
-            onClick={() => !isMobile && setIsSummaryCollapsed(!isSummaryCollapsed)}
-          >
-            <div
-              style={{
-                fontSize: "0.7rem",
-                textTransform: "uppercase",
-                letterSpacing: "0.14em",
-                color: "var(--text-secondary)",
-              }}
-            >
-              Live Surface • Kochi Coast
-            </div>
-            {!isMobile && (
-              <div style={{ color: "var(--text-secondary)", opacity: 0.6 }}>
-                {isSummaryCollapsed ? <FiMaximize2 /> : <FiMinimize2 />}
-              </div>
-            )}
+    <div style={{ height: "calc(100vh - var(--nav-height))", position: "relative", display: "flex" }}>
+      {/* ── Left Panel ─────────────────────────────────────── */}
+      <div style={{
+        width: 400,
+        minWidth: 400,
+        height: "100%",
+        background: "var(--white)",
+        borderRight: "1px solid var(--border)",
+        overflowY: "auto",
+        display: "flex",
+        flexDirection: "column",
+        zIndex: 1200,
+      }}>
+        {/* Top context section */}
+        <div style={{ padding: "20px", borderBottom: "1px solid var(--border)" }}>
+          <div style={{
+            fontSize: "0.65rem",
+            textTransform: "uppercase",
+            letterSpacing: "0.12em",
+            color: "var(--text-muted)",
+            fontWeight: 700,
+            marginBottom: "12px",
+          }}>
+            COMMAND CENTER
           </div>
 
-          <div style={{ 
-            maxHeight: isSummaryCollapsed && !isMobile ? "0px" : "1000px", 
-            opacity: isSummaryCollapsed && !isMobile ? 0 : 1,
-            transition: "all 0.4s cubic-bezier(0.83, 0, 0.17, 1)",
-            marginTop: isSummaryCollapsed && !isMobile ? 0 : 14
+          <div style={{ marginBottom: "12px" }}>
+            <span className="badge badge-teal" style={{ marginRight: 6 }}>📍 Kochi Metro</span>
+          </div>
+
+          <h2 style={{ fontSize: "1.1rem", margin: 0, fontWeight: 700, color: "var(--text-heading)", marginBottom: "8px" }}>
+            FloodMind Urban Intelligence
+          </h2>
+          <p style={{
+            margin: 0,
+            fontSize: "0.82rem",
+            color: "var(--text-secondary)",
+            lineHeight: 1.5,
           }}>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: "flex-start" }}>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <h1 style={{ fontSize: "1.05rem", margin: 0, fontWeight: 600 }}>OceanSentinel Marine Intelligence</h1>
-                <p
-                  style={{
-                    margin: "6px 0 0 0",
-                    fontSize: "0.8rem",
-                    color: "var(--text-secondary)",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  River mouth risk, live fishing zones, and citizen anomaly reports streamed into a single operational view.
-                </p>
-              </div>
+            Flood sensor data, evacuation zones, and citizen anomaly reports in a single operational view.
+          </p>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 8, minWidth: 150 }}>
-                <Link
-                  href="/report"
-                  className="btn btn-primary btn-sm"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 6,
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  🛡 File Report
-                </Link>
-                <Link
-                  href="/detect"
-                  className="btn btn-secondary btn-sm"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 6,
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <FiCamera /> AI Scan
-                </Link>
-              </div>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                gap: 8,
-                marginTop: 10,
-                flexWrap: "wrap",
-                fontSize: "0.72rem",
-              }}
+          <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
+            <Link href="/analytics" className="btn btn-primary btn-sm" style={{ flex: 1, justifyContent: "center" }}>
+              <Activity size={14} strokeWidth={1.5} /> Trigger Simulation
+            </Link>
+            <button
+              type="button"
+              className="btn btn-teal btn-sm"
+              onClick={() => setRefreshKey((v) => v + 1)}
+              style={{ flex: 1, justifyContent: "center" }}
             >
-              <button
-                type="button"
-                className="btn btn-primary btn-sm"
-                onClick={() => setRefreshKey((value) => value + 1)}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 6,
-                  whiteSpace: "nowrap",
-                  minWidth: 120,
-                }}
-              >
-                Scan Water
-              </button>
-              <span
-                style={{
-                  padding: "4px 9px",
-                  borderRadius: 999,
-                  background: "rgba(245, 158, 11, 0.08)",
-                  border: "1px solid rgba(245, 158, 11, 0.5)",
-                  color: "var(--amber)",
-                  fontFamily: "var(--font-mono)",
-                }}
-              >
-                Fishing Zones: 5
-              </span>
-              <span
-                style={{
-                  padding: "4px 9px",
-                  borderRadius: 999,
-                  background: "rgba(59, 130, 246, 0.08)",
-                  border: "1px solid rgba(59, 130, 246, 0.5)",
-                  color: "var(--blue)",
-                  fontFamily: "var(--font-mono)",
-                }}
-              >
-                Citizen Reports: Live
-              </span>
-            </div>
+              Scan Flood Zone
+            </button>
+          </div>
+
+          <div style={{
+            display: "flex",
+            gap: 6,
+            marginTop: 12,
+            flexWrap: "wrap",
+          }}>
+            <span style={{
+              padding: "4px 10px",
+              borderRadius: "var(--radius-full)",
+              background: "var(--teal-50)",
+              color: "var(--teal-700)",
+              fontSize: "0.7rem",
+              fontWeight: 600,
+            }}>
+              Evacuation Zones: 5
+            </span>
+            <span style={{
+              padding: "4px 10px",
+              borderRadius: "var(--radius-full)",
+              background: "var(--teal-50)",
+              color: "var(--teal-700)",
+              fontSize: "0.7rem",
+              fontWeight: 600,
+            }}>
+              Sensor Reports: Live
+            </span>
           </div>
         </div>
 
-        {/* Live feed card just below */}
-        <div
-          style={{
-            width: "100%",
-            padding: isMobile ? "10px 14px" : "12px 16px",
-            borderRadius: isMobile ? "18px" : "14px",
-            background: isMobile ? "rgba(255, 255, 255, 0.9)" : "rgba(255, 255, 255, 0.96)",
-            backdropFilter: isMobile ? "blur(18px)" : "blur(14px)",
-            border: "1px solid var(--border-strong)",
-            color: "var(--text-primary)",
-            boxShadow: isMobile ? "0 18px 45px rgba(15,23,42,0.32)" : "0 16px 40px rgba(15,23,42,0.18)",
-            transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-            overflow: "hidden",
-          }}
-        >
-          <div 
-            style={{ 
-              display: "flex", 
-              justifyContent: "space-between", 
-              gap: 10, 
-              alignItems: "center", 
-              cursor: isMobile ? "default" : "pointer", 
-              userSelect: "none" 
-            }}
-            onClick={() => !isMobile && setIsFeedCollapsed(!isFeedCollapsed)}
-          >
-            <div
-              style={{
-                fontSize: "0.72rem",
-                textTransform: "uppercase",
-                letterSpacing: "0.12em",
-                color: "var(--text-secondary)",
-              }}
-            >
-              Live Feed
-            </div>
-            {!isMobile && (
-              <div style={{ color: "var(--text-secondary)", opacity: 0.6 }}>
-                {isFeedCollapsed ? <FiMaximize2 /> : <FiMinimize2 />}
-              </div>
-            )}
-          </div>
-          
-          <div style={{ 
-            maxHeight: isFeedCollapsed && !isMobile ? "0px" : "500px", 
-            opacity: isFeedCollapsed && !isMobile ? 0 : 1,
-            transition: "all 0.4s cubic-bezier(0.83, 0, 0.17, 1)",
-            marginTop: isFeedCollapsed && !isMobile ? 0 : 12
+        {/* Live Feed section */}
+        <div style={{ padding: "16px 20px", flex: 1 }}>
+          <div style={{
+            fontSize: "0.65rem",
+            textTransform: "uppercase",
+            letterSpacing: "0.12em",
+            color: "var(--text-muted)",
+            fontWeight: 700,
+            marginBottom: "12px",
           }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, maxHeight: isMobile ? 180 : 250, overflowY: "auto" }}>
-              {(summary?.feedItems || []).map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => window.dispatchEvent(new CustomEvent("neptune:focus-feed", { detail: item }))}
-                  style={{
-                    width: "100%",
-                    textAlign: "left",
-                    padding: "10px 12px",
-                    borderRadius: 12,
-                    background: "rgba(255,255,255,0.9)",
-                    border: "1px solid var(--border-subtle)",
-                    color: "var(--text-primary)",
-                    boxShadow: "0 8px 20px rgba(15,23,42,0.08)",
-                    cursor: "pointer",
-                  }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
-                    <strong style={{ fontSize: "0.86rem" }}>{item.title}</strong>
-                    <span style={{ fontSize: "0.68rem", color: "var(--text-secondary)", whiteSpace: "nowrap" }}>{item.meta}</span>
-                  </div>
-                  <div style={{ marginTop: 4, fontSize: "0.78rem", color: "var(--text-secondary)", lineHeight: 1.45 }}>
-                    {item.detail}
-                  </div>
-                  <div style={{ marginTop: 6, fontSize: "0.72rem", color: "var(--teal)", fontWeight: 600 }}>
-                    Click to learn more
-                  </div>
-                </button>
-              ))}
-            </div>
+            LIVE FEED
           </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {(summary?.feedItems || []).map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => window.dispatchEvent(new CustomEvent("neptune:focus-feed", { detail: item }))}
+                style={{
+                  width: "100%",
+                  textAlign: "left",
+                  padding: "12px 14px",
+                  borderRadius: "var(--radius-xl)",
+                  background: "var(--white)",
+                  border: "1px solid var(--border)",
+                  color: "var(--text-primary)",
+                  cursor: "pointer",
+                  transition: "border-color 0.2s",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
+                  <strong style={{ fontSize: "0.84rem", color: "var(--text-heading)" }}>{item.title}</strong>
+                  <span style={{ fontSize: "0.68rem", color: "var(--text-muted)", whiteSpace: "nowrap" }}>{item.meta}</span>
+                </div>
+                <div style={{ marginTop: 4, fontSize: "0.78rem", color: "var(--text-secondary)", lineHeight: 1.45 }}>
+                  {item.detail}
+                </div>
+                <div style={{ marginTop: 6, fontSize: "0.72rem", color: "var(--teal)", fontWeight: 600 }}>
+                  Click to learn more
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom status */}
+        <div style={{
+          padding: "12px 20px",
+          borderTop: "1px solid var(--border)",
+          fontSize: "0.68rem",
+          color: "var(--text-muted)",
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+        }}>
+          <span style={{
+            width: 6,
+            height: 6,
+            borderRadius: "var(--radius-full)",
+            background: "var(--safe)",
+          }} />
+          <span>Flood sensor feed • refreshing every 5 minutes • {summary?.source ?? "API status: Healthy"}</span>
         </div>
       </div>
 
-      {/* Bottom status strip */}
-      <div
-        style={{
-          position: "absolute",
-          left: "50%",
-          bottom: 10,
-          transform: "translateX(-50%)",
-          zIndex: 1100,
-          padding: "6px 14px",
-          borderRadius: 999,
-          background: "rgba(255,255,255,0.92)",
-          color: "var(--text-primary)",
-          fontSize: "0.72rem",
-          display: "flex",
-          gap: 12,
-          alignItems: "center",
-          boxShadow: "0 10px 25px rgba(15,23,42,0.18)",
-          border: "1px solid var(--border-strong)",
-          backdropFilter: "blur(10px)",
-        }}
-      >
-        <span style={{ opacity: 0.85 }}>Open‑Meteo marine feed • refreshing every 5 minutes</span>
-        <span
-          style={{
-            width: 6,
-            height: 6,
-            borderRadius: 999,
-            background: "#22c55e",
-            boxShadow: "0 0 0 4px rgba(34,197,94,0.35)",
-          }}
-        />
-        <span style={{ opacity: 0.78 }}>{summary?.source ?? "API status: Healthy"}</span>
+      {/* ── Center Map ─────────────────────────────────────── */}
+      <div style={{ flex: 1, position: "relative" }}>
+        <Suspense fallback={<div>Loading Map...</div>}>
+          <MapView refreshKey={refreshKey} onSummaryChange={setSummary} />
+        </Suspense>
       </div>
     </div>
   );

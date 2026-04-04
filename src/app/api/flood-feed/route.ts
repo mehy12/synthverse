@@ -3,33 +3,33 @@ import currentVectors from "@/data/current-vectors.json";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const FISHING_ZONES = [
-  { name: "Chellanam Coast", lat: 9.81, lng: 76.27, waterQuality: 45 },
-  { name: "Fort Kochi", lat: 9.965, lng: 76.2415, waterQuality: 72 },
-  { name: "Munambam", lat: 10.16, lng: 76.18, waterQuality: 58 },
-  { name: "Vypeen Island", lat: 10.03, lng: 76.23, waterQuality: 68 },
-  { name: "Puthuvype", lat: 10.01, lng: 76.22, waterQuality: 52 },
+const EVACUATION_ZONES = [
+  { name: "Chellanam Coast", lat: 9.81, lng: 76.27, floodReadiness: 45 },
+  { name: "Fort Kochi", lat: 9.965, lng: 76.2415, floodReadiness: 72 },
+  { name: "Munambam", lat: 10.16, lng: 76.18, floodReadiness: 58 },
+  { name: "Vypeen Island", lat: 10.03, lng: 76.23, floodReadiness: 68 },
+  { name: "Puthuvype", lat: 10.01, lng: 76.22, floodReadiness: 52 },
 ];
 
-function scoreFromCurrentVelocity(baseQuality: number, currentVelocity: number): number {
-  const penalty = Math.round(currentVelocity * 18);
-  return Math.max(20, Math.min(100, baseQuality + 10 - penalty));
+function scoreFromWaterFlow(baseReadiness: number, flowVelocity: number): number {
+  const penalty = Math.round(flowVelocity * 18);
+  return Math.max(20, Math.min(100, baseReadiness + 10 - penalty));
 }
 
 function labelFromScore(score: number): string {
-  if (score >= 70) return "Good";
-  if (score >= 50) return "Moderate";
-  return "Poor";
+  if (score >= 70) return "Safe";
+  if (score >= 50) return "Warning";
+  return "Critical";
 }
 
 function fallbackZones() {
-  return FISHING_ZONES.map((zone) => ({
+  return EVACUATION_ZONES.map((zone) => ({
     ...zone,
     currentVelocity: 0,
     currentDirection: 0,
     liveUpdatedAt: currentVectors.metadata.date,
-    qualityScore: zone.waterQuality,
-    qualityLabel: labelFromScore(zone.waterQuality),
+    qualityScore: zone.floodReadiness,
+    qualityLabel: labelFromScore(zone.floodReadiness),
     source: "Cached baseline",
   }));
 }
@@ -37,7 +37,7 @@ function fallbackZones() {
 export async function GET() {
   try {
     const zones = await Promise.all(
-      FISHING_ZONES.map(async (zone) => {
+      EVACUATION_ZONES.map(async (zone) => {
         const url = new URL("https://marine-api.open-meteo.com/v1/marine");
         url.searchParams.set("latitude", String(zone.lat));
         url.searchParams.set("longitude", String(zone.lng));
@@ -55,7 +55,7 @@ export async function GET() {
         const current = payload.current ?? {};
         const currentVelocity = Number(current.ocean_current_velocity ?? 0);
         const currentDirection = Number(current.ocean_current_direction ?? 0);
-        const qualityScore = scoreFromCurrentVelocity(zone.waterQuality, currentVelocity);
+        const qualityScore = scoreFromWaterFlow(zone.floodReadiness, currentVelocity);
 
         return {
           ...zone,

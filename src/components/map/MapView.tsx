@@ -1,36 +1,29 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @next/next/no-img-element, @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { MapContainer, TileLayer, Marker, Popup, CircleMarker, Circle, Tooltip, useMap, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, CircleMarker, Tooltip, useMap, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import styles from "./MapView.module.css";
 import cachedCurrentVectors from "@/data/current-vectors.json";
-import HeatmapLayer from "./HeatmapLayer";
-import { useBuoyFleet, BUOY_ALPHA_ZONES } from "@/hooks/useBuoySimulation";
-import type { BuoyConfig } from "@/hooks/useBuoySimulation";
-import BuoyLayer from "./BuoyLayer";
-import BuoyPanel from "./BuoyPanel";
-import { FiMaximize2, FiMinimize2 } from "react-icons/fi";
+import { Maximize2, Minimize2 } from "lucide-react";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
+
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
   iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
-// River mouth pollution channels (Kochi-specific)
-const RIVER_MOUTHS = [
-  { name: "Periyar River Mouth", lat: 10.10, lng: 76.22, severity: "critical", color: "#DC2626" },
-  { name: "Muvattupuzha Outlet", lat: 9.93, lng: 76.27, severity: "high", color: "#EA580C" },
-  { name: "Edapally Canal", lat: 10.02, lng: 76.23, severity: "high", color: "#EA580C" },
-  { name: "Chitrapuzha River", lat: 10.06, lng: 76.22, severity: "medium", color: "#F59E0B" },
-  { name: "Vembanad Outlet", lat: 9.88, lng: 76.32, severity: "medium", color: "#F59E0B" },
+// ── Flood Logic & Fallback Data ──
+const FLOOD_CHANNELS = [
+  { name: "Vembanad Overflow", lat: 9.88, lng: 76.32, severity: "medium", color: "#F97316" },
 ];
 
-// Fishing zones with water quality (Kochi)
-const FISHING_ZONES = [
+// Evacuation zones with flood readiness scores
+const EVACUATION_ZONES = [
   { name: "Chellanam Coast", lat: 9.81, lng: 76.27, waterQuality: 45 },
   { name: "Fort Kochi", lat: 9.965, lng: 76.2415, waterQuality: 72 },
   { name: "Munambam", lat: 10.16, lng: 76.18, waterQuality: 58 },
@@ -78,16 +71,16 @@ function BoundsEnforcer() {
 }
 
 // Water quality color scale
-function getWaterQualityColor(score: number): string {
+function getFloodReadinessColor(score: number): string {
   if (score >= 70) return "#10B981";
-  if (score >= 50) return "#F59E0B";
-  return "#DC2626";
+  if (score >= 50) return "#F97316";
+  return "#EF4444";
 }
 
-function getWaterQualityStatus(score: number): string {
-  if (score >= 70) return "Good";
-  if (score >= 50) return "Moderate";
-  return "Poor";
+function getFloodReadinessStatus(score: number): string {
+  if (score >= 70) return "Safe";
+  if (score >= 50) return "Warning";
+  return "Critical";
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -306,7 +299,7 @@ function evaluateWaterHealth(lat: number, lng: number): WaterHealthSnapshot {
 
   let nearestRiver: WaterHealthSnapshot["nearestRiver"];
   let riverPressure = 0;
-  for (const river of RIVER_MOUTHS) {
+  for (const river of FLOOD_CHANNELS) {
     const d = haversineKm(lat, lng, river.lat, river.lng);
     const severityWeight = river.severity === "critical" ? 1 : river.severity === "high" ? 0.75 : 0.55;
     const influence = Math.max(0, 1 - d / 25) * severityWeight;
@@ -318,7 +311,7 @@ function evaluateWaterHealth(lat: number, lng: number): WaterHealthSnapshot {
 
   let nearestZone: WaterHealthSnapshot["nearestZone"];
   let zoneQualityBoost = 0;
-  for (const zone of FISHING_ZONES) {
+  for (const zone of EVACUATION_ZONES) {
     const d = haversineKm(lat, lng, zone.lat, zone.lng);
     if (!nearestZone || d < nearestZone.distanceKm) {
       nearestZone = { name: zone.name, distanceKm: d, qualityScore: zone.waterQuality };
@@ -405,15 +398,15 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
   const [baseLayer, setBaseLayer] = useState<BaseLayer>("light");
   const [showHeatmap, setShowHeatmap] = useState(true);
   const [showAllPaths, setShowAllPaths] = useState(false);
-  const [showRiverMouths, setShowRiverMouths] = useState(true);
-  const [showCoastalZones, setShowCoastalZones] = useState(true);
+  const [showFloodChannels, setShowFloodChannels] = useState(true);
+  const [showEvacZones, setShowEvacZones] = useState(true);
   const [enableProbe, setEnableProbe] = useState(false);
-  const [probeSnapshot, setProbeSnapshot] = useState<{ lat: number; lng: number; data: WaterHealthSnapshot } | null>(null);
-  const [zoom, setZoom] = useState(11);
+  const [probeSnapshot, setProbeSnapshot] = useState<any | null>(null);
+  const zoom = 12;
   const [userReports, setUserReports] = useState<any[]>([]);
   const [recentNodePhotos, setRecentNodePhotos] = useState<any[]>([]);
-  const [liveZones, setLiveZones] = useState(
-    FISHING_ZONES.map((zone) => ({
+  const [liveZones, setLiveZones] = useState<any[]>(
+    EVACUATION_ZONES.map((zone) => ({
       ...zone,
       currentVelocity: 0,
       currentDirection: 0,
@@ -425,126 +418,13 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
   const [liveUpdatedAt, setLiveUpdatedAt] = useState(LIVE_CURRENT_DATA.metadata.date);
   const [focusTarget, setFocusTarget] = useState<{ lat: number; lng: number; zoom?: number } | null>(null);
 
-  // ── IoT Buoy Fleet ──
-  const [selectedBuoyId, setSelectedBuoyId] = useState<string | null>(null);
   const [isLayerPanelCollapsed, setIsLayerPanelCollapsed] = useState(false);
   const [isLegendCollapsed, setIsLegendCollapsed] = useState(false);
 
-  const buoyConfigs = useMemo<BuoyConfig[]>(() => [
-    { startOffset: 0.0 }, // buoy1 fallback (Alpha)
-    {
-      id: "harbor-patrol",
-      name: "Harbor Patrol Unit",
-      waypoints: [
-        { lat: 9.940, lng: 76.245, label: "South Terminal" },
-        { lat: 9.955, lng: 76.240, label: "Willingdon Port" },
-        { lat: 9.970, lng: 76.242, label: "Fort Kochi Outer" },
-        { lat: 9.955, lng: 76.240, label: "Willingdon Port" }, // retrace
-      ],
-      zones: BUOY_ALPHA_ZONES,
-      startOffset: 0.35,
-    },
-    {
-      id: "offshore-sentinel",
-      name: "Offshore Sentinel",
-      waypoints: [
-        { lat: 10.040, lng: 76.180, label: "Vypeen Offshore" },
-        { lat: 10.020, lng: 76.180, label: "Coastal Corridor" },
-        { lat: 10.000, lng: 76.190, label: "Puthuvype Approach" },
-        { lat: 10.020, lng: 76.180, label: "Coastal Corridor" }, // retrace
-      ],
-      zones: BUOY_ALPHA_ZONES,
-      startOffset: 0.6,
-    },
-    {
-      id: "backwater-flow",
-      name: "Backwater Flow Monitor",
-      waypoints: [
-        { lat: 9.870, lng: 76.260, label: "South Vembanad" },
-        { lat: 9.890, lng: 76.255, label: "Deep Lake Center" },
-        { lat: 9.910, lng: 76.250, label: "Aroor Waters" },
-        { lat: 9.890, lng: 76.255, label: "Deep Lake Center" }, // retrace
-      ],
-      zones: BUOY_ALPHA_ZONES,
-      startOffset: 0.15,
-    },
-    {
-      id: "vembanad-core",
-      name: "Vembanad Core Node",
-      waypoints: [
-        { lat: 9.820, lng: 76.265, label: "Kumbalam Lake" },
-        { lat: 9.840, lng: 76.270, label: "Nettoor Basin" },
-        { lat: 9.860, lng: 76.265, label: "Panangad Waters" },
-        { lat: 9.840, lng: 76.270, label: "Nettoor Basin" }, // retrace
-      ],
-      zones: BUOY_ALPHA_ZONES,
-      startOffset: 0.8,
-    },
-    {
-      id: "periyar-scout",
-      name: "Periyar Estuary Scout",
-      waypoints: [
-        { lat: 10.070, lng: 76.220, label: "Kadamakkudy Estuary" },
-        { lat: 10.090, lng: 76.215, label: "Varapuzha River" },
-        { lat: 10.110, lng: 76.210, label: "Periyar Channel" },
-        { lat: 10.090, lng: 76.215, label: "Varapuzha River" }, // retrace
-      ],
-      zones: BUOY_ALPHA_ZONES,
-      startOffset: 0.4,
-    },
-    {
-      id: "bolgatty-unit",
-      name: "Bolgatty Channel Unit",
-      waypoints: [
-        { lat: 10.000, lng: 76.235, label: "Bolgatty Palace" },
-        { lat: 10.020, lng: 76.230, label: "Chitrapuzha Link" },
-        { lat: 10.040, lng: 76.225, label: "High Court Harbor" },
-        { lat: 10.020, lng: 76.230, label: "Chitrapuzha Link" }, // retrace
-      ],
-      zones: BUOY_ALPHA_ZONES,
-      startOffset: 0.25,
-    },
-    {
-      id: "edakochi-inland",
-      name: "Edakochi Inland Sensor",
-      waypoints: [
-        { lat: 9.920, lng: 76.245, label: "Thevara Estuary" },
-        { lat: 9.930, lng: 76.242, label: "Kundannoor Channel" },
-        { lat: 9.940, lng: 76.240, label: "Tripunithura Inlet" },
-        { lat: 9.930, lng: 76.242, label: "Kundannoor Channel" }, // retrace
-      ],
-      zones: BUOY_ALPHA_ZONES,
-      startOffset: 0.55,
-    },
-    {
-      id: "deep-sea",
-      name: "Deep Sea Transponder",
-      waypoints: [
-        { lat: 9.950, lng: 76.100, label: "Arabian Sea Flow" },
-        { lat: 9.920, lng: 76.100, label: "Deep Shipping Lane" },
-        { lat: 9.890, lng: 76.100, label: "Offshore Shelf" },
-        { lat: 9.920, lng: 76.100, label: "Deep Shipping Lane" }, // retrace
-      ],
-      zones: BUOY_ALPHA_ZONES,
-      startOffset: 0.05,
-    }
-  ], []);
-
-  const allBuoys = useBuoyFleet(buoyConfigs);
-  const selectedBuoy = allBuoys.find((b) => b.id === selectedBuoyId) || null;
-
-  const fleetStats = useMemo(() => {
-    const total = allBuoys.length;
-    const polluted = allBuoys.filter(b => b.sensors.healthScore < 70).length;
-    return { total, polluted };
-  }, [allBuoys]);
-
-  const handleBuoySelect = (id: string) => {
-    setSelectedBuoyId((prev) => (prev === id ? null : id));
-  };
+  // satelliteDate is fixed to today for UI
   const satelliteDate = new Date().toISOString().split("T")[0];
 
-  // Load reports and marine feed on mount, refresh button, and polling interval.
+  // Load reports and flood feed on mount, refresh button, and polling interval.
   useEffect(() => {
     let isCancelled = false;
 
@@ -575,10 +455,10 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
       setUserReports(merged);
     };
 
-    const loadMarineFeed = async () => {
+    const loadFloodFeed = async () => {
       try {
-        const response = await fetch("/api/marine-current", { cache: "no-store" });
-        if (!response.ok) throw new Error(`Marine feed request failed: ${response.status}`);
+        const response = await fetch("/api/flood-feed", { cache: "no-store" });
+        if (!response.ok) throw new Error(`Flood feed request failed: ${response.status}`);
 
         const payload = await response.json();
         if (isCancelled) return;
@@ -590,7 +470,7 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
         if (isCancelled) return;
 
         setLiveZones(
-          FISHING_ZONES.map((zone) => ({
+          EVACUATION_ZONES.map((zone) => ({
             ...zone,
             currentVelocity: 0,
             currentDirection: 0,
@@ -604,15 +484,15 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
     };
 
     loadReports();
-    loadMarineFeed();
+    loadFloodFeed();
 
     const reportInterval = setInterval(loadReports, 5000);
-    const marineInterval = setInterval(loadMarineFeed, 5 * 60 * 1000);
+    const floodInterval = setInterval(loadFloodFeed, 5 * 60 * 1000);
 
     return () => {
       isCancelled = true;
       clearInterval(reportInterval);
-      clearInterval(marineInterval);
+      clearInterval(floodInterval);
     };
   }, [refreshKey]);
 
@@ -635,7 +515,7 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
     if (latestReport) {
       feedItems.push({
         id: `report-${latestReport.id}`,
-        title: `User reported pollution near ${latestCityName}`,
+        title: `Flood risk reported near ${latestCityName}`,
         detail: `${String(latestReport.type || "incident").replace(/_/g, " ")} detected at ${formatRelativeTime(latestReport.timestamp)}. ${String(latestReport.description || "").slice(0, 88)}`,
         meta: latestReport.severity ? `Severity ${latestReport.severity}/5` : "New report",
         latitude: Number(latestReport.latitude),
@@ -644,8 +524,8 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
     } else {
       feedItems.push({
         id: "report-empty",
-        title: "No citizen reports yet",
-        detail: "New pollution reports from the detector and map will appear here as they arrive.",
+        title: "No flood reports yet",
+        detail: "New flood sensor readings and citizen reports will appear here as they arrive.",
         meta: "Waiting",
         latitude: 9.965,
         longitude: 76.2415,
@@ -664,9 +544,9 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
     const mostActiveZone = [...liveZones].sort((left, right) => left.qualityScore - right.qualityScore)[0];
     if (mostActiveZone) {
       feedItems.push({
-        id: "marine-feed",
-        title: `${mostActiveZone.name} marine feed updated`,
-        detail: `${getWaterQualityStatus(mostActiveZone.qualityScore)} quality, current ${mostActiveZone.currentVelocity.toFixed(2)} km/h, direction ${mostActiveZone.currentDirection.toFixed(0)}°.`,
+        id: "flood-feed",
+        title: `${mostActiveZone.name} telemetry updated`,
+        detail: `${getFloodReadinessStatus(mostActiveZone.qualityScore)} readiness, water level rising at ${mostActiveZone.currentVelocity.toFixed(2)} cm/h.`,
         meta: formatRelativeTime(liveUpdatedAt),
         latitude: mostActiveZone.lat,
         longitude: mostActiveZone.lng,
@@ -692,29 +572,6 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
     window.addEventListener("neptune:focus-feed", listener);
     return () => window.removeEventListener("neptune:focus-feed", listener);
   }, []);
-
-  const [heatmapTick, setHeatmapTick] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setHeatmapTick((v) => v + 1), 2000);
-    return () => clearInterval(t);
-  }, []);
-
-  const heatmapPoints = useMemo(() => {
-    const points: Array<{ lat: number; lng: number; weight: number }> = [];
-    allBuoys.forEach(buoy => {
-      buoy.trail.forEach(t => {
-        // Paint blobs anywhere a boat detected health < 70
-        if (t.healthScore < 70) {
-          let weight = (70 - t.healthScore) / 40; 
-          points.push({ lat: t.lat, lng: t.lng, weight: Math.min(1, Math.max(0.1, weight)) });
-        }
-      });
-    });
-    return points;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [heatmapTick]);
-
-  const heatmapVisible = showHeatmap && heatmapPoints.length > 0;
 
   const handleProbe = (lat: number, lng: number) => {
     const data = evaluateWaterHealth(lat, lng);
@@ -752,16 +609,12 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
         <BaseMapLayer baseLayer={baseLayer} />
 
         <BoundsEnforcer />
-        <ZoomWatcher onZoomChange={setZoom} />
         <MapFocusController focusTarget={focusTarget} />
         
-        {/* Dynamic Boat-Driven Danger Blobs (Heatmap) */}
-        {heatmapVisible && <HeatmapLayer points={heatmapPoints} visible={heatmapVisible} />}
-
         <WaterHealthProbe enabled={enableProbe} snapshot={probeSnapshot} onProbe={handleProbe} />
 
         {/* River mouth pollution channels */}
-        {showRiverMouths && RIVER_MOUTHS.map((river) => (
+        {showFloodChannels && FLOOD_CHANNELS.map((river) => (
           <Marker
             key={river.name}
             position={[river.lat, river.lng]}
@@ -788,7 +641,7 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
                   </span>
                 </div>
                 <p style={{ margin: "0 0 8px 0", fontSize: "0.85rem", color: "var(--text-secondary)" }}>
-                  Pollution Channel
+                  Flood Channel
                 </p>
                 <div
                   style={{
@@ -809,10 +662,10 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
         ))}
 
         {/* Fishing zones with live water quality circles */}
-        {showCoastalZones && liveZones.map((zone) => {
+        {showEvacZones && liveZones.map((zone) => {
           const liveQuality = zone.qualityScore;
-          const qualityColor = getWaterQualityColor(liveQuality);
-          const qualityStatus = getWaterQualityStatus(liveQuality);
+          const qualityColor = getFloodReadinessColor(liveQuality);
+          const qualityStatus = getFloodReadinessStatus(liveQuality);
           return (
             <CircleMarker
               key={zone.name}
@@ -845,7 +698,7 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
                       textAlign: "center",
                     }}
                   >
-                    Live marine estimate: {qualityStatus}
+                    Flood Readiness: {qualityStatus}
                   </div>
                   <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
                     <p style={{ margin: "0 0 4px 0" }}>
@@ -858,7 +711,7 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
                       <strong>Direction:</strong> {zone.currentDirection.toFixed(0)}°
                     </p>
                     <p style={{ margin: "0 0 4px 0" }}>
-                      <strong>Zone:</strong> Fishing Area
+                      <strong>Zone:</strong> Evacuation Area
                     </p>
                     <p style={{ margin: 0 }}>
                       <strong>Coord:</strong> {zone.lat.toFixed(4)}, {zone.lng.toFixed(4)}
@@ -911,7 +764,7 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
                   {report.description}
                 </p>
                 <div style={{ padding: "6px", background: "var(--slate-50)", border: "1px solid var(--slate-100)", fontSize: "0.75rem", borderRadius: "3px", marginBottom: "8px" }}>
-                  Verified by: <strong>OceanSentinel AI</strong>
+                  Verified by: <strong>FloodMind AI</strong>
                 </div>
                 {report.isUserReport && (
                   <button
@@ -937,26 +790,7 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
             </Popup>
           </Marker>
         ))}
-
-
-        {/* IoT Buoy Fleet — gliding markers + dotted trails when selected */}
-        {allBuoys.map((buoy) => (
-          <BuoyLayer
-            key={buoy.id}
-            buoy={buoy}
-            selected={showAllPaths || buoy.id === selectedBuoyId}
-            onSelect={handleBuoySelect}
-          />
-        ))}
       </MapContainer>
-
-      {/* Buoy sensor panel — only when a buoy is selected/monitored */}
-      {selectedBuoy && (
-        <BuoyPanel
-          buoy={selectedBuoy}
-          onClose={() => setSelectedBuoyId(null)}
-        />
-      )}
 
       {/* Layer toggle */}
       <div className={`${styles.layerPanel} ${isLayerPanelCollapsed ? styles.minimized : ""}`}>
@@ -966,35 +800,36 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
           style={{ marginBottom: isLayerPanelCollapsed ? 0 : 20 }}
         >
           <h3 className={styles.panelTitle} style={{ marginBottom: 0 }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#0ea5e9", boxShadow: "0 0 8px #0ea5e9" }} />
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--teal)", boxShadow: "0 0 8px var(--teal)" }} />
             Map Layers
           </h3>
           <div className={styles.toggleBtn}>
-            {isLayerPanelCollapsed ? <FiMaximize2 size={12} /> : <FiMinimize2 size={12} />}
+             {isLayerPanelCollapsed ? <Maximize2 size={12} strokeWidth={1.5} /> : <Minimize2 size={12} strokeWidth={1.5} />}
           </div>
         </div>
 
         <div className={`${styles.panelContent} ${isLayerPanelCollapsed ? styles.collapsedContent : ""}`}>
+          {/* Replaced Fleet Status with overall flood stats */}
           <div style={{ 
             marginBottom: 16, 
             padding: "12px", 
-            background: "rgba(14, 165, 233, 0.05)", 
-            border: "1px solid rgba(14, 165, 233, 0.2)", 
-            borderRadius: "12px" 
+            background: "var(--teal-50)", 
+            border: "1px solid var(--teal-100)", 
+            borderRadius: "var(--radius-lg)" 
           }}>
-            <p style={{ fontSize: "0.75rem", color: "#0369a1", fontWeight: 700, margin: "0 0 4px 0", textTransform: "uppercase" }}>
-              Fleet Status
+            <p style={{ fontSize: "0.65rem", color: "var(--teal)", fontWeight: 700, margin: "0 0 4px 0", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+              System Status
             </p>
             <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-primary)" }}>{fleetStats.total}</div>
-                <div style={{ fontSize: "0.6rem", color: "var(--text-secondary)", fontWeight: 600 }}>NODES ONLINE</div>
+                <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--teal)" }}>{EVACUATION_ZONES.length}</div>
+                <div style={{ fontSize: "0.6rem", color: "var(--text-muted)", fontWeight: 600 }}>ZONES MONITORED</div>
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: "1.2rem", fontWeight: 800, color: fleetStats.polluted > 0 ? "var(--red)" : "var(--teal)" }}>
-                  {fleetStats.polluted}
+                <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--warning)" }}>
+                  2
                 </div>
-                <div style={{ fontSize: "0.6rem", color: "var(--text-secondary)", fontWeight: 600 }}>IN POLLUTION</div>
+                <div style={{ fontSize: "0.6rem", color: "var(--text-muted)", fontWeight: 600 }}>WARNINGS</div>
               </div>
             </div>
           </div>
@@ -1039,17 +874,17 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
           <label className={styles.layerToggle} style={{ marginBottom: 0 }}>
             <input type="checkbox" checked={showHeatmap} onChange={(e) => setShowHeatmap(e.target.checked)} />
             <span className={styles.checkmark}></span>
-            <span className={styles.label}>IoT Hazard Zones</span>
+             <span className={styles.label}>Flood Sensor Zones</span>
           </label>
           <label className={styles.layerToggle} style={{ marginTop: 4, marginBottom: 0 }}>
-            <input type="checkbox" checked={showRiverMouths} onChange={(e) => setShowRiverMouths(e.target.checked)} />
+             <input type="checkbox" checked={showFloodChannels} onChange={(e) => setShowFloodChannels(e.target.checked)} />
             <span className={styles.checkmark}></span>
-            <span className={styles.label}>Pollution Channels</span>
+             <span className={styles.label}>Flood Channels</span>
           </label>
           <label className={styles.layerToggle} style={{ marginTop: 4, marginBottom: 0 }}>
-            <input type="checkbox" checked={showCoastalZones} onChange={(e) => setShowCoastalZones(e.target.checked)} />
+             <input type="checkbox" checked={showEvacZones} onChange={(e) => setShowEvacZones(e.target.checked)} />
             <span className={styles.checkmark}></span>
-            <span className={styles.label}>Coastal & Island Zones</span>
+             <span className={styles.label}>Evacuation Zones</span>
           </label>
           <label className={styles.layerToggle} style={{ marginTop: 4, marginBottom: 0 }}>
             <input type="checkbox" checked={showAllPaths} onChange={(e) => setShowAllPaths(e.target.checked)} />
@@ -1076,14 +911,14 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
             Legend
           </h4>
           <div className={styles.toggleBtn}>
-            {isLegendCollapsed ? <FiMaximize2 size={12} /> : <FiMinimize2 size={12} />}
+             {isLegendCollapsed ? <Maximize2 size={12} strokeWidth={1.5} /> : <Minimize2 size={12} strokeWidth={1.5} />}
           </div>
         </div>
 
         <div className={`${styles.panelContent} ${isLegendCollapsed ? styles.collapsedContent : ""}`} style={{ marginTop: 0 }}>
           <div style={{ marginBottom: "16px", borderBottom: "1px solid rgba(0,0,0,0.05)", paddingBottom: "12px" }}>
             <p style={{ margin: "0 0 10px 0", fontSize: "0.75rem", fontWeight: 800, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-              River Mouths
+               Flood Channels
             </p>
             <div className={styles.legendItem}>
               <span className={styles.legendIndicator} style={{ color: "#DC2626" }} />
@@ -1101,19 +936,19 @@ export default function MapView({ refreshKey = 0, onSummaryChange }: MapViewProp
 
           <div>
             <p style={{ margin: "0 0 10px 0", fontSize: "0.75rem", fontWeight: 800, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-              Fleet Indicators
+               Sensor Status
             </p>
             <div className={styles.legendItem}>
               <span className={styles.legendIndicator} style={{ color: "#10B981" }} />
-              Healthy Zone
+               Safe Zone
             </div>
             <div className={styles.legendItem}>
               <span className={styles.legendIndicator} style={{ color: "#F59E0B" }} />
-              Moderate Activity
+               Warning Zone
             </div>
             <div className={styles.legendItem}>
               <span className={styles.legendIndicator} style={{ color: "#DC2626" }} />
-              Pollution Detected
+               Flood Risk Detected
             </div>
             <div style={{ marginTop: "12px", fontSize: "0.65rem", color: "#94a3b8", lineHeight: 1.4 }}>
               System updates every 5s • Processing 9 nodes.

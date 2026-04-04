@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { FiMap, FiCamera, FiTrendingUp, FiActivity, FiShield, FiAward, FiBookOpen, FiMenu, FiX, FiLogOut, FiUser } from "react-icons/fi";
+import { Shield, Map, BarChart3, Menu, X, LogOut, User } from "lucide-react";
 import styles from "./Navbar.module.css";
 
 export default function Navbar() {
@@ -13,23 +13,17 @@ export default function Navbar() {
   const { user, logout } = useAuth();
 
   const navLinks = [
-    { name: "Live Map", href: "/map", icon: <FiMap /> },
-    { name: "Report", href: "/report", icon: <FiShield /> },
-    { name: "AI Detector", href: "/detect", icon: <FiCamera /> },
-    { name: "Biodiversity", href: "/biodiversity", icon: <FiActivity /> },
-    { name: "Dashboard", href: "/dashboard", icon: <FiAward /> },
-    { name: "Ledger", href: "/ledger", icon: <FiBookOpen /> },
+    { name: "Command Center", href: "/map", icon: <Map size={16} strokeWidth={1.5} /> },
+    { name: "Analytics", href: "/analytics", icon: <BarChart3 size={16} strokeWidth={1.5} /> },
   ];
 
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
         <Link href="/" className={styles.brand} onClick={() => setMobileOpen(false)}>
-          <div className={styles.logo}>
-            <span className={styles.logoMark}>🛡</span>
-          </div>
+          <Shield size={22} strokeWidth={1.5} className={styles.logoIcon} />
           <span className={styles.brandName}>
-            Ocean<span className={styles.brandAccent}>Sentinel</span>
+            Flood<span className={styles.brandAccent}>Mind</span>
           </span>
         </Link>
 
@@ -58,12 +52,12 @@ export default function Navbar() {
                   <span className={styles.userRole}>{user.role}</span>
                 </div>
                 <button onClick={logout} className={styles.logoutBtn} title="Logout">
-                  <FiLogOut />
+                  <LogOut size={16} strokeWidth={1.5} />
                 </button>
               </div>
             ) : (
               <Link href="/login" className={styles.loginBtn} onClick={() => setMobileOpen(false)}>
-                <FiUser /> <span>Sign In</span>
+                <User size={14} strokeWidth={1.5} /> <span>Sign In</span>
               </Link>
             )}
           </div>
@@ -74,7 +68,7 @@ export default function Navbar() {
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle navigation"
         >
-          {mobileOpen ? <FiX /> : <FiMenu />}
+          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
     </nav>

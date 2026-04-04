@@ -11,18 +11,18 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "OceanSentinel — Marine Ecosystem Intelligence Platform",
+  title: "FloodMind — AI-Powered Urban Flood Digital Twin",
   description:
-    "Anonymous threat reporting, AI root-cause tracing, biodiversity loss forecasting, and government-credit rewards. Turning oceanic stakeholders into active guardians.",
+    "Real-time flood simulation, cascade forecasting, evacuation zone mapping, and AI-driven disaster response. Turning urban data into life-saving decisions.",
   keywords: [
-    "marine pollution",
-    "ocean monitoring",
-    "anonymous reporting",
-    "guardian credits",
-    "biodiversity forecast",
-    "pollution tracing",
-    "Gulf of Mannar",
-    "environmental intelligence",
+    "urban flooding",
+    "flood monitoring",
+    "digital twin",
+    "disaster response",
+    "cascade forecast",
+    "evacuation zones",
+    "flood sensor",
+    "AI flood prediction",
   ],
 };
 

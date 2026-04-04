@@ -1,0 +1,62 @@
+[
+  {
+    "id": "rpt-001",
+    "latitude": 9.940,
+    "longitude": 76.245,
+    "type": "flash_flood",
+    "severity": 5,
+    "title": "Severe Flash Flood",
+    "description": "Rapid water level rise detected near South Terminal. Evacuation recommended.",
+    "timestamp": "2026-03-28T06:30:00Z",
+    "zone": "Kochi Central",
+    "status": "verified"
+  },
+  {
+    "id": "rpt-002",
+    "latitude": 9.955,
+    "longitude": 76.240,
+    "type": "storm_surge",
+    "severity": 4,
+    "title": "Storm Surge Inundation",
+    "description": "Coastal roads flooding due to high tide surge combined with heavy rain.",
+    "timestamp": "2026-03-29T14:15:00Z",
+    "zone": "Fort Kochi",
+    "status": "investigating"
+  },
+  {
+    "id": "rpt-003",
+    "latitude": 9.932,
+    "longitude": 76.255,
+    "type": "drainage_failure",
+    "severity": 3,
+    "title": "Blocked Drainage System",
+    "description": "Major urban drainage failure leading to localized standing water.",
+    "timestamp": "2026-03-30T08:00:00Z",
+    "zone": "Edapally",
+    "status": "pending"
+  },
+  {
+    "id": "rpt-004",
+    "latitude": 9.920,
+    "longitude": 76.270,
+    "type": "river_overflow",
+    "severity": 4,
+    "title": "River Canal Overflow",
+    "description": "Canal breaching banks near residential areas.",
+    "timestamp": "2026-03-29T05:45:00Z",
+    "zone": "Aluva",
+    "status": "verified"
+  },
+  {
+    "id": "rpt-005",
+    "latitude": 9.880,
+    "longitude": 76.290,
+    "type": "dam_release",
+    "severity": 5,
+    "title": "Unexpected Water Surge",
+    "description": "Water flow velocity spiked. Suspected upstream dam release.",
+    "timestamp": "2026-03-27T11:20:00Z",
+    "zone": "Vembanad",
+    "status": "investigating"
+  }
+]

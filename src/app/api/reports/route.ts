@@ -61,14 +61,14 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(record, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("POST /api/reports failed:", error);
     // Return the actual error message in development for easier debugging
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
     return NextResponse.json(
       { 
         error: "Failed to create report", 
-        message: error?.message || "Internal Server Error",
-        detail: error?.detail || null
+        message: errorMessage
       }, 
       { status: 500 }
     );

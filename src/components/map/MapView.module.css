@@ -1,36 +1,31 @@
 .mapWrapper {
   position: relative;
   width: 100%;
-  height: calc(100vh - var(--nav-height));
-  background: var(--slate-900);
-  /* Darker base for map contrast */
+  height: 100%;
   overflow: hidden;
 }
 
-/* Glassmorphic Layer Panel */
+/* Right Layer Panel */
 .layerPanel {
   position: absolute;
-  top: 24px;
-  right: 24px;
+  top: 16px;
+  right: 16px;
   z-index: 1000;
-  width: 280px;
+  width: 300px;
   padding: 20px;
-  background: #ffffff;
-  border: 1px solid var(--border-strong);
-  box-shadow: var(--shadow-md);
-  border-radius: 0 !important;
-  /* Force Sharp */
-  backdrop-filter: none !important;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .panelTitle {
-  margin-bottom: 20px;
-  font-size: 0.7rem;
-  font-weight: 800;
+  margin-bottom: 16px;
+  font-size: 0.65rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #64748b;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -39,14 +34,14 @@
 .layerToggle {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin-bottom: 8px;
   cursor: pointer;
   user-select: none;
-  font-size: 0.88rem;
-  color: #334155;
-  padding: 8px 12px;
-  border-radius: 12px;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
   transition: background 0.2s;
 }
 
@@ -54,32 +49,35 @@
   margin-bottom: 0;
 }
 
+.layerToggle:hover {
+  background: var(--off-white);
+}
+
 .layerToggle input {
   display: none;
 }
 
 .checkmark {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #e2e8f0;
-  background: #ffffff;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  background: var(--white);
   position: relative;
   transition: all 0.2s;
-  border-radius: 0 !important;
-  /* Square checkbox */
+  border-radius: 4px;
+  flex-shrink: 0;
 }
 
 .layerToggle input:checked+.checkmark {
-  background: #0ea5e9;
-  border-color: #0ea5e9;
-  box-shadow: 0 0 12px rgba(14, 165, 233, 0.3);
+  background: var(--teal);
+  border-color: var(--teal);
 }
 
 .layerToggle input:checked+.checkmark::after {
   content: "";
   position: absolute;
-  top: 4px;
-  left: 7px;
+  top: 3px;
+  left: 6px;
   width: 3px;
   height: 7px;
   border: solid white;
@@ -91,43 +89,43 @@
   font-weight: 500;
 }
 
-/* Legend - Glassmorphic */
+/* Legend */
 .legend {
   position: absolute;
-  bottom: 24px;
-  left: 24px;
+  bottom: 16px;
+  left: 16px;
   z-index: 1000;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
-  width: 260px;
+  padding: 16px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  width: 240px;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .legendItem {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 0.8rem;
-  margin-bottom: 10px;
-  color: #475569;
-  font-weight: 600;
+  gap: 10px;
+  font-size: 0.78rem;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+  font-weight: 500;
 }
 
 .legendItem:last-child {
   margin-bottom: 0;
 }
 
-/* Collapsible Panel Enhancements */
-.collapsiblePanel {
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
+.legendIndicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
 }
 
+/* Collapsible Panel */
 .panelHeader {
   display: flex !important;
   justify-content: space-between !important;
@@ -142,19 +140,18 @@
   justify-content: center;
   width: 22px;
   height: 22px;
-  border-radius: 6px;
-  background: rgba(15, 23, 42, 0.04);
-  color: #64748b;
-  transition: all 0.2s ease;
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: var(--radius-md);
+  background: var(--off-white);
+  color: var(--text-muted);
+  transition: all 0.2s;
+  border: 1px solid var(--border);
   cursor: pointer;
   flex-shrink: 0;
 }
 
 .toggleBtn:hover {
-  background: rgba(15, 23, 42, 0.08);
-  color: #0f172a;
-  transform: translateY(-1px);
+  background: var(--border);
+  color: var(--text-primary);
 }
 
 .panelContent {
@@ -162,7 +159,7 @@
   max-height: 1200px;
   opacity: 1;
   transform: translateY(0);
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
 .collapsedContent {
@@ -175,17 +172,12 @@
   transform: translateY(-10px);
 }
 
-/* Specific overrides for minimized state */
-.minimizedCard {
-  max-width: 240px !important;
-}
-
 .legend.minimized {
-  width: 180px;
-  padding: 14px 18px;
+  width: 160px;
+  padding: 12px 16px;
 }
 
 .layerPanel.minimized {
-  width: 180px;
-  padding: 14px 18px;
+  width: 160px;
+  padding: 12px 16px;
 }

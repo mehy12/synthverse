@@ -1,41 +1,95 @@
 {
-  "nodes": [
-    { "id": "mangrove", "name": "Mangrove Forests (Kandal)", "kingdom": "Plantae", "population": 100, "threshold": 60, "economicValue": 5500, "icon": "🌳", "color": "#15803d", "description": "Critical nursery — protects 80% of estuarine fish and prawns in Vembanad Lake" },
-    { "id": "seagrass", "name": "Ashtamudi Seagrasses", "kingdom": "Plantae", "population": 100, "threshold": 50, "economicValue": 1800, "icon": "🌿", "color": "#10b981", "description": "Feeding ground — essential for juvenile turtles and indigenous pearl spots" },
-    { "id": "chakara", "name": "Marine Biomass (Chakara)", "kingdom": "Protista", "population": 100, "threshold": 40, "economicValue": 4200, "icon": "🌊", "color": "#60a5e8", "description": "Unique Kerala Mudbanks — rich nutrient surges that drive the fishing season" },
-    { "id": "kaka", "name": "Black Clams (Kaka)", "kingdom": "Mollusca", "population": 100, "threshold": 55, "economicValue": 2500, "icon": "🐚", "color": "#8b5cf6", "description": "Benthic filters — maintain water clarity in Kerala's backwater network" },
-    { "id": "karimeen", "name": "Pearl Spot (Karimeen)", "kingdom": "Fish", "population": 100, "threshold": 45, "economicValue": 6800, "icon": "🐟", "color": "#ffc107", "description": "State fish of Kerala — crucial for local markets and ecological balance" },
-    { "id": "fish_stock", "name": "Mathi & Ayila (Sardines)", "kingdom": "Fish", "population": 100, "threshold": 35, "economicValue": 12500, "icon": "🐠", "color": "#f97316", "description": "Primary commercial stock — sustains 2500+ traditional fishing families" },
-    { "id": "turtle", "name": "Olive Ridley (Kerala Coast)", "kingdom": "Reptilia", "population": 100, "threshold": 50, "economicValue": 1200, "icon": "🐢", "color": "#84cc16", "description": "Endangered traveler — uses Kerala beaches for critical nesting every year" },
-    { "id": "dolphin", "name": "Humpback Dolphins", "kingdom": "Mammalia", "population": 100, "threshold": 30, "economicValue": 3200, "icon": "🐬", "color": "#00d2d3", "description": "Indicator species — presence signifies health of Kochi and Kozhikode shallows" },
-    { "id": "prawns", "name": "Malabar Prawns (Chemmeen)", "kingdom": "Arthropoda", "population": 100, "threshold": 25, "economicValue": 9800, "icon": "🦐", "color": "#ff7675", "description": "Export powerhouse — depend on pristine estuarine water quality for growth" }
-  ],
-  "edges": [
-    { "source": "mangrove", "target": "karimeen", "strength": 0.9, "label": "backwater nursery" },
-    { "source": "mangrove", "target": "prawns", "strength": 0.85, "label": "protective habitat" },
-    { "source": "chakara", "target": "fish_stock", "strength": 0.95, "label": "nutrient surge" },
-    { "source": "seagrass", "target": "karimeen", "strength": 0.7, "label": "secondary habitat" },
-    { "source": "seagrass", "target": "turtle", "strength": 0.6, "label": "feeding area" },
-    { "source": "kaka", "target": "chakara", "strength": 0.4, "label": "clears water" },
-    { "source": "karimeen", "target": "fish_stock", "strength": 0.3, "label": "community balance" },
-    { "source": "fish_stock", "target": "dolphin", "strength": 0.8, "label": "prey base" }
+  "districts": [
+    {
+      "id": "kochi-central",
+      "name": "Kochi Central",
+      "icon": "🏙️",
+      "baselineRisk": 100,
+      "sensitivity": { "flash_flood": 0.75, "river_overflow": 0.6, "storm_surge": 0.9, "drainage_failure": 0.85, "dam_release": 0.5, "monsoon_surge": 0.7, "coastal_erosion": 0.65 },
+      "economicValueCrore": 850
+    },
+    {
+      "id": "fort-kochi",
+      "name": "Fort Kochi",
+      "icon": "🏛️",
+      "baselineRisk": 100,
+      "sensitivity": { "flash_flood": 0.6, "river_overflow": 0.5, "storm_surge": 0.95, "drainage_failure": 0.7, "dam_release": 0.4, "monsoon_surge": 0.8, "coastal_erosion": 0.9 },
+      "economicValueCrore": 420
+    },
+    {
+      "id": "edapally",
+      "name": "Edapally",
+      "icon": "🏘️",
+      "baselineRisk": 100,
+      "sensitivity": { "flash_flood": 0.8, "river_overflow": 0.7, "storm_surge": 0.5, "drainage_failure": 0.9, "dam_release": 0.6, "monsoon_surge": 0.65, "coastal_erosion": 0.3 },
+      "economicValueCrore": 620
+    },
+    {
+      "id": "aluva",
+      "name": "Aluva",
+      "icon": "🌊",
+      "baselineRisk": 100,
+      "sensitivity": { "flash_flood": 0.9, "river_overflow": 0.95, "storm_surge": 0.3, "drainage_failure": 0.6, "dam_release": 0.95, "monsoon_surge": 0.85, "coastal_erosion": 0.2 },
+      "economicValueCrore": 380
+    },
+    {
+      "id": "thrippunithura",
+      "name": "Thrippunithura",
+      "icon": "🏠",
+      "baselineRisk": 100,
+      "sensitivity": { "flash_flood": 0.65, "river_overflow": 0.55, "storm_surge": 0.4, "drainage_failure": 0.75, "dam_release": 0.45, "monsoon_surge": 0.6, "coastal_erosion": 0.25 },
+      "economicValueCrore": 290
+    },
+    {
+      "id": "mattancherry",
+      "name": "Mattancherry",
+      "icon": "⚓",
+      "baselineRisk": 100,
+      "sensitivity": { "flash_flood": 0.7, "river_overflow": 0.6, "storm_surge": 0.85, "drainage_failure": 0.8, "dam_release": 0.35, "monsoon_surge": 0.75, "coastal_erosion": 0.8 },
+      "economicValueCrore": 350
+    },
+    {
+      "id": "kaloor",
+      "name": "Kaloor",
+      "icon": "🏢",
+      "baselineRisk": 100,
+      "sensitivity": { "flash_flood": 0.85, "river_overflow": 0.5, "storm_surge": 0.35, "drainage_failure": 0.95, "dam_release": 0.4, "monsoon_surge": 0.55, "coastal_erosion": 0.2 },
+      "economicValueCrore": 520
+    },
+    {
+      "id": "vypeen",
+      "name": "Vypeen Island",
+      "icon": "🏝️",
+      "baselineRisk": 100,
+      "sensitivity": { "flash_flood": 0.5, "river_overflow": 0.45, "storm_surge": 0.95, "drainage_failure": 0.6, "dam_release": 0.3, "monsoon_surge": 0.85, "coastal_erosion": 0.95 },
+      "economicValueCrore": 180
+    }
   ],
   "cascadeRules": [
-    { "trigger": "mangrove", "threshold": 60, "affects": ["karimeen", "prawns"], "delay": 0, "description": "Mangrove cover below 60% — immediate collapse of backwater nurseries" },
-    { "trigger": "chakara", "threshold": 40, "affects": ["fish_stock"], "delay": 7, "description": "Loss of Chakara (Mudbanks) effects commercial sardine stock within 7 days" },
-    { "trigger": "karimeen", "threshold": 45, "affects": ["fish_stock"], "delay": 30, "description": "Native stock collapse → commercial displacement within 30 days" },
-    { "trigger": "fish_stock", "threshold": 35, "affects": ["dolphin"], "delay": 45, "description": "Sardine shortage → predator migration patterns disrupted within 45 days" }
-  ],
-  "economicImpact": {
-    "currency": "INR",
-    "affectedFishermen": 2500,
-    "baselineDailyIncome": 3200,
-    "scenarios": [
-      { "coralCover": 100, "dailyLossPerFisherman": 0, "totalDailyLoss": 0 },
-      { "coralCover": 80, "dailyLossPerFisherman": 400, "totalDailyLoss": 1000000 },
-      { "coralCover": 60, "dailyLossPerFisherman": 1200, "totalDailyLoss": 3000000 },
-      { "coralCover": 40, "dailyLossPerFisherman": 2200, "totalDailyLoss": 5500000 },
-      { "coralCover": 20, "dailyLossPerFisherman": 3200, "totalDailyLoss": 8000000 }
-    ]
-  }
+    {
+      "trigger": "drainage_failure",
+      "delay": 2,
+      "description": "Blocked drainage → water accumulation in low-lying residential areas within 48 hours"
+    },
+    {
+      "trigger": "river_overflow",
+      "delay": 5,
+      "description": "River overflow → sewage contamination of drinking water supply within 5 days"
+    },
+    {
+      "trigger": "dam_release",
+      "delay": 1,
+      "description": "Dam release surge → downstream district inundation within 24 hours"
+    },
+    {
+      "trigger": "monsoon_surge",
+      "delay": 14,
+      "description": "Sustained monsoon → groundwater table rise causing foundation damage by T+14 days"
+    },
+    {
+      "trigger": "coastal_erosion",
+      "delay": 30,
+      "description": "Tidal surge + erosion → permanent infrastructure loss in coastal districts by T+30 days"
+    }
+  ]
 }

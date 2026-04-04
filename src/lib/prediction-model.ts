@@ -1,31 +1,27 @@
-// OceanSentinel — Biodiversity Loss Prediction Model
-// Exponential decay model calibrated against IUCN species sensitivity coefficients
-// and Gulf of Mannar ecological survey baselines.
+// FloodMind — Cascade Flood Prediction Model
+// Exponential risk escalation model calibrated for urban district flood vulnerability
 //
-// TRAINING DATA SOURCES (Kaggle + Open):
-//   1. kaggle.com/datasets/sohier/calcofi — CalCOFI 60-year oceanographic measurements
-//   2. kaggle.com/datasets/rashikrahmanpritom/water-quality-dataset — water quality params
-//   3. kaggle.com/datasets/vinicius150987/marine-litter-database — marine litter records
-//   4. gbif.org/occurrence/search — GBIF Karnataka/Kerala coast species occurrences
-//   5. iucnredlist.org — Red List species sensitivity thresholds
+// Model type: District-specific exponential risk with cascade multipliers
 //
-// Model type: Species-specific exponential decay with cascade multipliers
+// Formula per district:
+//   riskLevel(t) = baseline * exp(-λ * flood_index * t)
+//   where λ = district vulnerability coefficient
+//         t = days since flood onset
+//         flood_index = normalized severity (0-1)
 //
-// Formula per species:
-//   population(t) = baseline * exp(-λ * pollution_index * t)
-//   where λ = species sensitivity coefficient (from IUCN LD50 data)
-//         t = days since exposure
-//         pollution_index = normalized severity (0-1)
-//
-// Cascade: when a prey species drops below its threshold, dependents
-//          experience an additional starvation decay multiplier.
+// Cascade: when upstream districts flood beyond threshold, downstream
+//          districts experience amplified flood risk multipliers.
 
-export interface PollutionInput {
-  severity: number;        // 1-5 scale (user reported)
-  pollutionType: string;   // oil, plastic, chemical, sewage, etc.
+export interface FloodInput {
+  severity: number;        // 1-5 scale
+  floodType?: string;      // flash_flood, river_overflow, storm_surge, etc.
+  pollutionType?: string;  // backward compat alias for floodType
   surfaceAreaKm2: number;  // estimated affected area
-  durationDays: number;    // how long the pollution has been active
+  durationDays: number;    // how long the flooding has been active
 }
+
+// Keep backward compat with existing API interface
+export type PollutionInput = FloodInput;
 
 export interface SpeciesForecast {
   id: string;
@@ -61,117 +57,106 @@ export interface PredictionResult {
   };
 }
 
-// Species sensitivity coefficients (λ) — calibrated from IUCN Red List LD50 data
-// Higher λ = more sensitive to pollution
-const SPECIES_SENSITIVITY: Record<string, {
+// District vulnerability coefficients (λ)
+// Higher λ = more vulnerable to flooding
+const DISTRICT_VULNERABILITY: Record<string, {
   lambda: number;
   name: string;
   icon: string;
   baseline: number;
   threshold: number;
-  dailyEconomicValue: number; // INR per day per % population
+  dailyEconomicValue: number; // INR per day per % infrastructure at risk
   recoveryRate: number; // % per day natural recovery
-  pollutionWeights: Record<string, number>;
+  floodWeights: Record<string, number>;
   dependencies: string[];
 }> = {
-  mangrove: {
-    lambda: 0.015,
-    name: "Kandal Mangroves",
-    icon: "🌳",
+  kochi_central: {
+    lambda: 0.016,
+    name: "Kochi Central",
+    icon: "🏙️",
     baseline: 100,
-    threshold: 60,
-    dailyEconomicValue: 5500,
-    recoveryRate: 0.05,
-    pollutionWeights: { chemical: 1.4, oil: 1.2, sewage: 1.1, plastic: 0.8, shipping: 0.9, agricultural: 1.3, ghost_gear: 0.6 },
+    threshold: 55,
+    dailyEconomicValue: 8500,
+    recoveryRate: 0.06,
+    floodWeights: { flash_flood: 0.75, river_overflow: 0.6, storm_surge: 0.9, drainage_failure: 0.85, dam_release: 0.5, monsoon_surge: 0.7, coastal_erosion: 0.65 },
     dependencies: [],
   },
-  seagrass: {
-    lambda: 0.012,
-    name: "Estuarine Seagrass",
-    icon: "🌿",
+  edapally: {
+    lambda: 0.019,
+    name: "Edapally",
+    icon: "🏘️",
     baseline: 100,
     threshold: 50,
-    dailyEconomicValue: 1800,
-    recoveryRate: 0.1,
-    pollutionWeights: { chemical: 1.3, oil: 1.0, sewage: 1.5, plastic: 0.7, shipping: 0.5, agricultural: 1.6, ghost_gear: 0.4 },
-    dependencies: ["mangrove"],
+    dailyEconomicValue: 6200,
+    recoveryRate: 0.08,
+    floodWeights: { flash_flood: 0.8, river_overflow: 0.7, storm_surge: 0.5, drainage_failure: 0.9, dam_release: 0.6, monsoon_surge: 0.65, coastal_erosion: 0.3 },
+    dependencies: ["kochi_central"],
   },
-  chakara: {
-    lambda: 0.020,
-    name: "Chakara Biomass",
+  aluva: {
+    lambda: 0.022,
+    name: "Aluva",
     icon: "🌊",
     baseline: 100,
     threshold: 40,
-    dailyEconomicValue: 4200,
-    recoveryRate: 0.2,
-    pollutionWeights: { chemical: 1.5, oil: 1.4, sewage: 0.8, plastic: 0.5, shipping: 1.1, agricultural: 1.2, ghost_gear: 0.3 },
-    dependencies: ["mangrove"],
+    dailyEconomicValue: 3800,
+    recoveryRate: 0.1,
+    floodWeights: { flash_flood: 0.9, river_overflow: 0.95, storm_surge: 0.3, drainage_failure: 0.6, dam_release: 0.95, monsoon_surge: 0.85, coastal_erosion: 0.2 },
+    dependencies: [],
   },
-  kaka: {
+  fort_kochi: {
     lambda: 0.014,
-    name: "Black Clams (Kaka)",
-    icon: "🐚",
-    baseline: 100,
-    threshold: 55,
-    dailyEconomicValue: 2500,
-    recoveryRate: 0.08,
-    pollutionWeights: { chemical: 1.2, oil: 1.0, sewage: 1.3, plastic: 0.9, shipping: 0.7, agricultural: 1.1, ghost_gear: 0.5 },
-    dependencies: ["mangrove"],
-  },
-  karimeen: {
-    lambda: 0.018,
-    name: "Pearl Spot (Karimeen)",
-    icon: "🐟",
-    baseline: 100,
-    threshold: 45,
-    dailyEconomicValue: 6800,
-    recoveryRate: 0.12,
-    pollutionWeights: { chemical: 1.3, oil: 1.1, sewage: 1.0, plastic: 1.2, shipping: 0.8, agricultural: 0.9, ghost_gear: 1.4 },
-    dependencies: ["mangrove", "seagrass", "chakara"],
-  },
-  fish_stock: {
-    lambda: 0.009,
-    name: "Mathi & Ayila",
-    icon: "🐠",
-    baseline: 100,
-    threshold: 35,
-    dailyEconomicValue: 12500,
-    recoveryRate: 0.04,
-    pollutionWeights: { chemical: 1.1, oil: 1.0, sewage: 0.8, plastic: 1.0, shipping: 1.2, agricultural: 0.7, ghost_gear: 1.3 },
-    dependencies: ["karimeen"],
-  },
-  turtle: {
-    lambda: 0.022,
-    name: "Olive Ridley",
-    icon: "🐢",
+    name: "Fort Kochi",
+    icon: "🏛️",
     baseline: 100,
     threshold: 50,
-    dailyEconomicValue: 1200,
-    recoveryRate: 0.03,
-    pollutionWeights: { chemical: 1.4, oil: 1.5, sewage: 0.7, plastic: 1.8, shipping: 1.3, agricultural: 0.6, ghost_gear: 1.6 },
-    dependencies: ["seagrass"],
+    dailyEconomicValue: 4200,
+    recoveryRate: 0.05,
+    floodWeights: { flash_flood: 0.6, river_overflow: 0.5, storm_surge: 0.95, drainage_failure: 0.7, dam_release: 0.4, monsoon_surge: 0.8, coastal_erosion: 0.9 },
+    dependencies: ["kochi_central"],
   },
-  dolphin: {
-    lambda: 0.010,
-    name: "Kochi Dolphins",
-    icon: "🐬",
+  kaloor: {
+    lambda: 0.020,
+    name: "Kaloor",
+    icon: "🏢",
     baseline: 100,
-    threshold: 30,
-    dailyEconomicValue: 3200,
-    recoveryRate: 0.02,
-    pollutionWeights: { chemical: 1.3, oil: 1.2, sewage: 0.9, plastic: 1.1, shipping: 1.5, agricultural: 0.5, ghost_gear: 1.0 },
-    dependencies: ["fish_stock"],
+    threshold: 45,
+    dailyEconomicValue: 5200,
+    recoveryRate: 0.07,
+    floodWeights: { flash_flood: 0.85, river_overflow: 0.5, storm_surge: 0.35, drainage_failure: 0.95, dam_release: 0.4, monsoon_surge: 0.55, coastal_erosion: 0.2 },
+    dependencies: ["kochi_central", "edapally"],
   },
-  prawns: {
-    lambda: 0.008,
-    name: "Malabar Prawns",
-    icon: "🦐",
+  mattancherry: {
+    lambda: 0.017,
+    name: "Mattancherry",
+    icon: "⚓",
     baseline: 100,
-    threshold: 25,
-    dailyEconomicValue: 9800,
-    recoveryRate: 0.15,
-    pollutionWeights: { chemical: 1.2, oil: 1.1, sewage: 0.6, plastic: 1.0, shipping: 1.4, agricultural: 0.4, ghost_gear: 1.2 },
-    dependencies: ["mangrove"],
+    threshold: 48,
+    dailyEconomicValue: 3500,
+    recoveryRate: 0.06,
+    floodWeights: { flash_flood: 0.7, river_overflow: 0.6, storm_surge: 0.85, drainage_failure: 0.8, dam_release: 0.35, monsoon_surge: 0.75, coastal_erosion: 0.8 },
+    dependencies: ["fort_kochi"],
+  },
+  thrippunithura: {
+    lambda: 0.013,
+    name: "Thrippunithura",
+    icon: "🏠",
+    baseline: 100,
+    threshold: 55,
+    dailyEconomicValue: 2900,
+    recoveryRate: 0.09,
+    floodWeights: { flash_flood: 0.65, river_overflow: 0.55, storm_surge: 0.4, drainage_failure: 0.75, dam_release: 0.45, monsoon_surge: 0.6, coastal_erosion: 0.25 },
+    dependencies: ["kochi_central"],
+  },
+  vypeen: {
+    lambda: 0.021,
+    name: "Vypeen Island",
+    icon: "🏝️",
+    baseline: 100,
+    threshold: 42,
+    dailyEconomicValue: 1800,
+    recoveryRate: 0.04,
+    floodWeights: { flash_flood: 0.5, river_overflow: 0.45, storm_surge: 0.95, drainage_failure: 0.6, dam_release: 0.3, monsoon_surge: 0.85, coastal_erosion: 0.95 },
+    dependencies: ["fort_kochi"],
   },
 };
 
@@ -183,15 +168,16 @@ function getStatus(pop: number, threshold: number): "stable" | "declining" | "cr
 }
 
 export function predictBiodiversityLoss(input: PollutionInput): PredictionResult {
-  const severityIndex = input.severity / 5; // normalize to 0-1
+  const severityIndex = input.severity / 5;
   const areaMultiplier = Math.min(2, Math.log2(input.surfaceAreaKm2 + 1) / 3 + 0.5);
   const durationFactor = Math.min(1.5, 1 + input.durationDays / 60);
 
-  // Phase 1: Direct pollution decay for each species
+  // Phase 1: Direct flood risk escalation for each district
   const populations: Record<string, { day30: number; day60: number; day90: number }> = {};
 
-  for (const [id, spec] of Object.entries(SPECIES_SENSITIVITY)) {
-    const typeWeight = spec.pollutionWeights[input.pollutionType] ?? 1.0;
+  for (const [id, spec] of Object.entries(DISTRICT_VULNERABILITY)) {
+    const floodKey = input.floodType ?? input.pollutionType ?? "flash_flood";
+    const typeWeight = spec.floodWeights[floodKey] ?? 1.0;
     const effectiveLambda = spec.lambda * typeWeight * areaMultiplier * durationFactor;
 
     populations[id] = {
@@ -201,17 +187,17 @@ export function predictBiodiversityLoss(input: PollutionInput): PredictionResult
     };
   }
 
-  // Phase 2: Cascade effects — if a dependency drops below threshold, apply extra decay
+  // Phase 2: Cascade effects — if upstream districts flood, downstream districts amplified
   const cascadeOrder = [
-    "mangrove", "seagrass", "chakara", "kaka",
-    "karimeen", "fish_stock", "turtle", "dolphin", "prawns",
+    "kochi_central", "aluva", "edapally", "fort_kochi",
+    "kaloor", "mattancherry", "thrippunithura", "vypeen",
   ];
 
   for (const timeKey of ["day30", "day60", "day90"] as const) {
     for (const id of cascadeOrder) {
-      const spec = SPECIES_SENSITIVITY[id];
+      const spec = DISTRICT_VULNERABILITY[id];
       for (const depId of spec.dependencies) {
-        const depSpec = SPECIES_SENSITIVITY[depId];
+        const depSpec = DISTRICT_VULNERABILITY[depId];
         const depPop = populations[depId][timeKey];
         if (depPop < depSpec.threshold) {
           const cascadePenalty = (depSpec.threshold - depPop) / depSpec.threshold;
@@ -224,7 +210,7 @@ export function predictBiodiversityLoss(input: PollutionInput): PredictionResult
 
   // Phase 3: Build forecasts
   const forecasts: SpeciesForecast[] = cascadeOrder.map((id) => {
-    const spec = SPECIES_SENSITIVITY[id];
+    const spec = DISTRICT_VULNERABILITY[id];
     const pop = populations[id];
     const lossPercent30 = (spec.baseline - pop.day30) / 100;
     const lossPercent60 = (spec.baseline - pop.day60) / 100;

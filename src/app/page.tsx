@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FiArrowRight, FiMap, FiCamera, FiTrendingUp, FiActivity, FiShield, FiAward, FiBookOpen, FiCheck, FiX } from "react-icons/fi";
+import { ArrowRight, Map, Activity, Shield, Award, TrendingUp, Zap, Check, X, BarChart3, Radio } from "lucide-react";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -8,89 +8,91 @@ export default function Home() {
       {/* ── Hero Section ─────────────────────────────────────── */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <div className={`badge badge-teal animate-slide-up`} style={{ marginBottom: "1.25rem" }}>
-            <span>🛡 ADVAYA 2.0 Finalist</span>
+          <div className={`badge badge-teal animate-slide-up`}>
+            <Zap size={12} strokeWidth={1.5} />
+            <span>HACKATHON 2026</span>
           </div>
           <h1 className={`${styles.title} animate-slide-up`} style={{ animationDelay: "0.1s" }}>
-            Marine Pollution Isn't A <br />
-            <span className="text-gradient">Reporting Problem</span>
+            Urban Flooding Isn't A <br />
+            <span className="text-teal">Reporting Problem</span>
           </h1>
           <p className={`${styles.subtitle} animate-slide-up`} style={{ animationDelay: "0.2s" }}>
-            It's a tracing problem. Anyone can say "the water is dirty." Nobody can prove who
-            caused it, predict what dies next, or reward the people who protect it.{" "}
-            <strong style={{ color: "var(--teal-light)" }}>OceanSentinel does all three.</strong>
+            It's a prediction problem. Anyone can say "the streets are flooded." Nobody can
+            predict which districts drown next, model the cascade, or coordinate the response.{" "}
+            <strong style={{ color: "var(--teal)" }}>FloodMind does all three.</strong>
           </p>
           <div className={`${styles.ctaGroup} animate-slide-up`} style={{ animationDelay: "0.3s" }}>
-            <Link href="/report" className="btn btn-primary btn-lg">
-              <FiShield /> File Anonymous Report
+            <Link href="/analytics" className="btn btn-primary btn-lg">
+              <Activity size={18} strokeWidth={1.5} />
+              Trigger Simulation
             </Link>
             <Link href="/map" className="btn btn-secondary btn-lg">
-              Open Live Map <FiArrowRight />
+              Open Command Center <ArrowRight size={16} strokeWidth={1.5} />
             </Link>
           </div>
         </div>
 
         {/* ── Live Stats Bar ──────────────────────────────────── */}
         <div className={`${styles.statsGrid} animate-fade-in`} style={{ animationDelay: "0.5s" }}>
-          <div className={`${styles.statCard} glass`}>
-            <h3 style={{ color: "var(--red)" }}>12</h3>
+          <div className={styles.statCard}>
+            <h3 style={{ color: "var(--danger)" }}>12</h3>
             <p>Active Threat Zones</p>
           </div>
-          <div className={`${styles.statCard} glass`}>
-            <h3 style={{ color: "var(--teal-light)" }}>24/7</h3>
+          <div className={styles.statCard}>
+            <h3 style={{ color: "var(--teal)" }}>24/7</h3>
             <p>Live Monitoring</p>
           </div>
-          <div className={`${styles.statCard} glass`}>
-            <h3 style={{ color: "var(--amber-light)" }}>847</h3>
-            <p>Guardian Credits This Week</p>
+          <div className={styles.statCard}>
+            <h3 style={{ color: "var(--warning)" }}>847</h3>
+            <p>Response Credits This Week</p>
           </div>
-          <div className={`${styles.statCard} glass`}>
-            <h3 style={{ color: "var(--coral)" }}>6</h3>
-            <p>Species At Risk</p>
+          <div className={styles.statCard}>
+            <h3 style={{ color: "var(--danger)" }}>6</h3>
+            <p>Districts At Risk</p>
           </div>
         </div>
       </section>
 
-      {/* ── The Loop ──────────────────────────────────────────── */}
+      {/* ── The Cascade Loop ──────────────────────────────────── */}
       <section className={styles.loopSection}>
-        <h2 className="text-gradient" style={{ textAlign: "center", marginBottom: "0.5rem" }}>The Closed Loop</h2>
-        <p style={{ textAlign: "center", color: "var(--text-secondary)", marginBottom: "2.5rem", maxWidth: "600px", margin: "0 auto 2.5rem auto" }}>
-          Every part of this loop was broken before OceanSentinel. Now it's closed.
+        <h2 style={{ textAlign: "center", marginBottom: "0.5rem" }}>The Cascade Loop</h2>
+        <p className={styles.sectionSubtext}>
+          Every stage of disaster response was fragmented before FloodMind. Now it's a closed loop.
         </p>
         <div className={styles.loopGrid}>
           {[
-            { step: "01", label: "Report", desc: "Anonymous, encrypted, zero-knowledge", icon: <FiShield />, color: "var(--teal)" },
-            { step: "02", label: "Predict", desc: "30/60/90 day species loss forecast", icon: <FiActivity />, color: "var(--purple)" },
-            { step: "03", label: "Reward", desc: "Guardian Credits redeemable for govt benefits", icon: <FiAward />, color: "var(--guardian-gold)" },
+            { step: "01", label: "Detect", desc: "Real-time flood sensor data ingestion from across the urban grid", icon: <Radio size={24} strokeWidth={1.5} />, color: "var(--teal)" },
+            { step: "02", label: "Predict", desc: "30/60/90 day cascade forecasting with district-level risk scoring", icon: <Activity size={24} strokeWidth={1.5} />, color: "var(--warning)" },
+            { step: "03", label: "Respond", desc: "Automated evacuation zone mapping and emergency resource allocation", icon: <Shield size={24} strokeWidth={1.5} />, color: "var(--safe)" },
           ].map((item) => (
-            <div key={item.step} className={`${styles.loopCard} glass animate-slide-up stagger-item`}>
+            <div key={item.step} className={`${styles.loopCard} animate-slide-up stagger-item`}>
               <div className={styles.stepNumber} style={{ color: item.color }}>{item.step}</div>
               <div className={styles.loopIcon} style={{ color: item.color }}>{item.icon}</div>
-              <h3>{item.label}</h3>
-              <p>{item.desc}</p>
+              <h3 className={styles.loopTitle}>{item.label}</h3>
+              <p className={styles.loopDesc}>{item.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── 4 Moats — Why We Win ──────────────────────────────── */}
+      {/* ── Comparison: Why We Win ──────────────────────────────── */}
       <section className={styles.moatsSection}>
-        <h2 className="text-gradient" style={{ textAlign: "center", marginBottom: "2.5rem" }}>Why OceanSentinel Wins</h2>
+        <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>Why FloodMind Wins</h2>
         <div className={styles.moatsGrid}>
           {[
-            { bad: "Report pollution → nothing happens", good: "Report → authority notified + reporter rewarded" },
-            { bad: "Show current pollution levels", good: "Predict which species die in 30/60/90 days if nothing changes" },
-            { bad: "Fear of reporting — identity exposed", good: "Zero-knowledge anonymous reports — cryptographically safe" },
-            { bad: "Fishermen have no incentive to engage", good: "Govt scheme credits for verified reports + clean-zone fishing licenses" },
+            { bad: "Report flooding → nothing happens", good: "Report → emergency teams dispatched + responder rewarded" },
+            { bad: "Show current water levels only", good: "Predict which districts flood in 30/60/90 days if nothing changes" },
+            { bad: "Siloed sensor data across agencies", good: "Unified digital twin — every sensor, every district, one view" },
+            { bad: "Residents have no incentive to report", good: "Response Credits for verified reports + priority evacuation access" },
           ].map((moat, i) => (
-            <div key={i} className={`${styles.moatCard} glass-strong animate-slide-up stagger-item`}>
+            <div key={i} className={`${styles.moatCard} animate-slide-up stagger-item`}>
               <div className={styles.moatBad}>
-                <FiX style={{ color: "var(--red)", flexShrink: 0 }} />
+                <X size={16} strokeWidth={1.5} style={{ color: "var(--danger)", flexShrink: 0, marginTop: 2 }} />
                 <span>{moat.bad}</span>
               </div>
               <div className={styles.moatArrow}>→</div>
               <div className={styles.moatGood}>
-                <FiCheck style={{ color: "var(--emerald)", flexShrink: 0 }} />
+                <Check size={16} strokeWidth={1.5} style={{ color: "var(--safe)", flexShrink: 0, marginTop: 2 }} />
                 <span>{moat.good}</span>
               </div>
             </div>
@@ -100,49 +102,66 @@ export default function Home() {
 
       {/* ── 3 Pillar Feature Cards ────────────────────────────── */}
       <section className={styles.features}>
-        <h2 className="text-gradient" style={{ textAlign: "center", marginBottom: "2.5rem" }}>The 3 Pillars</h2>
+        <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>The 3 Pillars</h2>
         <div className={styles.featureGrid}>
-          <Link href="/report" className={`${styles.featureCard} glass-strong animate-slide-up stagger-item`}>
-            <div className={styles.iconWrapper} style={{ background: "rgba(20, 184, 166, 0.15)", color: "var(--teal-light)" }}>
-              <FiShield className="icon" />
+          <Link href="/map" className={`${styles.featureCard} animate-slide-up stagger-item`}>
+            <div className={styles.iconWrapper} style={{ background: "var(--teal-50)", color: "var(--teal)" }}>
+              <Map size={20} strokeWidth={1.5} />
             </div>
-            <h3>Anonymous Reporting</h3>
-            <p>Zero-knowledge proof identity. End-to-end encrypted media. Persistent Guardian ID without exposure. Even we can't identify you.</p>
-            <span className={styles.cardCta}>File Report <FiArrowRight /></span>
+            <h3 className={styles.featureTitle}>Command Center</h3>
+            <p className={styles.featureDesc}>
+              Live flood sensor map with district-level risk visualization. Real-time evacuation zone tracking and emergency resource deployment in a single operational view.
+            </p>
+            <span className={styles.cardCta}>View <ArrowRight size={14} strokeWidth={1.5} /></span>
           </Link>
 
-          <Link href="/biodiversity" className={`${styles.featureCard} glass-strong animate-slide-up stagger-item`}>
-            <div className={styles.iconWrapper} style={{ background: "rgba(139, 92, 246, 0.15)", color: "var(--purple-light)" }}>
-              <FiActivity className="icon" />
+          <Link href="/analytics" className={`${styles.featureCard} animate-slide-up stagger-item`}>
+            <div className={styles.iconWrapper} style={{ background: "rgba(249, 115, 22, 0.08)", color: "var(--warning)" }}>
+              <Activity size={20} strokeWidth={1.5} />
             </div>
-            <h3>Biodiversity Forecast</h3>
-            <p>30/60/90 day species loss prediction. Interactive dependency graph shows cascade timeline — and the economic cost in ₹ crore.</p>
-            <span className={styles.cardCta}>View Forecast <FiArrowRight /></span>
+            <h3 className={styles.featureTitle}>Cascade Forecast</h3>
+            <p className={styles.featureDesc}>
+              30/60/90 day district flood prediction. Interactive cascade timeline shows downstream impact propagation — and the economic cost in ₹ crore.
+            </p>
+            <span className={styles.cardCta}>View <ArrowRight size={14} strokeWidth={1.5} /></span>
           </Link>
 
-          <Link href="/dashboard" className={`${styles.featureCard} glass-strong animate-slide-up stagger-item`}>
-            <div className={styles.iconWrapper} style={{ background: "rgba(245, 166, 35, 0.15)", color: "var(--guardian-gold)" }}>
-              <FiAward className="icon" />
+          <Link href="/analytics" className={`${styles.featureCard} animate-slide-up stagger-item`}>
+            <div className={styles.iconWrapper} style={{ background: "rgba(16, 185, 129, 0.08)", color: "var(--safe)" }}>
+              <BarChart3 size={20} strokeWidth={1.5} />
             </div>
-            <h3>Guardian Credits</h3>
-            <p>Government-backed rewards. Fishermen earn fishing licenses. Industries earn green ratings. Citizens earn Swachh Bharat points.</p>
-            <span className={styles.cardCta}>Open Dashboard <FiArrowRight /></span>
+            <h3 className={styles.featureTitle}>Response Credits</h3>
+            <p className={styles.featureDesc}>
+              Government-backed rewards for verified flood reports. Responders earn priority access. Organizations earn resilience ratings. Citizens earn civic points.
+            </p>
+            <span className={styles.cardCta}>View <ArrowRight size={14} strokeWidth={1.5} /></span>
+          </Link>
+
+          <Link href="/map" className={`${styles.featureCard} animate-slide-up stagger-item`}>
+            <div className={styles.iconWrapper} style={{ background: "var(--teal-50)", color: "var(--teal)" }}>
+              <Radio size={20} strokeWidth={1.5} />
+            </div>
+            <h3 className={styles.featureTitle}>Flood Sensor Zones</h3>
+            <p className={styles.featureDesc}>
+              IoT-connected water level sensors deployed across critical urban infrastructure. Continuous monitoring of drainage systems, river gauges, and reservoir levels.
+            </p>
+            <span className={styles.cardCta}>View <ArrowRight size={14} strokeWidth={1.5} /></span>
           </Link>
         </div>
       </section>
 
       {/* ── Closing Pitch ─────────────────────────────────────── */}
       <section className={styles.closingSection}>
-        <div className={`${styles.closingCard} glass-strong animate-fade-in`}>
+        <div className={styles.closingCard}>
           <blockquote className={styles.closingQuote}>
-            "We turned the person who knows the most about ocean health — the fisherman who watches it die every day — into the person most financially incentivized to protect it."
+            "We turned raw sensor streams into a living digital twin — one that doesn't just show you the flood, but tells you where it's going, who's in danger, and what to do about it."
           </blockquote>
           <div style={{ display: "flex", gap: "12px", marginTop: "2rem", justifyContent: "center", flexWrap: "wrap" }}>
             <Link href="/map" className="btn btn-primary btn-lg">
-              <FiMap /> Explore Live Map
+              <Map size={18} strokeWidth={1.5} /> Open Command Center
             </Link>
-            <Link href="/ledger" className="btn btn-secondary btn-lg">
-              <FiBookOpen /> View Public Ledger
+            <Link href="/analytics" className="btn btn-secondary btn-lg">
+              <TrendingUp size={18} strokeWidth={1.5} /> Run Simulation
             </Link>
           </div>
         </div>

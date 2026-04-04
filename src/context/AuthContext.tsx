@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-export type UserRole = "fisherman" | "compliance" | "citizen" | null;
+export type UserRole = "responder" | "coordinator" | "resident" | null;
 
 interface UserProfile {
   name: string;
@@ -21,9 +21,9 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const ROLE_DATA: Record<string, UserProfile> = {
-  fisherman: { name: "Antony K.", role: "fisherman", avatar: "🛶" },
-  compliance: { name: "Inspector Nair", role: "compliance", avatar: "👮" },
-  citizen: { name: "Meera Ravi", role: "citizen", avatar: "👩" },
+  responder: { name: "Arun K.", role: "responder", avatar: "🚒" },
+  coordinator: { name: "Inspector Nair", role: "coordinator", avatar: "👮" },
+  resident: { name: "Meera Ravi", role: "resident", avatar: "👩" },
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -31,8 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Persist session
-    const storedRole = localStorage.getItem("ocean_sentinel_role");
+    const storedRole = localStorage.getItem("floodmind_role");
     if (storedRole && ROLE_DATA[storedRole]) {
       setUser(ROLE_DATA[storedRole]);
     }
@@ -43,13 +42,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (role && ROLE_DATA[role]) {
       const profile = ROLE_DATA[role];
       setUser(profile);
-      localStorage.setItem("ocean_sentinel_role", role);
+      localStorage.setItem("floodmind_role", role);
     }
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("ocean_sentinel_role");
+    localStorage.removeItem("floodmind_role");
   };
 
   return (
