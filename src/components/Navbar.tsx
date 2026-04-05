@@ -25,7 +25,7 @@ export default function Navbar() {
         <Link href="/" className={styles.brand} onClick={() => setMobileOpen(false)}>
           <Shield size={22} strokeWidth={1.5} className={styles.logoIcon} />
           <span className={styles.brandName}>
-            Flood<span className={styles.brandAccent}>Mind</span>
+            Hive<span className={styles.brandAccent}>Mind</span>
           </span>
         </Link>
 
