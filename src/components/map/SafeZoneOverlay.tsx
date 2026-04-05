@@ -946,14 +946,13 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
           width: 310,
           maxHeight: "calc(100vh - 40px)",
           overflowY: "auto",
-          background: "rgba(10, 18, 32, 0.95)",
-          border: "1px solid rgba(239,68,68,0.35)",
+          background: "var(--white)",
+          border: "1px solid var(--border)",
           borderRadius: 18,
           padding: 16,
-          color: "white",
-          backdropFilter: "blur(16px)",
-          boxShadow:
-            "0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)",
+          color: "var(--text-primary)",
+          backdropFilter: "blur(8px)",
+          boxShadow: "0 16px 36px rgba(15, 23, 42, 0.12)",
           fontFamily: "inherit",
         }}
       >
@@ -993,7 +992,7 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
               fontWeight: 800,
               letterSpacing: "0.12em",
               textTransform: "uppercase",
-              color: "#94A3B8",
+              color: "var(--text-muted)",
             }}
           >
             Emergency Route Planner
@@ -1004,8 +1003,8 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
         {rerouteFlash && (
           <div
             style={{
-              background: "rgba(239,68,68,0.12)",
-              border: "1px solid rgba(239,68,68,0.45)",
+              background: "rgba(239,68,68,0.08)",
+              border: "1px solid rgba(239,68,68,0.28)",
               borderRadius: 10,
               padding: "9px 12px",
               marginBottom: 12,
@@ -1065,7 +1064,7 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
           <div
             style={{
               fontSize: "0.67rem",
-              color: "#F59E0B",
+              color: "var(--warning)",
               marginBottom: 8,
               lineHeight: 1.4,
             }}
@@ -1079,7 +1078,7 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
           <label
             style={{
               fontSize: "0.63rem",
-              color: "#64748B",
+              color: "var(--text-muted)",
               fontWeight: 700,
               letterSpacing: "0.06em",
               textTransform: "uppercase",
@@ -1094,10 +1093,10 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
             onChange={(e) => setSelectedStationId(e.target.value)}
             style={{
               width: "100%",
-              background: "rgba(30,41,59,0.9)",
-              border: "1px solid rgba(100,116,139,0.35)",
+              background: "var(--off-white)",
+              border: "1px solid var(--border)",
               borderRadius: 9,
-              color: "white",
+              color: "var(--text-primary)",
               padding: "8px 10px",
               fontSize: "0.8rem",
             }}
@@ -1116,7 +1115,7 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
           <label
             style={{
               fontSize: "0.63rem",
-              color: "#64748B",
+              color: "var(--text-muted)",
               fontWeight: 700,
               letterSpacing: "0.06em",
               textTransform: "uppercase",
@@ -1141,12 +1140,12 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
                     border:
                       scenario === key
                         ? "1px solid #EF4444"
-                        : "1px solid rgba(100,116,139,0.25)",
+                        : "1px solid var(--border)",
                     background:
                       scenario === key
-                        ? "rgba(239,68,68,0.15)"
-                        : "rgba(30,41,59,0.6)",
-                    color: scenario === key ? "#EF4444" : "#94A3B8",
+                        ? "rgba(239,68,68,0.08)"
+                        : "var(--off-white)",
+                    color: scenario === key ? "#EF4444" : "var(--text-secondary)",
                     fontSize: "0.7rem",
                     fontWeight: 600,
                     textAlign: "left",
@@ -1174,8 +1173,8 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
             border: "none",
             background: selectedStationId
               ? "linear-gradient(135deg, #DC2626, #EA580C)"
-              : "rgba(100,116,139,0.15)",
-            color: selectedStationId ? "white" : "#4B5563",
+              : "var(--off-white)",
+            color: selectedStationId ? "white" : "var(--text-muted)",
             cursor: selectedStationId ? "pointer" : "not-allowed",
             fontWeight: 800,
             fontSize: "0.84rem",
@@ -1204,9 +1203,9 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
                 ? "1px solid #EF4444"
                 : "1px solid rgba(239,68,68,0.3)",
               background: addingThreat
-                ? "rgba(239,68,68,0.18)"
-                : "rgba(30,41,59,0.5)",
-              color: addingThreat ? "#EF4444" : "#94A3B8",
+                ? "rgba(239,68,68,0.08)"
+                : "var(--off-white)",
+              color: addingThreat ? "#EF4444" : "var(--text-secondary)",
               cursor: "pointer",
               fontSize: "0.78rem",
               fontWeight: 600,
@@ -1229,9 +1228,9 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
               ? "1px solid #F97316"
               : "1px solid rgba(249,115,22,0.3)",
             background: addingDebris
-              ? "rgba(249,115,22,0.18)"
-              : "rgba(30,41,59,0.5)",
-            color: addingDebris ? "#F97316" : "#94A3B8",
+              ? "rgba(249,115,22,0.08)"
+              : "var(--off-white)",
+            color: addingDebris ? "#F97316" : "var(--text-secondary)",
             cursor: "pointer",
             fontSize: "0.78rem",
             fontWeight: 600,
@@ -1249,7 +1248,7 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
               marginBottom: 8,
               padding: "10px",
               borderRadius: 10,
-              background: "rgba(249,115,22,0.12)",
+              background: "rgba(249,115,22,0.08)",
               border: "1px solid rgba(249,115,22,0.3)",
               fontSize: "0.74rem",
               lineHeight: 1.5,
@@ -1295,7 +1294,7 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
         {plan && status === "active" && plan.routes.length > 0 && (
           <div
             style={{
-              borderTop: "1px solid rgba(100,116,139,0.15)",
+              borderTop: "1px solid var(--border)",
               paddingTop: 12,
               marginTop: 6,
             }}
@@ -1303,7 +1302,7 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
             <div
               style={{
                 fontSize: "0.63rem",
-                color: "#64748B",
+                color: "var(--text-muted)",
                 fontWeight: 700,
                 textTransform: "uppercase",
                 letterSpacing: "0.06em",
@@ -1326,10 +1325,10 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
                     cursor: "pointer",
                     border: isActive
                       ? `1px solid ${style.fill}`
-                      : "1px solid rgba(100,116,139,0.2)",
+                      : "1px solid var(--border)",
                     background: isActive
                       ? `rgba(${style.fill === "#1DB954" ? "29,185,84" : style.fill === "#1A73E8" ? "26,115,232" : "245,158,11"},0.12)`
-                      : "rgba(30,41,59,0.4)",
+                      : "var(--white)",
                     transition: "all 0.15s",
                   }}
                 >
@@ -1366,7 +1365,7 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
                     style={{
                       fontSize: "0.78rem",
                       fontWeight: 600,
-                      color: "white",
+                      color: "var(--text-heading)",
                       marginBottom: 2,
                     }}
                   >
@@ -1377,7 +1376,7 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
                       display: "flex",
                       gap: 10,
                       fontSize: "0.7rem",
-                      color: "#94A3B8",
+                      color: "var(--text-secondary)",
                     }}
                   >
                     <span>📏 {formatDist(r.distanceM)}</span>
@@ -1394,7 +1393,7 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
                 gap: 6,
                 marginTop: 8,
                 fontSize: "0.67rem",
-                color: "#64748B",
+                color: "var(--text-muted)",
               }}
             >
               <div style={{ textAlign: "center" }}>
@@ -1440,7 +1439,7 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
         {/* Gov portal */}
         <div
           style={{
-            borderTop: "1px solid rgba(100,116,139,0.15)",
+            borderTop: "1px solid var(--border)",
             marginTop: 12,
             paddingTop: 10,
           }}
@@ -1454,8 +1453,8 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
               border: "1px solid rgba(245,158,11,0.35)",
               background: govUnlocked
                 ? "rgba(245,158,11,0.12)"
-                : "rgba(30,41,59,0.4)",
-              color: govUnlocked ? "#F59E0B" : "#64748B",
+                : "var(--off-white)",
+              color: govUnlocked ? "#F59E0B" : "var(--text-muted)",
               cursor: "pointer",
               fontSize: "0.73rem",
               fontWeight: 600,
@@ -1479,7 +1478,7 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
                   : "1px solid rgba(245,158,11,0.25)",
                 background: addingShelter
                   ? "rgba(245,158,11,0.18)"
-                  : "rgba(30,41,59,0.3)",
+                  : "var(--off-white)",
                 color: "#F59E0B",
                 cursor: "pointer",
                 fontSize: "0.73rem",
@@ -1500,7 +1499,7 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
           style={{
             position: "absolute",
             inset: 0,
-            background: "rgba(0,0,0,0.7)",
+            background: "rgba(15,23,42,0.35)",
             zIndex: 3000,
             display: "flex",
             alignItems: "center",
@@ -1509,14 +1508,14 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
         >
           <div
             style={{
-              background: "rgba(10,18,32,0.98)",
-              border: "1px solid rgba(245,158,11,0.4)",
+              background: "var(--white)",
+              border: "1px solid var(--border)",
               borderRadius: 18,
               padding: 28,
               width: 340,
-              color: "white",
-              backdropFilter: "blur(20px)",
-              boxShadow: "0 24px 60px rgba(0,0,0,0.6)",
+              color: "var(--text-primary)",
+              backdropFilter: "blur(8px)",
+              boxShadow: "0 24px 60px rgba(15,23,42,0.2)",
             }}
           >
             <div
@@ -1527,7 +1526,7 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
             <div
               style={{
                 fontSize: "0.74rem",
-                color: "#94A3B8",
+                color: "var(--text-secondary)",
                 marginBottom: 16,
                 lineHeight: 1.5,
               }}
@@ -1565,10 +1564,10 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
               }}
               style={{
                 width: "100%",
-                background: "rgba(30,41,59,0.9)",
-                border: "1px solid rgba(100,116,139,0.4)",
+                background: "var(--off-white)",
+                border: "1px solid var(--border)",
                 borderRadius: 9,
-                color: "white",
+                color: "var(--text-primary)",
                 padding: "9px 12px",
                 fontSize: "0.85rem",
                 boxSizing: "border-box",
@@ -1611,10 +1610,10 @@ export default function SafeZoneOverlay({ visible }: SafeZoneOverlayProps) {
                 style={{
                   flex: 1,
                   padding: "10px",
-                  background: "rgba(100,116,139,0.15)",
-                  border: "1px solid rgba(100,116,139,0.3)",
+                  background: "var(--off-white)",
+                  border: "1px solid var(--border)",
                   borderRadius: 10,
-                  color: "#94A3B8",
+                  color: "var(--text-secondary)",
                   cursor: "pointer",
                 }}
               >
