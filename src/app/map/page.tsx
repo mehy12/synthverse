@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Map, Layers3 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { Map, Layers3, Shield } from "lucide-react";
 import MobileApp from "@/components/mobile/MobileApp";
 
 const MapView = dynamic(() => import("@/components/map/MapView"), {
@@ -26,10 +27,13 @@ const MapView = dynamic(() => import("@/components/map/MapView"), {
 });
 
 export default function MapPage() {
+  const searchParams = useSearchParams();
+  const safeZoneMode = searchParams.get("safeZones") === "1";
+
   return (
     <>
       <div className="desktop-only" style={{ height: "calc(100vh - var(--nav-height))", position: "relative" }}>
-        <MapView />
+        <MapView initialSafeZones={safeZoneMode} />
 
         <div
           style={{
@@ -52,6 +56,18 @@ export default function MapPage() {
           <p style={{ margin: 0, fontSize: "0.86rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
             This route keeps the map minimal. Open the full dashboard for flood-heavy intelligence panels.
           </p>
+          <Link
+            href="/map?safeZones=1"
+            className="btn btn-teal btn-sm"
+            style={{ marginTop: 12, display: "inline-flex", alignItems: "center", gap: 8, width: "100%", justifyContent: "center" }}
+          >
+            <Shield size={14} strokeWidth={1.6} /> Open Safe Zone Routing
+          </Link>
+          {safeZoneMode && (
+            <p style={{ margin: "10px 0 0", fontSize: "0.78rem", color: "var(--teal)", fontWeight: 700 }}>
+              Safe Zone routing is active.
+            </p>
+          )}
           <Link
             href="/command-center"
             className="btn btn-teal btn-sm"

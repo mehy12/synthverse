@@ -104,6 +104,7 @@ const EVACUATION_ZONES = [
 
 interface MapViewProps {
   refreshKey?: number;
+  initialSafeZones?: boolean;
   onSummaryChange?: (summary: {
     generatedAt: string;
     source: string;
@@ -299,6 +300,7 @@ function MapClickHandler({ onMark }: { onMark: (lat: number, lng: number) => voi
 
 export default function MapView({
   refreshKey = 0,
+  initialSafeZones = false,
   onSummaryChange,
 }: MapViewProps) {
   const [baseLayer, setBaseLayer] = useState<BaseLayer>("light");
@@ -311,7 +313,7 @@ export default function MapView({
   const [showIrrigationChannels, setShowIrrigationChannels] = useState(true);
   const [showSewageLines, setShowSewageLines] = useState(false);
   const [showPowerGrid, setShowPowerGrid] = useState(false);
-  const [showSafeZones, setShowSafeZones] = useState(false);
+  const [showSafeZones, setShowSafeZones] = useState(initialSafeZones);
   const [showARO, setShowARO] = useState(false);
   const [enableProbe, setEnableProbe] = useState(false);
   const [probeSnapshot, setProbeSnapshot] = useState<any | null>(null);

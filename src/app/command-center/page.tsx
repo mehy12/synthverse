@@ -3,7 +3,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Suspense, useState } from "react";
-import { Activity, Camera } from "lucide-react";
+import { Activity, Camera, Shield } from "lucide-react";
 import MobileApp from "@/components/mobile/MobileApp";
 
 const DeckMapView = dynamic(() => import("@/components/map/DeckMapView"), {
@@ -134,6 +134,14 @@ export default function MapPage() {
               Scan Flood Zone
             </button>
           </div>
+
+          <Link
+            href="/map?safeZones=1"
+            className="btn btn-teal btn-sm"
+            style={{ marginTop: 8, width: "100%", justifyContent: "center", display: "inline-flex", gap: 8 }}
+          >
+            <Shield size={14} strokeWidth={1.6} /> Open Safe Zone Routing
+          </Link>
 
           <div
             style={{
