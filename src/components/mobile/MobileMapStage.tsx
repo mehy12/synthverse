@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
+import { Circle, MapContainer, Marker, Polygon, Polyline, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import styles from "./MobileApp.module.css";
 import "leaflet/dist/leaflet.css";
@@ -55,6 +55,34 @@ export default function MobileMapStage({ layerMode, zoomSignal, focusTarget }: M
     ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
     : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
 
+  const criticalZone: Array<[number, number]> = [
+    [20.41, 85.88],
+    [20.37, 85.95],
+    [20.31, 85.91],
+    [20.34, 85.82],
+  ];
+
+  const warningZone: Array<[number, number]> = [
+    [20.28, 85.77],
+    [20.24, 85.84],
+    [20.18, 85.8],
+    [20.2, 85.72],
+  ];
+
+  const flowLines: Array<Array<[number, number]>> = [
+    [
+      [20.42, 85.94],
+      [20.35, 85.88],
+      [20.28, 85.84],
+      [20.21, 85.8],
+    ],
+    [
+      [20.39, 85.86],
+      [20.3, 85.83],
+      [20.23, 85.76],
+    ],
+  ];
+
   const waterIcon = createIcon(`
     <div style="display:flex;flex-direction:column;align-items:center;gap:6px;transform:translate(-50%, -100%);">
       <div style="width:34px;height:34px;border-radius:12px;background:#c81e1e;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 18px rgba(0,0,0,.18);">
@@ -94,6 +122,58 @@ export default function MobileMapStage({ layerMode, zoomSignal, focusTarget }: M
     <MapContainer center={[20.2961, 85.8245]} zoom={11} scrollWheelZoom={false} zoomControl={false} className={styles.mapContainer}>
       <TileLayer key={layerMode} url={tileUrl} attribution="" />
       <MapEffects zoomSignal={zoomSignal} focusTarget={focusTarget} />
+
+      {/* Command-center inspired overlays */}
+      <Polygon
+        positions={criticalZone}
+        pathOptions={{
+          color: "#dc2626",
+          weight: 1.5,
+          fillColor: "#ef4444",
+          fillOpacity: 0.24,
+          dashArray: "4 6",
+        }}
+      />
+      <Polygon
+        positions={warningZone}
+        pathOptions={{
+          color: "#f59e0b",
+          weight: 1.4,
+          fillColor: "#facc15",
+          fillOpacity: 0.18,
+          dashArray: "5 6",
+        }}
+      />
+
+      {flowLines.map((line, index) => (
+        <Polyline
+          // index is stable here because flow lines are static literals
+          key={`flow-${index}`}
+          positions={line}
+          pathOptions={{
+            color: "#38bdf8",
+            weight: 2,
+            opacity: 0.75,
+          }}
+        />
+      ))}
+
+      <Circle
+        center={[20.362, 85.892]}
+        radius={2100}
+        pathOptions={{ color: "#ef4444", fillColor: "#ef4444", fillOpacity: 0.16, weight: 1 }}
+      />
+      <Circle
+        center={[20.244, 85.744]}
+        radius={1600}
+        pathOptions={{ color: "#f59e0b", fillColor: "#f59e0b", fillOpacity: 0.14, weight: 1 }}
+      />
+      <Circle
+        center={[20.125, 85.88]}
+        radius={1200}
+        pathOptions={{ color: "#22c55e", fillColor: "#22c55e", fillOpacity: 0.12, weight: 1 }}
+      />
+
       <Marker position={[20.406, 85.91]} icon={waterIcon} />
       <Marker position={[20.245, 85.74]} icon={sensorIcon} />
       <Marker position={[20.125, 85.88]} icon={normalIcon} />
