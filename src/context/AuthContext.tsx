@@ -1,30 +1,32 @@
 ﻿"use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
-export type UserRole = "responder" | "coordinator" | "resident" | null;
-
-type SessionRole = Exclude<UserRole, null>;
-
-interface AuthSession {
-  role: SessionRole;
-  issuedAt: number;
-  expiresAt: number;
-  sessionId: string;
-}
+export type UserRole = "resident" | null;
 
 interface UserProfile {
   name: string;
-  role: UserRole;
+  role: Exclude<UserRole, null>;
   avatar: string;
+}
+
+interface AuthSessionResponse {
+  user: UserProfile;
+  expiresAt: number;
 }
 
 interface AuthContextType {
   user: UserProfile | null;
   role: UserRole;
-  login: (role: UserRole) => boolean;
-  logout: () => void;
-  renewSession: () => void;
+  login: (role: UserRole, accessCode: string) => Promise<boolean>;
+  logout: () => Promise<void>;
+  renewSession: () => Promise<boolean>;
   isLoading: boolean;
   isAuthenticated: boolean;
   sessionExpiresAt: number | null;
@@ -32,163 +34,182 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const AUTH_SESSION_KEY = "HiveMind_auth_session_v1";
-const LEGACY_ROLE_KEY = "HiveMind_role";
-const SESSION_TTL_MS = 12 * 60 * 60 * 1000;
-
-const ROLE_DATA: Record<string, UserProfile> = {
-  responder: { name: "Arun K.", role: "responder", avatar: "FR" },
-  coordinator: { name: "Inspector Nair", role: "coordinator", avatar: "DC" },
-  resident: { name: "Meera Ravi", role: "resident", avatar: "UR" },
-};
-
-function clearStoredAuth() {
-  localStorage.removeItem(AUTH_SESSION_KEY);
-  localStorage.removeItem(LEGACY_ROLE_KEY);
-}
-
-function buildSession(role: SessionRole): AuthSession {
-  const now = Date.now();
-  return {
-    role,
-    issuedAt: now,
-    expiresAt: now + SESSION_TTL_MS,
-    sessionId:
-      typeof crypto !== "undefined" && "randomUUID" in crypto
-        ? crypto.randomUUID()
-        : `${role}-${now}`,
-  };
-}
-
-function persistSession(session: AuthSession) {
-  localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(session));
-}
-
-function readStoredSession(): AuthSession | null {
-  const rawSession = localStorage.getItem(AUTH_SESSION_KEY);
-  if (!rawSession) {
-    return null;
+function isValidSessionPayload(payload: unknown): payload is AuthSessionResponse {
+  if (!payload || typeof payload !== "object") {
+    return false;
   }
 
-  try {
-    const parsed = JSON.parse(rawSession) as Partial<AuthSession>;
-    const role = parsed.role;
-    if (!role || !(role in ROLE_DATA)) {
-      return null;
-    }
-
-    if (
-      typeof parsed.issuedAt !== "number" ||
-      typeof parsed.expiresAt !== "number" ||
-      typeof parsed.sessionId !== "string"
-    ) {
-      return null;
-    }
-
-    return {
-      role,
-      issuedAt: parsed.issuedAt,
-      expiresAt: parsed.expiresAt,
-      sessionId: parsed.sessionId,
-    };
-  } catch {
-    return null;
-  }
+  const candidate = payload as Partial<AuthSessionResponse>;
+  return (
+    !!candidate.user &&
+    candidate.user.role === "resident" &&
+    typeof candidate.user.name === "string" &&
+    typeof candidate.user.avatar === "string" &&
+    typeof candidate.expiresAt === "number"
+  );
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [session, setSession] = useState<AuthSession | null>(null);
+  const [sessionExpiresAt, setSessionExpiresAt] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const storedSession = readStoredSession();
-
-    if (storedSession && storedSession.expiresAt > Date.now()) {
-      setSession(storedSession);
-      setUser(ROLE_DATA[storedSession.role]);
-      setIsLoading(false);
-      return;
-    }
-
-    const legacyRole = localStorage.getItem(LEGACY_ROLE_KEY);
-    if (legacyRole && ROLE_DATA[legacyRole]) {
-      const migratedSession = buildSession(legacyRole as SessionRole);
-      setSession(migratedSession);
-      setUser(ROLE_DATA[legacyRole]);
-      persistSession(migratedSession);
-      setIsLoading(false);
-      return;
-    }
-
-    clearStoredAuth();
-    setIsLoading(false);
+  const clearLocalAuth = useCallback(() => {
+    setUser(null);
+    setSessionExpiresAt(null);
   }, []);
 
-  useEffect(() => {
-    const handleStorage = (event: StorageEvent) => {
-      if (event.key !== AUTH_SESSION_KEY && event.key !== LEGACY_ROLE_KEY) {
+  const applySession = useCallback((payload: AuthSessionResponse) => {
+    setUser(payload.user);
+    setSessionExpiresAt(payload.expiresAt);
+  }, []);
+
+  const hydrateSession = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/auth/session", {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        clearLocalAuth();
         return;
       }
 
-      const restoredSession = readStoredSession();
-      if (restoredSession && restoredSession.expiresAt > Date.now()) {
-        setSession(restoredSession);
-        setUser(ROLE_DATA[restoredSession.role]);
-      } else {
-        setSession(null);
-        setUser(null);
+      const payload = (await response.json()) as unknown;
+      if (!isValidSessionPayload(payload)) {
+        clearLocalAuth();
+        return;
+      }
+
+      applySession(payload);
+    } catch {
+      clearLocalAuth();
+    } finally {
+      setIsLoading(false);
+    }
+  }, [applySession, clearLocalAuth]);
+
+  useEffect(() => {
+    void hydrateSession();
+  }, [hydrateSession]);
+
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") {
+        void hydrateSession();
       }
     };
 
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, []);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, [hydrateSession]);
 
-  const login = (role: UserRole) => {
-    if (role && ROLE_DATA[role]) {
-      const profile = ROLE_DATA[role];
-      const nextSession = buildSession(role);
-      setUser(profile);
-      setSession(nextSession);
-      persistSession(nextSession);
-      localStorage.setItem(LEGACY_ROLE_KEY, role);
+  const login = useCallback(
+    async (role: UserRole, accessCode: string) => {
+      if (role !== "resident" || !accessCode.trim()) {
+        return false;
+      }
+
+      setIsLoading(true);
+      try {
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ role, accessCode }),
+        });
+
+        if (!response.ok) {
+          clearLocalAuth();
+          return false;
+        }
+
+        const payload = (await response.json()) as unknown;
+        if (!isValidSessionPayload(payload)) {
+          clearLocalAuth();
+          return false;
+        }
+
+        applySession(payload);
+        return true;
+      } catch {
+        clearLocalAuth();
+        return false;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [applySession, clearLocalAuth],
+  );
+
+  const logout = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch {
+      // Keep logout resilient even if network fails.
+    } finally {
+      clearLocalAuth();
+      setIsLoading(false);
+    }
+  }, [clearLocalAuth]);
+
+  const renewSession = useCallback(async () => {
+    if (!user) {
+      return false;
+    }
+
+    try {
+      const response = await fetch("/api/auth/renew", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          clearLocalAuth();
+        }
+        return false;
+      }
+
+      const payload = (await response.json()) as unknown;
+      if (!isValidSessionPayload(payload)) {
+        clearLocalAuth();
+        return false;
+      }
+
+      applySession(payload);
       return true;
+    } catch {
+      return false;
     }
-
-    return false;
-  };
-
-  const logout = () => {
-    setUser(null);
-    setSession(null);
-    clearStoredAuth();
-  };
-
-  const renewSession = () => {
-    if (!session || !session.role) {
-      return;
-    }
-
-    const renewed = buildSession(session.role);
-    setSession(renewed);
-    persistSession(renewed);
-  };
+  }, [applySession, clearLocalAuth, user]);
 
   useEffect(() => {
-    if (!session) {
+    if (!sessionExpiresAt) {
       return;
     }
 
-    const timeoutMs = Math.max(session.expiresAt - Date.now(), 0);
+    const msUntilExpiry = sessionExpiresAt - Date.now();
+    if (msUntilExpiry <= 0) {
+      void logout();
+      return;
+    }
+
     const timeoutId = window.setTimeout(() => {
-      setUser(null);
-      setSession(null);
-      clearStoredAuth();
-    }, timeoutMs);
+      void logout();
+    }, msUntilExpiry);
 
     return () => window.clearTimeout(timeoutId);
-  }, [session]);
+  }, [logout, sessionExpiresAt]);
 
   return (
     <AuthContext.Provider
@@ -200,7 +221,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         renewSession,
         isLoading,
         isAuthenticated: Boolean(user),
-        sessionExpiresAt: session?.expiresAt ?? null,
+        sessionExpiresAt,
       }}
     >
       {children}
