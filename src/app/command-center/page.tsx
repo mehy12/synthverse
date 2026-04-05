@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { Suspense, useState } from "react";
 import { Activity, Camera, Shield } from "lucide-react";
 import MobileApp from "@/components/mobile/MobileApp";
+import RequireAuth from "@/components/auth/RequireAuth";
 
 const DeckMapView = dynamic(() => import("@/components/map/DeckMapView"), {
   ssr: false,
@@ -55,7 +56,7 @@ export default function MapPage() {
   } | null>(null);
 
   return (
-    <>
+    <RequireAuth>
     <div className="desktop-only" style={{ height: "calc(100vh - var(--nav-height))", position: "relative", display: "flex" }}>
       {/* Left Panel */}
       <div
@@ -328,7 +329,7 @@ export default function MapPage() {
     <div className="mobile-only">
       <MobileApp initialTab="map" />
     </div>
-    </>
+    </RequireAuth>
   );
 }
 

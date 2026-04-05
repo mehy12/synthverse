@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useState, type ComponentType, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import {
   Bell,
   Bot,
@@ -53,6 +54,32 @@ type FeedReport = {
   longitude: number;
   timestamp: string;
   verificationScore: number | null;
+};
+
+type SettingKey =
+  | "notifications"
+  | "layerDefaults"
+  | "gpsAccuracy"
+  | "reportPrivacy"
+  | "dataSync"
+  | "about";
+
+type MobileSettingsState = {
+  notificationsEnabled: boolean;
+  defaultLayerProfile: "balanced" | "sensors" | "evacuation";
+  gpsAccuracy: "balanced" | "high" | "battery";
+  reportPrivacy: "zk_anonymous" | "verified_public";
+  dataSync: "auto" | "manual";
+};
+
+const MOBILE_SETTINGS_KEY = "HiveMind_mobile_settings_v1";
+
+const DEFAULT_MOBILE_SETTINGS: MobileSettingsState = {
+  notificationsEnabled: true,
+  defaultLayerProfile: "balanced",
+  gpsAccuracy: "balanced",
+  reportPrivacy: "zk_anonymous",
+  dataSync: "auto",
 };
 
 interface MobileMapStageProps {
@@ -475,16 +502,79 @@ function ReportScreen() {
 }
 
 function SettingsScreen() {
-  const { user, logout } = useAuth();
+  const { user, logout, renewSession, sessionExpiresAt } = useAuth();
+  const router = useRouter();
+  const [openSetting, setOpenSetting] = useState<SettingKey | null>(null);
+  const [settings, setSettings] = useState<MobileSettingsState>(DEFAULT_MOBILE_SETTINGS);
+  const [status, setStatus] = useState("Settings are synced locally on this device.");
 
-  const rows = [
-    "Notifications",
-    "Map Layer Defaults",
-    "GPS Accuracy",
-    "Report Privacy",
-    "Data Sync",
-    "About HiveMind",
+  useEffect(() => {
+    const raw = localStorage.getItem(MOBILE_SETTINGS_KEY);
+    if (!raw) {
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(raw) as Partial<MobileSettingsState>;
+      setSettings((current) => ({
+        ...current,
+        ...parsed,
+      }));
+    } catch {
+      localStorage.removeItem(MOBILE_SETTINGS_KEY);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(MOBILE_SETTINGS_KEY, JSON.stringify(settings));
+  }, [settings]);
+
+  const rows: Array<{ key: SettingKey; title: string; summary: string }> = [
+    {
+      key: "notifications",
+      title: "Notifications",
+      summary: settings.notificationsEnabled ? "Operational alerts enabled" : "Muted",
+    },
+    {
+      key: "layerDefaults",
+      title: "Map Layer Defaults",
+      summary: settings.defaultLayerProfile,
+    },
+    {
+      key: "gpsAccuracy",
+      title: "GPS Accuracy",
+      summary: settings.gpsAccuracy,
+    },
+    {
+      key: "reportPrivacy",
+      title: "Report Privacy",
+      summary: settings.reportPrivacy === "zk_anonymous" ? "ZK anonymous" : "Verified public",
+    },
+    {
+      key: "dataSync",
+      title: "Data Sync",
+      summary: settings.dataSync === "auto" ? "Automatic" : "Manual",
+    },
+    {
+      key: "about",
+      title: "About HiveMind",
+      summary: "Version and session",
+    },
   ];
+
+  const sessionLabel = sessionExpiresAt
+    ? new Date(sessionExpiresAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    : "Not available";
+
+  const applySetting = (message: string, update: Partial<MobileSettingsState>) => {
+    setSettings((current) => ({ ...current, ...update }));
+    setStatus(message);
+  };
+
+  const handleLogout = () => {
+    logout();
+    router.replace("/login");
+  };
 
   return (
     <div className={styles.screen}>
@@ -497,20 +587,174 @@ function SettingsScreen() {
         <div className={styles.profileAvatar}>{user?.avatar || <UserCircle2 size={30} strokeWidth={1.8} />}</div>
         <div>
           <div className={styles.profileName}>{user?.name || "Field Operator"}</div>
-          <div className={styles.profileRole}>Field Operator</div>
+          <div className={styles.profileRole}>{user?.role || "Field Operator"}</div>
         </div>
       </div>
 
+      <div className={styles.settingsStatus}>{status}</div>
+
       <div className={styles.settingsList}>
-        {rows.map((row) => (
-          <button key={row} type="button" className={styles.settingRow}>
-            <span>{row}</span>
-            {row === "Report Privacy" ? <span className={styles.togglePill}>ZK Anonymous</span> : <ChevronDown size={18} strokeWidth={2.2} color="#8a97a8" />}
-          </button>
-        ))}
+        {rows.map((row) => {
+          const isOpen = openSetting === row.key;
+          return (
+            <div key={row.key} className={styles.settingCard}>
+              <button
+                type="button"
+                className={styles.settingRow}
+                onClick={() => setOpenSetting((current) => (current === row.key ? null : row.key))}
+                aria-expanded={isOpen}
+              >
+                <span>
+                  {row.title}
+                  <span className={styles.settingSummary}>{row.summary}</span>
+                </span>
+                <ChevronDown
+                  size={18}
+                  strokeWidth={2.2}
+                  color="#8a97a8"
+                  style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s ease" }}
+                />
+              </button>
+
+              {isOpen ? (
+                <div className={styles.settingPanel}>
+                  {row.key === "notifications" ? (
+                    <button
+                      type="button"
+                      className={styles.settingAction}
+                      onClick={() =>
+                        applySetting(
+                          settings.notificationsEnabled
+                            ? "Notifications muted."
+                            : "Notifications enabled for critical alerts.",
+                          { notificationsEnabled: !settings.notificationsEnabled },
+                        )
+                      }
+                    >
+                      {settings.notificationsEnabled ? "Disable Push Alerts" : "Enable Push Alerts"}
+                    </button>
+                  ) : null}
+
+                  {row.key === "layerDefaults" ? (
+                    <div className={styles.settingOptionRow}>
+                      {(["balanced", "sensors", "evacuation"] as const).map((option) => (
+                        <button
+                          key={option}
+                          type="button"
+                          className={`${styles.settingChip} ${
+                            settings.defaultLayerProfile === option ? styles.settingChipActive : ""
+                          }`}
+                          onClick={() =>
+                            applySetting(`Default map profile set to ${option}.`, {
+                              defaultLayerProfile: option,
+                            })
+                          }
+                        >
+                          {option}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  {row.key === "gpsAccuracy" ? (
+                    <div className={styles.settingOptionRow}>
+                      {(["balanced", "high", "battery"] as const).map((option) => (
+                        <button
+                          key={option}
+                          type="button"
+                          className={`${styles.settingChip} ${
+                            settings.gpsAccuracy === option ? styles.settingChipActive : ""
+                          }`}
+                          onClick={() =>
+                            applySetting(`GPS mode updated to ${option}.`, {
+                              gpsAccuracy: option,
+                            })
+                          }
+                        >
+                          {option}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  {row.key === "reportPrivacy" ? (
+                    <div className={styles.settingOptionRow}>
+                      <button
+                        type="button"
+                        className={`${styles.settingChip} ${
+                          settings.reportPrivacy === "zk_anonymous" ? styles.settingChipActive : ""
+                        }`}
+                        onClick={() =>
+                          applySetting("Reports will be shared in anonymous mode.", {
+                            reportPrivacy: "zk_anonymous",
+                          })
+                        }
+                      >
+                        ZK Anonymous
+                      </button>
+                      <button
+                        type="button"
+                        className={`${styles.settingChip} ${
+                          settings.reportPrivacy === "verified_public" ? styles.settingChipActive : ""
+                        }`}
+                        onClick={() =>
+                          applySetting("Reports will include identity verification.", {
+                            reportPrivacy: "verified_public",
+                          })
+                        }
+                      >
+                        Verified Public
+                      </button>
+                    </div>
+                  ) : null}
+
+                  {row.key === "dataSync" ? (
+                    <div className={styles.settingOptionRow}>
+                      <button
+                        type="button"
+                        className={`${styles.settingChip} ${
+                          settings.dataSync === "auto" ? styles.settingChipActive : ""
+                        }`}
+                        onClick={() => applySetting("Automatic sync enabled.", { dataSync: "auto" })}
+                      >
+                        Auto Sync
+                      </button>
+                      <button
+                        type="button"
+                        className={`${styles.settingChip} ${
+                          settings.dataSync === "manual" ? styles.settingChipActive : ""
+                        }`}
+                        onClick={() => applySetting("Manual sync mode enabled.", { dataSync: "manual" })}
+                      >
+                        Manual
+                      </button>
+                    </div>
+                  ) : null}
+
+                  {row.key === "about" ? (
+                    <>
+                      <div className={styles.aboutLine}>HiveMind Mobile v2.0</div>
+                      <div className={styles.aboutLine}>Session expires at: {sessionLabel}</div>
+                      <button
+                        type="button"
+                        className={styles.settingAction}
+                        onClick={() => {
+                          renewSession();
+                          setStatus("Secure session renewed.");
+                        }}
+                      >
+                        Renew Session
+                      </button>
+                    </>
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
       </div>
 
-      <button type="button" className={styles.logoutButton} onClick={logout}>Logout</button>
+      <button type="button" className={styles.logoutButton} onClick={handleLogout}>Logout</button>
     </div>
   );
 }

@@ -7,24 +7,34 @@ import { Shield, Radio, User, ArrowRight, CheckCircle } from "lucide-react";
 import Link from "next/link";
 
 export default function LoginPage() {
-  const { login, user } = useAuth();
+  const { login, user, isLoading } = useAuth();
   const router = useRouter();
   const [selectedRole, setSelectedRole] = useState<UserRole>(null);
+  const [nextPath, setNextPath] = useState("/map");
 
   useEffect(() => {
-    if (user) {
-      router.push("/map");
+    const nextPathParam = new URLSearchParams(window.location.search).get("next");
+    if (nextPathParam && nextPathParam.startsWith("/") && !nextPathParam.startsWith("//")) {
+      setNextPath(nextPathParam);
     }
-  }, [user, router]);
+  }, []);
 
-  if (user) {
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.replace(nextPath);
+    }
+  }, [isLoading, user, router, nextPath]);
+
+  if (isLoading || user) {
     return null;
   }
 
   const handleLogin = () => {
     if (selectedRole) {
-      login(selectedRole);
-      router.push("/map");
+      const success = login(selectedRole);
+      if (success) {
+        router.replace(nextPath);
+      }
     }
   };
 

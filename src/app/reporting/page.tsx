@@ -4,10 +4,11 @@ import Link from "next/link";
 import { Camera, Map, ShieldCheck } from "lucide-react";
 import LiveReportPanel from "@/components/reporting/LiveReportPanel";
 import MobileApp from "@/components/mobile/MobileApp";
+import RequireAuth from "@/components/auth/RequireAuth";
 
 export default function ReportingPage() {
   return (
-    <>
+    <RequireAuth>
       <div
         className="desktop-only"
         style={{
@@ -58,6 +59,6 @@ export default function ReportingPage() {
       <div className="mobile-only">
         <MobileApp initialTab="report" />
       </div>
-    </>
+    </RequireAuth>
   );
 }

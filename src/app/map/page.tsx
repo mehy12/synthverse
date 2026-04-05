@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { Map, Layers3, Shield } from "lucide-react";
 import MobileApp from "@/components/mobile/MobileApp";
+import RequireAuth from "@/components/auth/RequireAuth";
 
 const MapView = dynamic(() => import("@/components/map/MapView"), {
   ssr: false,
@@ -35,7 +36,7 @@ export default function MapPage() {
   }, []);
 
   return (
-    <>
+    <RequireAuth>
       <div className="desktop-only" style={{ height: "calc(100vh - var(--nav-height))", position: "relative" }}>
         <MapView initialSafeZones={safeZoneMode} />
 
@@ -85,6 +86,6 @@ export default function MapPage() {
       <div className="mobile-only">
         <MobileApp initialTab="map" />
       </div>
-    </>
+    </RequireAuth>
   );
 }
