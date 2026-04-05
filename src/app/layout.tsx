@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "HiveMind â€” AI-Powered Urban Flood Digital Twin",
+  title: "HiveMind - AI-Powered Urban Flood Digital Twin",
   description:
     "Real-time flood simulation, cascade forecasting, evacuation zone mapping, and AI-driven disaster response. Turning urban data into life-saving decisions.",
   keywords: [

@@ -57,7 +57,7 @@ export default function MapPage() {
   return (
     <>
     <div className="desktop-only" style={{ height: "calc(100vh - var(--nav-height))", position: "relative", display: "flex" }}>
-      {/* â”€â”€ Left Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* Left Panel */}
       <div
         style={{
           width: 400,
@@ -90,7 +90,7 @@ export default function MapPage() {
 
           <div style={{ marginBottom: "12px" }}>
             <span className="badge badge-teal" style={{ marginRight: 6 }}>
-              ðŸ“ Odisha Corridor
+              Odisha Corridor
             </span>
           </div>
 
@@ -312,13 +312,13 @@ export default function MapPage() {
             }}
           />
           <span>
-            Flood sensor feed â€¢ refreshing every 5 minutes â€¢{" "}
+            Flood sensor feed - refreshing every 5 minutes -{" "}
             {summary?.source ?? "API status: Healthy"}
           </span>
         </div>
       </div>
 
-      {/* â”€â”€ Center Map â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* Center Map */}
       <div style={{ flex: 1, position: "relative" }}>
         <Suspense fallback={<div>Loading Map...</div>}>
           <DeckMapView refreshKey={refreshKey} onSummaryChange={setSummary} />

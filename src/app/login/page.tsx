@@ -128,7 +128,7 @@ export default function LoginPage() {
           </button>
           <div style={{ marginTop: "20px" }}>
             <Link href="/" style={{ fontSize: "0.82rem", color: "var(--text-muted)", fontWeight: 600 }}>
-              â† Return to homepage
+              <- Return to homepage
             </Link>
           </div>
         </div>
