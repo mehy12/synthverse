@@ -43,7 +43,7 @@ export default function LoginPage() {
       desc: "Monitor district-level telemetry and manage flood mitigation resources.",
       icon: <Shield size={24} strokeWidth={1.5} />,
       color: "var(--warning)",
-      benefits: ["Threat analytics", "Sensor oversight", "AI cascade reports"]
+      benefits: ["Threat monitoring", "Sensor oversight", "AI cascade reports"]
     },
     {
       id: "resident",

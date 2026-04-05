@@ -24,9 +24,9 @@ export default function Home() {
             <strong style={{ color: "var(--teal)" }}>FloodMind does all three.</strong>
           </p>
           <div className={`${styles.ctaGroup} animate-slide-up`} style={{ animationDelay: "0.3s" }}>
-            <Link href="/analytics" className="btn btn-primary btn-lg">
+            <Link href="/live-feed" className="btn btn-primary btn-lg">
               <Activity size={18} strokeWidth={1.5} />
-              Trigger Simulation
+              Open Live Feed
             </Link>
             <Link href="/command-center" className="btn btn-secondary btn-lg">
               Open Command Center <ArrowRight size={16} strokeWidth={1.5} />
@@ -117,7 +117,7 @@ export default function Home() {
             <span className={styles.cardCta}>View <ArrowRight size={14} strokeWidth={1.5} /></span>
           </Link>
 
-          <Link href="/analytics" className={`${styles.featureCard} animate-slide-up stagger-item`}>
+          <Link href="/live-feed" className={`${styles.featureCard} animate-slide-up stagger-item`}>
             <div className={styles.iconWrapper} style={{ background: "rgba(249, 115, 22, 0.08)", color: "var(--warning)" }}>
               <Activity size={20} strokeWidth={1.5} />
             </div>
@@ -128,7 +128,7 @@ export default function Home() {
             <span className={styles.cardCta}>View <ArrowRight size={14} strokeWidth={1.5} /></span>
           </Link>
 
-          <Link href="/analytics" className={`${styles.featureCard} animate-slide-up stagger-item`}>
+          <Link href="/live-feed" className={`${styles.featureCard} animate-slide-up stagger-item`}>
             <div className={styles.iconWrapper} style={{ background: "rgba(16, 185, 129, 0.08)", color: "var(--safe)" }}>
               <BarChart3 size={20} strokeWidth={1.5} />
             </div>
@@ -162,8 +162,8 @@ export default function Home() {
             <Link href="/command-center" className="btn btn-primary btn-lg">
               <Map size={18} strokeWidth={1.5} /> Open Command Center
             </Link>
-            <Link href="/analytics" className="btn btn-secondary btn-lg">
-              <TrendingUp size={18} strokeWidth={1.5} /> Run Simulation
+            <Link href="/live-feed" className="btn btn-secondary btn-lg">
+              <TrendingUp size={18} strokeWidth={1.5} /> View Live Feed
             </Link>
           </div>
         </div>

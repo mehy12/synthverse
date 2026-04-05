@@ -119,11 +119,11 @@ export default function MapPage() {
 
           <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
             <Link
-              href="/analytics"
+              href="/live-feed"
               className="btn btn-primary btn-sm"
               style={{ flex: 1, justifyContent: "center" }}
             >
-              <Activity size={14} strokeWidth={1.5} /> Trigger Simulation
+              <Activity size={14} strokeWidth={1.5} /> Open Live Feed
             </Link>
             <button
               type="button"
