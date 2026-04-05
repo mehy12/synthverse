@@ -6,15 +6,17 @@ import { Suspense, useState } from "react";
 import { Activity } from "lucide-react";
 import LiveReportPanel from "@/components/reporting/LiveReportPanel";
 
-const MapView = dynamic(() => import("@/components/map/MapView"), {
+const DeckMapView = dynamic(() => import("@/components/map/DeckMapView"), {
   ssr: false,
   loading: () => (
     <div
       style={{
-        height: "calc(100vh - var(--nav-height))",
+        height: "100%",
+        width: "100%",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        background: "#f8f9fa",
         position: "relative",
       }}
     >
@@ -116,7 +118,7 @@ export default function MapPage() {
               lineHeight: 1.5,
             }}
           >
-            Flood sensor data, evacuation zones, imaginary water pipelines, and
+            Flood sensor data, evacuation zones, water infrastructure, and
             citizen anomaly reports in a single operational view.
           </p>
 
@@ -294,7 +296,7 @@ export default function MapPage() {
       {/* ── Center Map ─────────────────────────────────────── */}
       <div style={{ flex: 1, position: "relative" }}>
         <Suspense fallback={<div>Loading Map...</div>}>
-          <MapView refreshKey={refreshKey} onSummaryChange={setSummary} />
+          <DeckMapView refreshKey={refreshKey} onSummaryChange={setSummary} />
         </Suspense>
       </div>
     </div>
