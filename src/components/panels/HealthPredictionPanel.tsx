@@ -154,7 +154,7 @@ export default function HealthPredictionPanel({
         overflow: "hidden",
         background: bg,
         border: `1px solid ${border}`,
-        borderRadius: 14,
+        borderRadius: 4,
         backdropFilter: "blur(16px)",
         boxShadow: isDark
           ? "0 8px 32px rgba(0,0,0,0.5)"
@@ -218,7 +218,7 @@ export default function HealthPredictionPanel({
                 style={{
                   flex: 1,
                   padding: "6px",
-                  borderRadius: 8,
+                  borderRadius: 3,
                   fontSize: "0.72rem",
                   fontWeight: 700,
                   background: activeTab === key ? accent : cardBg,
@@ -280,7 +280,7 @@ export default function HealthPredictionPanel({
                         justifyContent: "space-between",
                         padding: "8px 10px",
                         background: cardBg,
-                        borderRadius: 8,
+                        borderRadius: 3,
                         fontSize: "0.65rem",
                         color: muted,
                         marginBottom: 4,
@@ -308,7 +308,7 @@ export default function HealthPredictionPanel({
                             : "rgba(16, 185, 129, 0.05)"
                           : cardBg,
                         border: `1px solid ${i === 0 ? "rgba(16, 185, 129, 0.3)" : border}`,
-                        borderRadius: 10,
+                        borderRadius: 3,
                         cursor: "pointer",
                         transition: "all 0.2s",
                       }}
@@ -352,7 +352,7 @@ export default function HealthPredictionPanel({
                               color: "#10b981",
                               background: "rgba(16,185,129,0.1)",
                               padding: "2px 6px",
-                              borderRadius: 4,
+                              borderRadius: 2,
                               flexShrink: 0,
                             }}
                           >
@@ -413,7 +413,7 @@ export default function HealthPredictionPanel({
                 style={{
                   width: "100%",
                   padding: "8px",
-                  borderRadius: 8,
+                  borderRadius: 3,
                   fontSize: "0.72rem",
                   fontWeight: 700,
                   background: loading ? muted : "#dc2626",
@@ -462,7 +462,7 @@ export default function HealthPredictionPanel({
                           ? "rgba(245,158,11,0.3)"
                           : border
                     }`,
-                    borderRadius: 10,
+                    borderRadius: 3,
                     marginBottom: 8,
                   }}
                 >
@@ -502,7 +502,7 @@ export default function HealthPredictionPanel({
                             ? "rgba(239,68,68,0.1)"
                             : "rgba(245,158,11,0.1)",
                         padding: "2px 6px",
-                        borderRadius: 4,
+                        borderRadius: 2,
                       }}
                     >
                       {d.dispatchStatus === "auto_dispatched"
@@ -555,7 +555,7 @@ export default function HealthPredictionPanel({
                         background: isDark
                           ? "rgba(56,189,248,0.06)"
                           : "rgba(14,165,233,0.05)",
-                        borderRadius: 6,
+                        borderRadius: 3,
                         border: `1px solid ${isDark ? "rgba(56,189,248,0.2)" : "rgba(14,165,233,0.15)"}`,
                         cursor: "pointer",
                         fontSize: "0.68rem",

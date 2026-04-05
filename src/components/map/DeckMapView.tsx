@@ -26,7 +26,6 @@ import {
 
 import {
   ODISHA_DISTRICTS,
-  getTimeMultiplier,
   type DistrictFeature,
 } from "@/data/odisha-geo";
 import {
@@ -48,7 +47,6 @@ import {
   createShelterLayer,
 } from "./deck-layers";
 
-import TimeSlider from "./TimeSlider";
 import DashboardPanel from "../panels/DashboardPanel";
 import CommandPanel from "../panels/CommandPanel";
 import HealthPredictionPanel from "../panels/HealthPredictionPanel";
@@ -234,8 +232,6 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
   }, [heatmapPoints]);
 
   useARO(showARO, responseTargets);
-
-  const timeLabel = useMemo(() => getTimeMultiplier(timeHour).label, [timeHour]);
 
   // ── Map click handler — mark hazard point ──────────────────────
   const handleMapClick = useCallback((info: any) => {
@@ -926,9 +922,6 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
             </div>
           </div>
         )}
-
-        {/* Time Slider */}
-        <TimeSlider value={timeHour} onChange={setTimeHour} label={timeLabel} />
 
         {/* Health Prediction Panel */}
         <HealthPredictionPanel

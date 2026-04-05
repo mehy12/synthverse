@@ -67,7 +67,7 @@ function CustomTooltip({ active, payload, label }: any) {
       style={{
         background: "rgba(255, 255, 255, 0.98)",
         border: "1px solid rgba(203, 213, 225, 1)",
-        borderRadius: 8,
+        borderRadius: 3,
         padding: "8px 12px",
         fontSize: "0.72rem",
         color: "#1f2937",
@@ -281,7 +281,7 @@ export default function DashboardPanel({
               {/* District Detail Card */}
               <div
                 style={{
-                  borderRadius: 12,
+                  borderRadius: 4,
                   border: "1px solid rgba(226, 232, 240, 1)",
                   background: "rgba(255, 255, 255, 0.98)",
                   padding: 16,
@@ -330,7 +330,7 @@ export default function DashboardPanel({
                     <span
                       style={{
                         padding: "4px 10px",
-                        borderRadius: 6,
+                        borderRadius: 3,
                         background: riskBadge.bg,
                         color: riskBadge.text,
                         border: `1px solid ${riskBadge.border}`,
@@ -349,7 +349,7 @@ export default function DashboardPanel({
                         justifyContent: "center",
                         width: 24,
                         height: 24,
-                        borderRadius: 6,
+                        borderRadius: 3,
                         background: "rgba(241, 245, 249, 1)",
                         border: "none",
                         cursor: "pointer",
@@ -372,7 +372,7 @@ export default function DashboardPanel({
                   <div
                     style={{
                       padding: 10,
-                      borderRadius: 8,
+                      borderRadius: 3,
                       background: "rgba(248, 250, 252, 1)",
                       border: "1px solid rgba(226, 232, 240, 1)",
                     }}
@@ -399,7 +399,7 @@ export default function DashboardPanel({
                   <div
                     style={{
                       padding: 10,
-                      borderRadius: 8,
+                      borderRadius: 3,
                       background: "rgba(248, 250, 252, 1)",
                       border: "1px solid rgba(226, 232, 240, 1)",
                     }}
@@ -441,7 +441,7 @@ export default function DashboardPanel({
               {/* Rainfall Chart */}
               <div
                 style={{
-                  borderRadius: 12,
+                  borderRadius: 4,
                   border: "1px solid rgba(226, 232, 240, 1)",
                   background: "rgba(255, 255, 255, 0.98)",
                   padding: 16,
@@ -503,7 +503,7 @@ export default function DashboardPanel({
               {/* Water Level Chart */}
               <div
                 style={{
-                  borderRadius: 12,
+                  borderRadius: 4,
                   border: "1px solid rgba(226, 232, 240, 1)",
                   background: "rgba(255, 255, 255, 0.98)",
                   padding: 16,
@@ -616,7 +616,7 @@ export default function DashboardPanel({
                 style={{
                   width: "100%",
                   marginTop: 24,
-                  borderRadius: 12,
+                  borderRadius: 4,
                   border: "1px solid rgba(226, 232, 240, 1)",
                   background: "rgba(255, 255, 255, 0.98)",
                   overflow: "hidden",
@@ -690,7 +690,7 @@ export default function DashboardPanel({
                         <span
                           style={{
                             padding: "2px 6px",
-                            borderRadius: 4,
+                            borderRadius: 2,
                             background: badge.bg,
                             color: badge.text,
                             border: `1px solid ${badge.border}`,
