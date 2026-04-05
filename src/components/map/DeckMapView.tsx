@@ -27,7 +27,6 @@ import {
 import {
   ODISHA_DISTRICTS,
   getTimeMultiplier,
-  generateAlerts,
   type DistrictFeature,
 } from "@/data/odisha-geo";
 import {
@@ -49,7 +48,6 @@ import {
   createShelterLayer,
 } from "./deck-layers";
 
-import AlertBanner from "./AlertBanner";
 import TimeSlider from "./TimeSlider";
 import DashboardPanel from "../panels/DashboardPanel";
 import CommandPanel from "../panels/CommandPanel";
@@ -237,8 +235,6 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
 
   useARO(showARO, responseTargets);
 
-  // ── Alerts ─────────────────────────────────────────────────────
-  const alerts = useMemo(() => generateAlerts(ODISHA_DISTRICTS, timeHour), [timeHour]);
   const timeLabel = useMemo(() => getTimeMultiplier(timeHour).label, [timeHour]);
 
   // ── Map click handler — mark hazard point ──────────────────────
@@ -581,9 +577,6 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
         >
           <MapLibreMap mapStyle={MAP_STYLES[baseLayer]} attributionControl={false} />
         </DeckGL>
-
-        {/* Alert Banner */}
-        <AlertBanner alerts={alerts} />
 
         {/* ARO Toggle */}
         <button
