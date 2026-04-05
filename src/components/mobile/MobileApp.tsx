@@ -27,6 +27,14 @@ import { useAuth } from "@/context/AuthContext";
 import styles from "./MobileApp.module.css";
 
 type MobileTab = "map" | "analytics" | "report" | "settings";
+type MapLayerMode = "light" | "dark";
+type MapTarget = { lat: number; lng: number };
+
+interface MobileMapStageProps {
+  layerMode: MapLayerMode;
+  zoomSignal: number;
+  focusTarget: MapTarget | null;
+}
 
 interface MobileAppProps {
   initialTab?: MobileTab;
@@ -100,8 +108,14 @@ function StopwatchIcon() {
   );
 }
 
-function MapScreen() {
-  const [MobileMapStage, setMobileMapStage] = useState<ComponentType | null>(null);
+function MapScreen({ onOpenAnalytics }: { onOpenAnalytics: () => void }) {
+  const [MobileMapStage, setMobileMapStage] = useState<ComponentType<MobileMapStageProps> | null>(null);
+  const [layerMode, setLayerMode] = useState<MapLayerMode>("light");
+  const [zoomSignal, setZoomSignal] = useState(0);
+  const [focusTarget, setFocusTarget] = useState<MapTarget | null>(null);
+  const [statusMessage, setStatusMessage] = useState(
+    "Tap a control to interact with the live map.",
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -117,6 +131,43 @@ function MapScreen() {
     };
   }, []);
 
+  const handleNotificationTap = () => {
+    window.alert("Notifications: 3 active alerts, 1 unresolved report.");
+  };
+
+  const handleLayerToggle = () => {
+    setLayerMode((currentMode) => {
+      const nextMode = currentMode === "light" ? "dark" : "light";
+      setStatusMessage(`Basemap switched to ${nextMode === "light" ? "light" : "dark"} mode.`);
+      return nextMode;
+    });
+  };
+
+  const handleZoomIn = () => {
+    setZoomSignal((value) => value + 1);
+    setStatusMessage("Zoomed in on the map.");
+  };
+
+  const handleLocate = () => {
+    if (typeof navigator !== "undefined" && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setFocusTarget({ lat: position.coords.latitude, lng: position.coords.longitude });
+          setStatusMessage("Centered on your current location.");
+        },
+        () => {
+          setFocusTarget({ lat: 20.2961, lng: 85.8245 });
+          setStatusMessage("Location unavailable. Centered on the Odisha corridor.");
+        },
+        { enableHighAccuracy: true, timeout: 3000, maximumAge: 0 },
+      );
+      return;
+    }
+
+    setFocusTarget({ lat: 20.2961, lng: 85.8245 });
+    setStatusMessage("Centered on the Odisha corridor.");
+  };
+
   return (
     <div className={styles.screen}>
       <TopBar
@@ -127,11 +178,25 @@ function MapScreen() {
             SYSTEM ACTIVE
           </div>
         }
-        right={<button className={styles.iconButton} type="button" aria-label="Notifications"><Bell size={22} strokeWidth={2} /></button>}
+        right={<button className={styles.iconButton} type="button" aria-label="Notifications" onClick={handleNotificationTap}><Bell size={22} strokeWidth={2} /></button>}
       />
 
+      <div className={styles.mapActionBanner}>
+        <div className={styles.mapActionBannerIcon}>
+          <Bell size={18} strokeWidth={2.3} />
+        </div>
+        <div>
+          <div className={styles.mapActionBannerTitle}>Live Map Response</div>
+          <div className={styles.mapActionBannerText}>{statusMessage}</div>
+        </div>
+      </div>
+
       <div className={styles.mapStage}>
-        {MobileMapStage ? <MobileMapStage /> : <div className={styles.mobileMapLoading} />}
+        {MobileMapStage ? (
+          <MobileMapStage layerMode={layerMode} zoomSignal={zoomSignal} focusTarget={focusTarget} />
+        ) : (
+          <div className={styles.mobileMapLoading} />
+        )}
 
         <div className={styles.mapOverlayCard}>
           <div className={styles.cardLabel}>ZONES MONITORED</div>
@@ -152,9 +217,9 @@ function MapScreen() {
         </div>
 
         <div className={styles.mapControls}>
-          <button type="button" className={styles.controlButton} aria-label="Locate"><Crosshair size={24} strokeWidth={2.2} /></button>
-          <button type="button" className={styles.controlButton} aria-label="Layers"><Layers3 size={24} strokeWidth={2.2} /></button>
-          <button type="button" className={styles.controlButton} aria-label="Zoom in"><ZoomIn size={24} strokeWidth={2.2} /></button>
+          <button type="button" className={styles.controlButton} aria-label="Locate" onClick={handleLocate}><Crosshair size={24} strokeWidth={2.2} /></button>
+          <button type="button" className={styles.controlButton} aria-label="Layers" onClick={handleLayerToggle}><Layers3 size={24} strokeWidth={2.2} /></button>
+          <button type="button" className={styles.controlButton} aria-label="Zoom in" onClick={handleZoomIn}><ZoomIn size={24} strokeWidth={2.2} /></button>
         </div>
 
         <div className={styles.mapBottomSheet}>
@@ -167,7 +232,7 @@ function MapScreen() {
                 <div className={styles.sheetSubtitle}>Live Heatmap</div>
               </div>
             </div>
-            <button type="button" className={styles.simulationButton}>
+            <button type="button" className={styles.simulationButton} onClick={onOpenAnalytics}>
               <span className={styles.robotIcon}><Bot size={18} strokeWidth={2.2} /></span>
               Trigger Simulation
             </button>
@@ -189,7 +254,7 @@ function AnalyticsScreen() {
     <div className={styles.screen}>
       <TopBar
         left={<Brand />}
-        right={<div className={styles.topBarIcons}><button className={styles.iconButton} type="button" aria-label="Notifications"><Bell size={22} strokeWidth={2} /></button><div className={styles.avatarCircle}><UserCircle2 size={28} strokeWidth={1.8} /></div></div>}
+        right={<div className={styles.topBarIcons}><button className={styles.iconButton} type="button" aria-label="Notifications" onClick={() => window.alert("Notifications: 2 active alerts and 1 pending report.")}><Bell size={22} strokeWidth={2} /></button><div className={styles.avatarCircle}><UserCircle2 size={28} strokeWidth={1.8} /></div></div>}
       />
 
       <div className={styles.sectionEyebrow}>REAL-TIME ANALYSIS</div>
@@ -270,7 +335,7 @@ function ReportScreen() {
     <div className={styles.screen}>
       <TopBar
         left={<Brand />}
-        right={<div className={styles.topBarIcons}><button className={styles.iconButton} type="button" aria-label="Notifications"><Bell size={22} strokeWidth={2} /></button><div className={styles.avatarCircle}><UserCircle2 size={28} strokeWidth={1.8} /></div></div>}
+        right={<div className={styles.topBarIcons}><button className={styles.iconButton} type="button" aria-label="Notifications" onClick={() => window.alert("Notifications: report feed is live.")}><Bell size={22} strokeWidth={2} /></button><div className={styles.avatarCircle}><UserCircle2 size={28} strokeWidth={1.8} /></div></div>}
       />
 
       <div className={styles.cameraFrame}>
@@ -361,7 +426,7 @@ function SettingsScreen() {
     <div className={styles.screen}>
       <TopBar
         left={<Brand />}
-        right={<div className={styles.topBarIcons}><button className={styles.iconButton} type="button" aria-label="Notifications"><Bell size={22} strokeWidth={2} /></button><div className={styles.avatarCircle}>{user?.avatar || <UserCircle2 size={28} strokeWidth={1.8} />}</div></div>}
+        right={<div className={styles.topBarIcons}><button className={styles.iconButton} type="button" aria-label="Notifications" onClick={() => window.alert("Notifications: settings sync is up to date.")}><Bell size={22} strokeWidth={2} /></button><div className={styles.avatarCircle}>{user?.avatar || <UserCircle2 size={28} strokeWidth={1.8} />}</div></div>}
       />
 
       <div className={styles.profileCard}>
@@ -395,7 +460,7 @@ export default function MobileApp({ initialTab = "map" }: MobileAppProps) {
 
   return (
     <div className={styles.mobileApp}>
-      {activeTab === "map" ? <MapScreen /> : null}
+      {activeTab === "map" ? <MapScreen onOpenAnalytics={() => setActiveTab("analytics")} /> : null}
       {activeTab === "analytics" ? <AnalyticsScreen /> : null}
       {activeTab === "report" ? <ReportScreen /> : null}
       {activeTab === "settings" ? <SettingsScreen /> : null}

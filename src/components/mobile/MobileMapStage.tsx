@@ -1,9 +1,45 @@
 "use client";
 
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { useEffect, useRef } from "react";
+import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import styles from "./MobileApp.module.css";
 import "leaflet/dist/leaflet.css";
+
+type MapLayerMode = "light" | "dark";
+
+interface MobileMapStageProps {
+  layerMode: MapLayerMode;
+  zoomSignal: number;
+  focusTarget: { lat: number; lng: number } | null;
+}
+
+function MapEffects({ zoomSignal, focusTarget }: Pick<MobileMapStageProps, "zoomSignal" | "focusTarget">) {
+  const map = useMap();
+  const previousZoomSignal = useRef(zoomSignal);
+
+  useEffect(() => {
+    if (zoomSignal === previousZoomSignal.current) {
+      return;
+    }
+
+    previousZoomSignal.current = zoomSignal;
+    map.zoomIn();
+  }, [map, zoomSignal]);
+
+  useEffect(() => {
+    if (!focusTarget) {
+      return;
+    }
+
+    map.flyTo([focusTarget.lat, focusTarget.lng], Math.max(map.getZoom(), 13), {
+      animate: true,
+      duration: 0.8,
+    });
+  }, [focusTarget, map]);
+
+  return null;
+}
 
 function createIcon(html: string) {
   return L.divIcon({
@@ -14,7 +50,11 @@ function createIcon(html: string) {
   });
 }
 
-export default function MobileMapStage() {
+export default function MobileMapStage({ layerMode, zoomSignal, focusTarget }: MobileMapStageProps) {
+  const tileUrl = layerMode === "light"
+    ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+    : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+
   const waterIcon = createIcon(`
     <div style="display:flex;flex-direction:column;align-items:center;gap:6px;transform:translate(-50%, -100%);">
       <div style="width:34px;height:34px;border-radius:12px;background:#c81e1e;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 18px rgba(0,0,0,.18);">
@@ -52,7 +92,8 @@ export default function MobileMapStage() {
 
   return (
     <MapContainer center={[20.2961, 85.8245]} zoom={11} scrollWheelZoom={false} zoomControl={false} className={styles.mapContainer}>
-      <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" attribution="" />
+      <TileLayer key={layerMode} url={tileUrl} attribution="" />
+      <MapEffects zoomSignal={zoomSignal} focusTarget={focusTarget} />
       <Marker position={[20.406, 85.91]} icon={waterIcon} />
       <Marker position={[20.245, 85.74]} icon={sensorIcon} />
       <Marker position={[20.125, 85.88]} icon={normalIcon} />
