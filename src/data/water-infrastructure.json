@@ -1,0 +1,234 @@
+{
+  "waterways": [
+    {
+      "name": "Mahanadi River",
+      "kind": "river",
+      "color": "#38BDF8",
+      "line": [
+        [21.5167, 83.873],
+        [21.2, 84.3],
+        [20.89, 84.83],
+        [20.4625, 85.8828]
+      ],
+      "description": "Main river corridor through central Odisha."
+    },
+    {
+      "name": "Brahmani River",
+      "kind": "river",
+      "color": "#22D3EE",
+      "line": [
+        [22.12, 85.24],
+        [21.74, 85.34],
+        [21.24, 85.8],
+        [20.98, 86.1]
+      ],
+      "description": "Industrial river corridor feeding the eastern delta."
+    },
+    {
+      "name": "Baitarani River",
+      "kind": "river",
+      "color": "#06B6D4",
+      "line": [
+        [21.98, 86.66],
+        [21.49, 86.43],
+        [21.07, 86.05],
+        [20.98, 86.1]
+      ],
+      "description": "Northern Odisha river belt highlighted for flood routing."
+    },
+    {
+      "name": "Subarnarekha River",
+      "kind": "river",
+      "color": "#67E8F9",
+      "line": [
+        [22.1, 86.65],
+        [21.7, 86.92],
+        [21.04, 87.32]
+      ],
+      "description": "Northern coastal river frontage near the Odisha border."
+    },
+    {
+      "name": "Rushikulya River",
+      "kind": "river",
+      "color": "#0EA5E9",
+      "line": [
+        [19.46, 84.89],
+        [19.3, 84.7941],
+        [19.02, 84.93]
+      ],
+      "description": "Southern coastal river highlighted around Ganjam."
+    },
+    {
+      "name": "Chilika Lake",
+      "kind": "lake",
+      "color": "#0F766E",
+      "polygon": [
+        [19.98, 85.3],
+        [19.9, 85.56],
+        [19.66, 85.57],
+        [19.47, 85.35],
+        [19.55, 85.12],
+        [19.8, 85.16]
+      ],
+      "description": "Highlighted lagoon and wetland complex."
+    },
+    {
+      "name": "Bay of Bengal Coastline",
+      "kind": "coast",
+      "color": "#60A5FA",
+      "line": [
+        [18.0, 86.2],
+        [18.45, 86.05],
+        [19.05, 86.12],
+        [19.65, 86.24],
+        [20.25, 86.56],
+        [20.85, 86.98]
+      ],
+      "description": "Coastal water edge highlighted for orientation."
+    }
+  ],
+  "pipelines": [
+    {
+      "name": "Mahanadi Trunk Line",
+      "description": "A fictional inland supply corridor linking the Mahanadi basin to central Odisha.",
+      "color": "#0EA5E9",
+      "path": [
+        [21.5167, 83.873],
+        [21.4704, 83.9758],
+        [20.4625, 85.8828],
+        [20.2961, 85.8245]
+      ]
+    },
+    {
+      "name": "Coastal Relief Main",
+      "description": "An imaginary coastal transfer line tracing the Bay-facing evacuation belt.",
+      "color": "#14B8A6",
+      "path": [
+        [19.8135, 85.8312],
+        [19.703, 85.522],
+        [20.3164, 86.6104]
+      ]
+    },
+    {
+      "name": "Eastern Water Ring",
+      "description": "A made-up support loop feeding flood response hubs across the eastern corridor.",
+      "color": "#3B82F6",
+      "path": [
+        [20.2961, 85.8245],
+        [20.4625, 85.8828],
+        [20.3164, 86.6104],
+        [19.8135, 85.8312]
+      ]
+    }
+  ],
+  "basins": [
+    {
+      "name": "Mahanadi Basin",
+      "kind": "basin",
+      "color": "#1E40AF",
+      "polygon": [
+        [21.8, 83.5],
+        [22.0, 84.0],
+        [21.5, 85.5],
+        [20.5, 85.5],
+        [20.0, 84.5],
+        [20.5, 83.5]
+      ],
+      "description": "Primary floodplain and water collection basin"
+    },
+    {
+      "name": "Brahmani-Baitarani Basin",
+      "kind": "basin",
+      "color": "#0C4A6E",
+      "polygon": [
+        [21.5, 85.5],
+        [22.5, 86.0],
+        [22.0, 87.0],
+        [21.0, 86.5],
+        [20.5, 85.8]
+      ],
+      "description": "Eastern delta basin and confluence zone"
+    },
+    {
+      "name": "Subarnarekha Wetlands",
+      "kind": "wetland",
+      "color": "#164E63",
+      "polygon": [
+        [22.0, 86.5],
+        [22.3, 87.0],
+        [22.1, 87.5],
+        [21.8, 87.2]
+      ],
+      "description": "Northern wetland preservation zone"
+    }
+  ],
+  "irrigation": [
+    {
+      "name": "Upper Mahanadi Canal",
+      "color": "#3B82F6",
+      "opacity": 0.6,
+      "line": [
+        [21.8, 83.8],
+        [21.5, 84.5],
+        [21.2, 85.0],
+        [20.9, 85.3]
+      ]
+    },
+    {
+      "name": "Lower Mahanadi Canal",
+      "color": "#2563EB",
+      "opacity": 0.6,
+      "line": [
+        [20.9, 85.3],
+        [20.6, 85.8],
+        [20.4, 86.2],
+        [20.2, 86.5]
+      ]
+    },
+    {
+      "name": "Brahmani Irrigation Network",
+      "color": "#1D4ED8",
+      "opacity": 0.6,
+      "line": [
+        [22.0, 85.5],
+        [21.5, 85.8],
+        [21.0, 86.2],
+        [20.8, 86.5]
+      ]
+    },
+    {
+      "name": "Eastern Drainage Main",
+      "color": "#1E40AF",
+      "opacity": 0.5,
+      "line": [
+        [21.5, 86.0],
+        [21.2, 86.5],
+        [20.9, 87.0],
+        [20.6, 87.3]
+      ]
+    }
+  ],
+  "flood_channels": [
+    {
+      "name": "Mahanadi Backflow",
+      "lat": 20.46,
+      "lng": 85.88,
+      "severity": "medium",
+      "color": "#F97316"
+    },
+    {
+      "name": "Chilika Inlet Surge",
+      "lat": 19.72,
+      "lng": 85.48,
+      "severity": "high",
+      "color": "#EF4444"
+    }
+  ],
+  "evacuation_zones": [
+    { "name": "Bhubaneswar East", "lat": 20.2961, "lng": 85.8245, "waterQuality": 62 },
+    { "name": "Cuttack Riverside", "lat": 20.4625, "lng": 85.8828, "waterQuality": 54 },
+    { "name": "Puri Coast", "lat": 19.8135, "lng": 85.8312, "waterQuality": 68 },
+    { "name": "Sambalpur Basin", "lat": 21.4704, "lng": 83.9758, "waterQuality": 74 },
+    { "name": "Paradeep Port", "lat": 20.3164, "lng": 86.6104, "waterQuality": 49 }
+  ]
+}

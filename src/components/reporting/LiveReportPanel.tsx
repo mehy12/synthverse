@@ -130,6 +130,17 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
   const [description, setDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState<string | null>(null);
+  const [manualCoords, setManualCoords] = useState<{ latitude: number; longitude: number } | null>(null);
+
+  useEffect(() => {
+    const handleMark = (e: any) => {
+      const { lat, lng } = e.detail;
+      setManualCoords({ latitude: Number(lat), longitude: Number(lng) });
+      setSubmitMessage(`Map location captured: ${Number(lat).toFixed(5)}, ${Number(lng).toFixed(5)}`);
+    };
+    window.addEventListener("floodmind:map-mark", handleMark);
+    return () => window.removeEventListener("floodmind:map-mark", handleMark);
+  }, []);
 
   const {
     coords,
@@ -250,9 +261,10 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
   };
 
   const submitReport = async () => {
-    if (!coords || !capturedImage) {
+    const finalCoords = manualCoords || coords;
+    if (!finalCoords || !capturedImage) {
       setSubmitMessage(
-        "Capture a live camera image and allow location access before submitting.",
+        "Capture a live camera image and define a location (GPS or Map click) before submitting.",
       );
       return;
     }
@@ -267,8 +279,8 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          latitude: coords.latitude,
-          longitude: coords.longitude,
+          latitude: finalCoords.latitude,
+          longitude: finalCoords.longitude,
           reporterKey,
           type: reportType,
           severity,
@@ -277,12 +289,12 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
             description.trim() ||
             `Live report submitted from ${reportType.toLowerCase()}.`,
           imageBase64: capturedImage,
-          captureMethod: "camera-live-geolocated",
+          captureMethod: manualCoords ? "map-click-manual" : "camera-live-geolocated",
           capturedAt: captureTimestamp ?? new Date().toISOString(),
-          locationAccuracyMeters: coords.accuracy ?? null,
-          verificationScore: verification.score,
+          locationAccuracyMeters: manualCoords ? 0 : (coords?.accuracy ?? null),
+          verificationScore: manualCoords ? Math.min(100, verification.score + 10) : verification.score,
           verificationStatus: verification.status,
-          verificationNotes: verification.notes,
+          verificationNotes: verification.notes + (manualCoords ? " • location manually pinned on map" : ""),
           timestamp: captureTimestamp ?? new Date().toISOString(),
           isUserReport: true,
         }),
@@ -315,9 +327,11 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
     }
   };
 
-  const locationLabel = coords
-    ? `${formatCoord(coords.latitude)}, ${formatCoord(coords.longitude)}`
-    : "Waiting for live GPS fix";
+  const locationLabel = manualCoords 
+    ? `${formatCoord(manualCoords.latitude)}, ${formatCoord(manualCoords.longitude)} (Pinned)`
+    : coords
+    ? `${formatCoord(coords.latitude)}, ${formatCoord(coords.longitude)} (GPS)`
+    : "Waiting for location fix";
 
   return (
     <section
@@ -547,11 +561,11 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
             <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
               <button
                 type="button"
-                onClick={() => getPosition()}
+                onClick={() => { setManualCoords(null); getPosition(); }}
                 className="btn btn-teal btn-sm"
                 style={{ flex: 1, justifyContent: "center" }}
               >
-                <Crosshair size={14} /> Refresh GPS
+                <Crosshair size={14} /> Use My GPS
               </button>
             </div>
           </div>
