@@ -169,7 +169,7 @@ function MapScreen({ onOpenAnalytics }: { onOpenAnalytics: () => void }) {
   };
 
   return (
-    <div className={styles.screen}>
+    <div className={`${styles.screen} ${styles.mapScreen}`}>
       <TopBar
         left={<Brand subtitle />}
         center={

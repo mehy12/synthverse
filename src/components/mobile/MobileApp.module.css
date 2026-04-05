@@ -28,6 +28,18 @@
   padding: 18px 18px 8px;
 }
 
+.mapScreen {
+  min-height: calc(100dvh - 92px - env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+}
+
+.mapScreen .mapStage {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
+
 .topBar {
   display: flex;
   align-items: center;
@@ -1153,7 +1165,9 @@
   }
 
   .mapOverlayCard {
-    width: calc(100% - 32px);
+    width: calc(100% - 132px);
+    min-width: 210px;
+    max-width: 250px;
   }
 
   .sheetContent {
