@@ -173,6 +173,10 @@
 }
 
 @media (max-width: 768px) {
+  .navbar {
+    display: none;
+  }
+
   .navLinks {
     position: fixed;
     top: 0;

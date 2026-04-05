@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { Suspense, useState } from "react";
 import { Activity } from "lucide-react";
 import LiveReportPanel from "@/components/reporting/LiveReportPanel";
+import MobileApp from "@/components/mobile/MobileApp";
 
 const DeckMapView = dynamic(() => import("@/components/map/DeckMapView"), {
   ssr: false,
@@ -55,13 +56,8 @@ export default function MapPage() {
   } | null>(null);
 
   return (
-    <div
-      style={{
-        height: "calc(100vh - var(--nav-height))",
-        position: "relative",
-        display: "flex",
-      }}
-    >
+    <>
+    <div className="desktop-only" style={{ height: "calc(100vh - var(--nav-height))", position: "relative", display: "flex" }}>
       {/* ── Left Panel ─────────────────────────────────────── */}
       <div
         style={{
@@ -300,5 +296,9 @@ export default function MapPage() {
         </Suspense>
       </div>
     </div>
+    <div className="mobile-only">
+      <MobileApp initialTab="map" />
+    </div>
+    </>
   );
 }

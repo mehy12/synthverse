@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { ArrowRight, Map, Activity, Shield, Award, TrendingUp, Zap, Check, X, BarChart3, Radio } from "lucide-react";
 import styles from "./page.module.css";
+import MobileApp from "@/components/mobile/MobileApp";
 
 export default function Home() {
   return (
-    <div className={styles.container}>
+    <>
+    <div className={`desktop-only ${styles.container}`}>
       {/* ── Hero Section ─────────────────────────────────────── */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
@@ -167,5 +169,9 @@ export default function Home() {
         </div>
       </section>
     </div>
+    <div className="mobile-only">
+      <MobileApp initialTab="map" />
+    </div>
+    </>
   );
 }

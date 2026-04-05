@@ -5,6 +5,7 @@ import districtData from "@/data/species-graph.json";
 import styles from "@/components/biodiversity/Biodiversity.module.css";
 import { AlertTriangle, Activity, TrendingDown, Clock, Zap, MapPin } from "lucide-react";
 import type { PredictionResult, SpeciesForecast } from "@/lib/prediction-model";
+import MobileApp from "@/components/mobile/MobileApp";
 
 const FLOOD_TYPES = [
   { value: "flash_flood", label: "Flash Flood" },
@@ -36,23 +37,31 @@ export default function AnalyticsPage() {
   const runPrediction = useCallback(async () => {
     setLoading(true);
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+      
       const res = await fetch("/api/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ severity, pollutionType: floodType, surfaceAreaKm2: surfaceArea, durationDays }),
+        signal: controller.signal,
       });
+      clearTimeout(timeout);
+      
       const data = await res.json();
       setPrediction(data);
     } catch (err) {
       console.error("Prediction failed", err);
+      setPrediction(null); // Clear to show fallback
     } finally {
       setLoading(false);
     }
   }, [severity, floodType, surfaceArea, durationDays]);
 
-  useEffect(() => {
-    runPrediction();
-  }, [runPrediction]);
+  // Disabled auto-fetch on mount to prevent network timeouts from blocking render
+  // useEffect(() => {
+  //   runPrediction();
+  // }, [runPrediction]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -62,7 +71,8 @@ export default function AnalyticsPage() {
   }, [runPrediction]);
 
   return (
-    <div className={styles.container}>
+    <>
+    <div className={`desktop-only ${styles.container}`}>
       <header className={styles.header}>
         <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginBottom: "16px" }}>
           <div className="badge badge-teal">
@@ -275,5 +285,9 @@ export default function AnalyticsPage() {
         </div>
       </div>
     </div>
+    <div className="mobile-only">
+      <MobileApp initialTab="analytics" />
+    </div>
+    </>
   );
 }

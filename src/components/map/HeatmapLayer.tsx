@@ -51,9 +51,17 @@ export default function HeatmapLayer({ points, visible, theme = "flood" }: Heatm
   useEffect(() => {
     if (!visible || !points.length) return;
 
+    // Ensure map container has valid dimensions (leaflet.heat needs non-zero canvas)
+    const container = map.getContainer();
+    if (!container || container.offsetWidth === 0 || container.offsetHeight === 0) {
+      return;
+    }
+
     // Convert points to LatLng array with intensity
     // leaflet.heat expects [lat, lng, intensity]
     const heatPoints = points.map(p => [p.lat, p.lng, p.weight] as L.HeatLatLngTuple);
+
+    if (heatPoints.length === 0) return;
 
     const heatLayer = (L as any).heatLayer(heatPoints, {
       radius: themeConfig.radius,
@@ -63,7 +71,11 @@ export default function HeatmapLayer({ points, visible, theme = "flood" }: Heatm
     }).addTo(map);
 
     return () => {
-      map.removeLayer(heatLayer);
+      try {
+        map.removeLayer(heatLayer);
+      } catch (e) {
+        // Layer already removed, ignore
+      }
     };
   }, [map, points, visible, theme]);
 

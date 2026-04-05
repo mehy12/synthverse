@@ -36,7 +36,7 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <Navbar />
-          <main style={{ paddingTop: "var(--nav-height)" }}>{children}</main>
+          <main className="app-main">{children}</main>
         </AuthProvider>
       </body>
     </html>
