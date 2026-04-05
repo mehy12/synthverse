@@ -1,0 +1,15 @@
+{
+  "rows_total": 120,
+  "mae": 1.6796194862971146,
+  "r2": 0.9568469635653283,
+  "feature_columns": [
+    "latitude",
+    "longitude",
+    "coastal_exposure",
+    "distance_to_epicenter_km",
+    "magnitude",
+    "depth_km"
+  ],
+  "target": "risk_score",
+  "model": "RandomForestRegressor"
+}

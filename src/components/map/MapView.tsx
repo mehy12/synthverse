@@ -391,6 +391,7 @@ type HotspotPoint = {
   score?: number;
 };
 type RainScenario = "normal" | "rain" | "heavy_rain";
+type HazardMode = "flood" | "cyclone" | "earthquake";
 
 type ScenarioChance = {
   severePct: number;
@@ -925,6 +926,7 @@ export default function MapView({
   const [liveUpdatedAt, setLiveUpdatedAt] = useState(
     LIVE_CURRENT_DATA.metadata.date,
   );
+  const [hazardMode, setHazardMode] = useState<HazardMode>("flood");
   const [rainScenario, setRainScenario] = useState<RainScenario>("normal");
   const [heatmapPoints, setHeatmapPoints] = useState<HeatPoint[]>([]);
   const [hotspotPoints, setHotspotPoints] = useState<HotspotPoint[]>([]);
@@ -935,6 +937,25 @@ export default function MapView({
     rain: { severePct: 0, highPct: 0, moderatePct: 0 },
     heavy_rain: { severePct: 0, highPct: 0, moderatePct: 0 },
   });
+  const hazardSummary = useMemo(() => {
+    const total = heatmapPoints.length || 1;
+    const toScore = (point: HeatPoint) => (typeof point.riskScore === "number" ? point.riskScore : point.weight * 100);
+    const severe = heatmapPoints.filter((point) => toScore(point) >= 70).length;
+    const high = heatmapPoints.filter((point) => {
+      const score = toScore(point);
+      return score >= 50 && score < 70;
+    }).length;
+    const moderate = heatmapPoints.filter((point) => {
+      const score = toScore(point);
+      return score >= 35 && score < 50;
+    }).length;
+
+    return {
+      severePct: Math.round((severe / total) * 100),
+      highPct: Math.round((high / total) * 100),
+      moderatePct: Math.round((moderate / total) * 100),
+    };
+  }, [heatmapPoints]);
   const [focusTarget, setFocusTarget] = useState<{
     lat: number;
     lng: number;
@@ -1011,8 +1032,14 @@ export default function MapView({
 
     const loadHeatmap = async () => {
       try {
+        const params = new URLSearchParams();
+        params.set("hazard", hazardMode);
+        if (hazardMode === "flood") {
+          params.set("scenario", rainScenario);
+        }
+
         const response = await fetch(
-          `/api/odisha-heatmap?scenario=${rainScenario}`,
+          `/api/odisha-heatmap?${params.toString()}`,
           {
             cache: "no-store",
           },
@@ -1050,7 +1077,7 @@ export default function MapView({
       clearInterval(reportInterval);
       clearInterval(floodInterval);
     };
-  }, [refreshKey, rainScenario]);
+  }, [refreshKey, rainScenario, hazardMode]);
 
   useEffect(() => {
     if (typeof onSummaryChange !== "function") return;
@@ -1204,7 +1231,7 @@ export default function MapView({
           />
         )}
 
-        <HeatmapLayer points={heatmapPoints} visible={showHeatmap} />
+        <HeatmapLayer points={heatmapPoints} visible={showHeatmap} theme={hazardMode} />
 
         {/* Safe Zone Intelligence Overlay */}
         <SafeZoneOverlay visible={showSafeZones} />
@@ -1235,7 +1262,11 @@ export default function MapView({
                     color: "var(--text-primary)",
                   }}
                 >
-                  Hotspot{hotspot.district ? `: ${hotspot.district}` : ""}
+                  {hazardMode === "flood"
+                    ? `Hotspot${hotspot.district ? `: ${hotspot.district}` : ""}`
+                    : hazardMode === "cyclone"
+                      ? `Cyclone hotspot${hotspot.district ? `: ${hotspot.district}` : ""}`
+                      : `Earthquake hotspot${hotspot.district ? `: ${hotspot.district}` : ""}`}
                 </div>
               </Tooltip>
               <Popup className="custom-popup">
@@ -1257,7 +1288,11 @@ export default function MapView({
                       color: "var(--text-secondary)",
                     }}
                   >
-                    High water concentration zone from ML heatmap.
+                    {hazardMode === "flood"
+                      ? "High water concentration zone from ML heatmap."
+                      : hazardMode === "cyclone"
+                        ? "Cyclone-prone corridor from storm-track heatmap."
+                        : "Earthquake-prone corridor from seismic heatmap."}
                   </p>
                   <p
                     style={{
@@ -2349,7 +2384,7 @@ export default function MapView({
                 onChange={(e) => setShowHeatmap(e.target.checked)}
               />
               <span className={styles.checkmark}></span>
-              <span className={styles.label}>Flood Sensor Zones</span>
+              <span className={styles.label}>Hazard Heatmap</span>
             </label>
             <label
               className={styles.layerToggle}
@@ -2365,7 +2400,7 @@ export default function MapView({
             </label>
             <div style={{ marginTop: 8, marginBottom: 2 }}>
               <label
-                htmlFor="rain-scenario"
+                htmlFor="hazard-mode"
                 style={{
                   display: "block",
                   fontSize: "0.72rem",
@@ -2375,14 +2410,12 @@ export default function MapView({
                   letterSpacing: "0.03em",
                 }}
               >
-                RAIN SCENARIO
+                HEATMAP MODE
               </label>
               <select
-                id="rain-scenario"
-                value={rainScenario}
-                onChange={(event) =>
-                  setRainScenario(event.target.value as RainScenario)
-                }
+                id="hazard-mode"
+                value={hazardMode}
+                onChange={(event) => setHazardMode(event.target.value as HazardMode)}
                 style={{
                   width: "100%",
                   border: "1px solid var(--border-subtle)",
@@ -2394,11 +2427,66 @@ export default function MapView({
                   fontWeight: 600,
                 }}
               >
-                <option value="normal">Normal rainfall</option>
-                <option value="rain">Rain alert</option>
-                <option value="heavy_rain">Heavy rain / cloudburst</option>
+                <option value="flood">Flood / water stress</option>
+                <option value="cyclone">Cyclone prone zones</option>
+                <option value="earthquake">Earthquake prone zones</option>
               </select>
             </div>
+            {hazardMode === "flood" && (
+              <div style={{ marginTop: 8, marginBottom: 2 }}>
+                <label
+                  htmlFor="rain-scenario"
+                  style={{
+                    display: "block",
+                    fontSize: "0.72rem",
+                    color: "var(--text-secondary)",
+                    marginBottom: 6,
+                    fontWeight: 700,
+                    letterSpacing: "0.03em",
+                  }}
+                >
+                  RAIN SCENARIO
+                </label>
+                <select
+                  id="rain-scenario"
+                  value={rainScenario}
+                  onChange={(event) =>
+                    setRainScenario(event.target.value as RainScenario)
+                  }
+                  style={{
+                    width: "100%",
+                    border: "1px solid var(--border-subtle)",
+                    borderRadius: 10,
+                    background: "#fff",
+                    color: "var(--text-primary)",
+                    padding: "8px 10px",
+                    fontSize: "0.82rem",
+                    fontWeight: 600,
+                  }}
+                >
+                  <option value="normal">Normal rainfall</option>
+                  <option value="rain">Rain alert</option>
+                  <option value="heavy_rain">Heavy rain / cloudburst</option>
+                </select>
+              </div>
+            )}
+            {hazardMode !== "flood" && (
+              <div style={{
+                marginTop: 8,
+                padding: "8px 10px",
+                borderRadius: 10,
+                background: "rgba(15, 23, 42, 0.04)",
+                border: "1px solid rgba(148, 163, 184, 0.24)",
+                fontSize: "0.76rem",
+                color: "var(--text-secondary)",
+                lineHeight: 1.45,
+              }}>
+                {hazardMode === "cyclone"
+                  ? "Cyclone heatmap uses storm-track intensity, wind, landfall proximity, and shelter access."
+                  : "Earthquake heatmap uses epicenter distance, depth, and district exposure."
+                }
+              </div>
+            )}
             <label
               className={styles.layerToggle}
               style={{ marginTop: 4, marginBottom: 0 }}
@@ -2715,26 +2803,51 @@ export default function MapView({
                 letterSpacing: "0.05em",
               }}
             >
-              Flood Chance By Rain
+              {hazardMode === "flood" ? "Flood Chance By Rain" : "Hazard Intensity"}
             </p>
-            <div className={styles.legendItem}>
-              Severe chance
-              <strong style={{ marginLeft: "auto", color: "#DC2626" }}>
-                {scenarioChance[rainScenario].severePct}%
-              </strong>
-            </div>
-            <div className={styles.legendItem}>
-              High chance
-              <strong style={{ marginLeft: "auto", color: "#EA580C" }}>
-                {scenarioChance[rainScenario].highPct}%
-              </strong>
-            </div>
-            <div className={styles.legendItem}>
-              Moderate chance
-              <strong style={{ marginLeft: "auto", color: "#F59E0B" }}>
-                {scenarioChance[rainScenario].moderatePct}%
-              </strong>
-            </div>
+            {hazardMode === "flood" ? (
+              <>
+                <div className={styles.legendItem}>
+                  Severe chance
+                  <strong style={{ marginLeft: "auto", color: "#DC2626" }}>
+                    {scenarioChance[rainScenario].severePct}%
+                  </strong>
+                </div>
+                <div className={styles.legendItem}>
+                  High chance
+                  <strong style={{ marginLeft: "auto", color: "#EA580C" }}>
+                    {scenarioChance[rainScenario].highPct}%
+                  </strong>
+                </div>
+                <div className={styles.legendItem}>
+                  Moderate chance
+                  <strong style={{ marginLeft: "auto", color: "#F59E0B" }}>
+                    {scenarioChance[rainScenario].moderatePct}%
+                  </strong>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className={styles.legendItem}>
+                  Severe zones
+                  <strong style={{ marginLeft: "auto", color: "#DC2626" }}>
+                    {hazardSummary.severePct}%
+                  </strong>
+                </div>
+                <div className={styles.legendItem}>
+                  High zones
+                  <strong style={{ marginLeft: "auto", color: "#EA580C" }}>
+                    {hazardSummary.highPct}%
+                  </strong>
+                </div>
+                <div className={styles.legendItem}>
+                  Moderate zones
+                  <strong style={{ marginLeft: "auto", color: "#F59E0B" }}>
+                    {hazardSummary.moderatePct}%
+                  </strong>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -13,11 +13,17 @@ type HeatPoint = {
 };
 
 type ScenarioKey = "normal" | "rain" | "heavy_rain";
+type HazardKey = "flood" | "cyclone" | "earthquake";
 
 const SCENARIO_TO_FILE: Record<ScenarioKey, string> = {
     normal: "odisha_predictions_normal.csv",
     rain: "odisha_predictions_rain.csv",
     heavy_rain: "odisha_predictions_heavy_rain.csv",
+};
+
+const HAZARD_TO_FILE: Record<Exclude<HazardKey, "flood">, string> = {
+    cyclone: "odisha_cyclone_heatmap.csv",
+    earthquake: "odisha_earthquake_heatmap.csv",
 };
 
 function clamp(value: number, min: number, max: number): number {
@@ -69,6 +75,7 @@ function parseHeatCsv(csvText: string): HeatPoint[] {
     const districtIdx = idx("district");
     const predictedIdx = idx("predicted_flood_risk_score");
     const fallbackRiskIdx = idx("flood_risk_score");
+    const hazardRiskIdx = idx("risk_score");
     const waterBodiesIdx = idx("water_bodies_count");
 
     if (latIdx < 0 || lngIdx < 0) {
@@ -85,7 +92,8 @@ function parseHeatCsv(csvText: string): HeatPoint[] {
 
         const predictedScore = predictedIdx >= 0 ? safeNum(cells[predictedIdx]) : null;
         const fallbackRisk = fallbackRiskIdx >= 0 ? safeNum(cells[fallbackRiskIdx]) : null;
-        const riskScore = predictedScore ?? fallbackRisk;
+        const hazardRisk = hazardRiskIdx >= 0 ? safeNum(cells[hazardRiskIdx]) : null;
+        const riskScore = predictedScore ?? fallbackRisk ?? hazardRisk;
 
         const waterBodiesCount = waterBodiesIdx >= 0 ? safeNum(cells[waterBodiesIdx]) : null;
 
@@ -114,6 +122,11 @@ function toScenario(value: string | null): ScenarioKey {
     return "normal";
 }
 
+function toHazard(value: string | null): HazardKey {
+    if (value === "cyclone" || value === "earthquake") return value;
+    return "flood";
+}
+
 function summarizeFloodChance(points: HeatPoint[]) {
     const total = points.length || 1;
     const severe = points.filter((point) => (point.riskScore ?? point.weight * 100) >= 50).length;
@@ -140,12 +153,22 @@ async function readScenarioPoints(scenario: ScenarioKey): Promise<HeatPoint[]> {
     return parseHeatCsv(csvText);
 }
 
+async function readHazardPoints(hazard: Exclude<HazardKey, "flood">): Promise<HeatPoint[]> {
+    const fileName = HAZARD_TO_FILE[hazard];
+    const csvPath = path.join(process.cwd(), "scripts", "ml", "data", fileName);
+    const csvText = await fs.readFile(csvPath, "utf-8");
+    return parseHeatCsv(csvText);
+}
+
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
+        const hazard = toHazard(searchParams.get("hazard"));
         const scenario = toScenario(searchParams.get("scenario"));
 
-        const points = await readScenarioPoints(scenario);
+        const points = hazard === "flood"
+            ? await readScenarioPoints(scenario)
+            : await readHazardPoints(hazard);
 
         const hotspots = [...points]
             .sort((a, b) => (b.riskScore ?? b.weight * 100) - (a.riskScore ?? a.weight * 100))
@@ -157,25 +180,28 @@ export async function GET(request: Request) {
                 score: point.riskScore ?? Math.round(point.weight * 100),
             }));
 
-        const [normalPoints, rainPoints, heavyRainPoints] = await Promise.all([
-            readScenarioPoints("normal").catch(() => []),
-            readScenarioPoints("rain").catch(() => []),
-            readScenarioPoints("heavy_rain").catch(() => []),
-        ]);
-
-        const chanceByScenario = {
-            normal: summarizeFloodChance(normalPoints),
-            rain: summarizeFloodChance(rainPoints),
-            heavy_rain: summarizeFloodChance(heavyRainPoints),
-        };
+        const chanceByScenario = hazard === "flood"
+            ? {
+                normal: summarizeFloodChance(await readScenarioPoints("normal").catch(() => [])),
+                rain: summarizeFloodChance(await readScenarioPoints("rain").catch(() => [])),
+                heavy_rain: summarizeFloodChance(await readScenarioPoints("heavy_rain").catch(() => [])),
+            }
+            : {
+                normal: summarizeFloodChance(points),
+                rain: summarizeFloodChance(points),
+                heavy_rain: summarizeFloodChance(points),
+            };
 
         return NextResponse.json(
             {
                 points,
                 hotspots,
+                hazard,
                 scenario,
                 chanceByScenario,
-                source: `scripts/ml/data/${SCENARIO_TO_FILE[scenario]}`,
+                source: hazard === "flood"
+                    ? `scripts/ml/data/${SCENARIO_TO_FILE[scenario]}`
+                    : `scripts/ml/data/${HAZARD_TO_FILE[hazard]}`,
                 generatedAt: new Date().toISOString(),
             },
             { status: 200 },
@@ -186,6 +212,7 @@ export async function GET(request: Request) {
             {
                 points: [],
                 hotspots: [],
+                hazard: "flood",
                 scenario: "normal",
                 chanceByScenario: {
                     normal: { severePct: 0, highPct: 0, moderatePct: 0 },

@@ -264,4 +264,21 @@
 :global(.route-flow-anim) {
   stroke-dasharray: 12, 8;
   animation: routeFlowAnim 1.5s linear infinite;
-}
+}
+
+/* User location pulse */
+@keyframes userLocPulse {
+  0% { r: 9; opacity: 1; }
+  50% { r: 13; opacity: 0.6; }
+  100% { r: 9; opacity: 1; }
+}
+
+:global(.user-loc-pulse) {
+  animation: userLocPulse 2s ease-in-out infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+

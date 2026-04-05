@@ -1,0 +1,19 @@
+{
+  "rows_total": 120,
+  "mae": 3.422379148065487,
+  "r2": 0.8262475086734186,
+  "feature_columns": [
+    "latitude",
+    "longitude",
+    "coastal_exposure",
+    "min_track_distance_km",
+    "nearby_track_density",
+    "max_wind_kts",
+    "min_pressure_mb",
+    "avg_dist2land_km",
+    "landfall_rate",
+    "storm_speed_kts"
+  ],
+  "target": "risk_score",
+  "model": "RandomForestRegressor"
+}

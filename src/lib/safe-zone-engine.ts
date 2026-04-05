@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export type ScenarioType = "blackout" | "flood_blackout" | "cyclone" | "strike";
+export type ScenarioType = "blackout" | "flood_blackout" | "cyclone" | "earthquake" | "strike";
 
 export interface Shelter {
   id: string;
@@ -34,12 +34,18 @@ export interface ImpactZone {
   label: string;
 }
 
+export interface SafeZoneRoute {
+  coords: number[][];
+  distanceM: number;
+  durationS: number;
+}
+
 export interface SafeZonePlan {
   redZones: ImpactZone[];
   yellowZones: ImpactZone[];
   safeShelters: Shelter[];
   targetShelters: Shelter[];   // top-3 from k-means
-  routes: number[][][];        // each route = array of [lat, lng] from OSRM
+  routes: SafeZoneRoute[];
   rerouteCount: number;
   status: "idle" | "calculating" | "active" | "rerouting";
 }
@@ -107,10 +113,11 @@ export function computeImpactZones(
   const zones: ImpactZone[] = [];
 
   const radii: Record<ScenarioType, { red: number; yellow: number }> = {
-    blackout:       { red: 15, yellow: 25 },
+    blackout: { red: 15, yellow: 25 },
     flood_blackout: { red: 20, yellow: 35 },
-    cyclone:        { red: 30, yellow: 50 },
-    strike:         { red: 10, yellow: 18 },
+    cyclone: { red: 30, yellow: 50 },
+    earthquake: { red: 22, yellow: 40 },
+    strike: { red: 10, yellow: 18 },
   };
 
   const { red, yellow } = radii[scenario];
@@ -153,11 +160,37 @@ export function filterSafeShelters(
   });
 }
 
+export function findNearestShelter(
+  point: { lat: number; lng: number },
+  shelters: Shelter[],
+): Shelter | null {
+  if (!shelters.length) return null;
+
+  return shelters.reduce((closest, shelter) => {
+    const currentDistance = haversineKm(point.lat, point.lng, shelter.lat, shelter.lng);
+    const closestDistance = haversineKm(point.lat, point.lng, closest.lat, closest.lng);
+    return currentDistance < closestDistance ? shelter : closest;
+  }, shelters[0]);
+}
+
+export function findNearestStation(
+  point: { lat: number; lng: number },
+  stations: Substation[],
+): Substation | null {
+  if (!stations.length) return null;
+
+  return stations.reduce((closest, station) => {
+    const currentDistance = haversineKm(point.lat, point.lng, station.lat, station.lng);
+    const closestDistance = haversineKm(point.lat, point.lng, closest.lat, closest.lng);
+    return currentDistance < closestDistance ? station : closest;
+  }, stations[0]);
+}
+
 // ─── Fetch road-following route from OSRM ────────────────────────────────────
 export async function fetchOSRMRoute(
   from: { lat: number; lng: number },
   to: { lat: number; lng: number },
-): Promise<number[][]> {
+): Promise<{ coords: number[][]; distanceM: number; durationS: number }> {
   try {
     const url =
       `https://router.project-osrm.org/route/v1/driving/${from.lng},${from.lat};${to.lng},${to.lat}?overview=full&geometries=geojson`;
@@ -165,11 +198,22 @@ export async function fetchOSRMRoute(
     if (!res.ok) throw new Error("OSRM error");
     const data = await res.json();
     if (data.code !== "Ok" || !data.routes?.[0]) throw new Error("No route");
+    const route = data.routes[0];
     // GeoJSON coords are [lng, lat] → convert to [lat, lng] for Leaflet
-    return data.routes[0].geometry.coordinates.map((c: number[]) => [c[1], c[0]]);
+    const coords = route.geometry.coordinates.map((c: number[]) => [c[1], c[0]]);
+    return {
+      coords,
+      distanceM: route.distance ?? 0,
+      durationS: route.duration ?? 0,
+    };
   } catch {
-    // Fallback: return straight line if OSRM fails
-    return [[from.lat, from.lng], [to.lat, to.lng]];
+    // Fallback: straight line with estimated distance/time
+    const distM = haversineKm(from.lat, from.lng, to.lat, to.lng) * 1000;
+    return {
+      coords: [[from.lat, from.lng], [to.lat, to.lng]],
+      distanceM: distM,
+      durationS: distM / 13.9, // ~50km/h fallback
+    };
   }
 }
 
