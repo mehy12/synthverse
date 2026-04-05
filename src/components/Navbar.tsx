@@ -53,7 +53,7 @@ export default function Navbar() {
                   <span className={styles.userName}>{user.name}</span>
                   <span className={styles.userRole}>{user.role}</span>
                 </div>
-                <button onClick={logout} className={styles.logoutBtn} title="Logout">
+                <button onClick={() => void logout()} className={styles.logoutBtn} title="Logout">
                   <LogOut size={16} strokeWidth={1.5} />
                 </button>
               </div>

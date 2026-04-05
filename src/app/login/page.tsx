@@ -2,14 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth, UserRole } from "@/context/AuthContext";
-import { Shield, Radio, User, ArrowRight, CheckCircle } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { ArrowRight, CheckCircle, KeyRound, User } from "lucide-react";
 import Link from "next/link";
 
 export default function LoginPage() {
   const { login, user, isLoading } = useAuth();
   const router = useRouter();
-  const [selectedRole, setSelectedRole] = useState<UserRole>(null);
+  const [accessCode, setAccessCode] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [nextPath, setNextPath] = useState("/map");
 
   useEffect(() => {
@@ -29,112 +31,160 @@ export default function LoginPage() {
     return null;
   }
 
-  const handleLogin = () => {
-    if (selectedRole) {
-      const success = login(selectedRole);
+  const handleLogin = async () => {
+    if (!accessCode.trim()) {
+      setErrorMessage("Access code is required.");
+      return;
+    }
+
+    setSubmitting(true);
+    setErrorMessage(null);
+
+    try {
+      const success = await login("resident", accessCode);
       if (success) {
         router.replace(nextPath);
+        return;
       }
+
+      setErrorMessage("Invalid access code. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  const roles = [
-    {
-      id: "responder",
-      title: "First Responder",
-      desc: "Access live flood data and coordinate emergency deployment across districts.",
-      icon: <Radio size={24} strokeWidth={1.5} />,
-      color: "var(--teal)",
-      benefits: ["Priority alerts", "Evacuation tools", "Response Credits"]
-    },
-    {
-      id: "coordinator",
-      title: "District Coordinator",
-      desc: "Monitor district-level telemetry and manage flood mitigation resources.",
-      icon: <Shield size={24} strokeWidth={1.5} />,
-      color: "var(--warning)",
-      benefits: ["Threat monitoring", "Sensor oversight", "AI cascade reports"]
-    },
-    {
-      id: "resident",
-      title: "Urban Resident",
-      desc: "Report flooding, track your district risk, and earn civic response credits.",
-      icon: <User size={24} strokeWidth={1.5} />,
-      color: "var(--safe)",
-      benefits: ["Community rank", "Civic awards", "Priority evacuation"]
-    },
-  ];
-
   return (
     <div style={{ minHeight: "calc(100vh - var(--nav-height))", background: "var(--off-white)", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 20px" }}>
-      <div style={{ maxWidth: "900px", width: "100%" }}>
+      <div style={{ maxWidth: "680px", width: "100%" }}>
         <div style={{ textAlign: "center", marginBottom: "40px" }} className="animate-slide-up">
           <div className="badge badge-teal" style={{ marginBottom: "16px" }}>SECURE ACCESS</div>
-          <h2 style={{ fontSize: "2rem", marginBottom: "12px", color: "var(--text-heading)" }}>Choose Your Perspective</h2>
+          <h2 style={{ fontSize: "2rem", marginBottom: "12px", color: "var(--text-heading)" }}>Urban Resident Sign In</h2>
           <p style={{ color: "var(--text-secondary)", maxWidth: "500px", margin: "0 auto", fontSize: "0.9rem" }}>
-            Select your role to access role-specific tools and the HiveMind command center.
+            Access is limited to Urban Resident accounts with a verified access code.
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "16px", marginBottom: "40px" }}>
-          {roles.map((role, idx) => (
+        <div className="card animate-slide-up" style={{ padding: "28px", marginBottom: "28px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "14px" }}>
             <div
-              key={role.id}
-              onClick={() => setSelectedRole(role.id as UserRole)}
-              className="card animate-slide-up stagger-item"
               style={{
-                padding: "28px",
-                cursor: "pointer",
-                border: selectedRole === role.id ? `2px solid ${role.color}` : "1px solid var(--border)",
-                transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                animationDelay: `${idx * 0.1}s`,
-              }}
-            >
-              <div style={{ 
-                width: "44px", 
-                height: "44px", 
-                borderRadius: "var(--radius-lg)", 
-                background: selectedRole === role.id ? role.color : "var(--off-white)", 
-                color: selectedRole === role.id ? "#fff" : role.color,
+                width: "46px",
+                height: "46px",
+                borderRadius: "var(--radius-lg)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                marginBottom: "16px",
-                transition: "all 0.3s"
-              }}>
-                {role.icon}
-              </div>
-              <h3 style={{ marginBottom: "6px", fontSize: "1rem", fontWeight: 600, color: selectedRole === role.id ? role.color : "var(--text-heading)" }}>{role.title}</h3>
-              <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", marginBottom: "16px", lineHeight: 1.5 }}>{role.desc}</p>
-              
-              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                {role.benefits.map(benefit => (
-                  <div key={benefit} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.72rem", fontWeight: 600, color: "var(--text-muted)" }}>
-                    <CheckCircle size={14} strokeWidth={1.5} style={{ color: selectedRole === role.id ? role.color : "var(--text-muted)" }} />
-                    {benefit}
-                  </div>
-                ))}
-              </div>
+                background: "var(--safe)",
+                color: "#ffffff",
+              }}
+            >
+              <User size={24} strokeWidth={1.6} />
             </div>
-          ))}
+            <div>
+              <h3 style={{ margin: 0, fontSize: "1.08rem", fontWeight: 700 }}>Urban Resident</h3>
+              <p style={{ margin: "4px 0 0", fontSize: "0.84rem", color: "var(--text-secondary)" }}>
+                Report flooding, view district risk, and receive verified civic alerts.
+              </p>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "18px" }}>
+            {[
+              "Resident-only secure entry",
+              "Server-verified session cookie",
+              "Session expiry + renewal support",
+            ].map((benefit) => (
+              <div
+                key={benefit}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontSize: "0.78rem",
+                  fontWeight: 600,
+                  color: "var(--text-muted)",
+                }}
+              >
+                <CheckCircle size={14} strokeWidth={1.5} style={{ color: "var(--safe)" }} />
+                {benefit}
+              </div>
+            ))}
+          </div>
+
+          <label
+            htmlFor="resident-access-code"
+            style={{
+              display: "block",
+              fontSize: "0.78rem",
+              fontWeight: 700,
+              color: "var(--text-muted)",
+              marginBottom: "8px",
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+            }}
+          >
+            Access Code
+          </label>
+          <div style={{ position: "relative" }}>
+            <KeyRound
+              size={16}
+              strokeWidth={1.8}
+              style={{
+                position: "absolute",
+                left: 12,
+                top: "50%",
+                transform: "translateY(-50%)",
+                color: "var(--text-muted)",
+              }}
+            />
+            <input
+              id="resident-access-code"
+              type="password"
+              value={accessCode}
+              onChange={(event) => {
+                setAccessCode(event.target.value);
+                if (errorMessage) {
+                  setErrorMessage(null);
+                }
+              }}
+              placeholder="Enter resident access code"
+              style={{
+                width: "100%",
+                height: 46,
+                borderRadius: 12,
+                border: "1px solid var(--border)",
+                padding: "0 12px 0 38px",
+                fontSize: "0.9rem",
+                outline: "none",
+                background: "#ffffff",
+              }}
+            />
+          </div>
+          {errorMessage ? (
+            <div style={{ color: "var(--danger)", marginTop: 10, fontSize: "0.8rem", fontWeight: 600 }}>
+              {errorMessage}
+            </div>
+          ) : null}
         </div>
 
         <div style={{ textAlign: "center" }} className="animate-fade-in">
           <button
-            onClick={handleLogin}
-            disabled={!selectedRole}
+            onClick={() => {
+              void handleLogin();
+            }}
+            disabled={!accessCode.trim() || submitting}
             className="btn btn-primary btn-lg"
-            style={{ 
-              padding: "14px 40px", 
-              fontSize: "1rem", 
-              opacity: selectedRole ? 1 : 0.5,
-              cursor: selectedRole ? "pointer" : "not-allowed",
+            style={{
+              padding: "14px 40px",
+              fontSize: "1rem",
+              opacity: accessCode.trim() && !submitting ? 1 : 0.5,
+              cursor: accessCode.trim() && !submitting ? "pointer" : "not-allowed",
               display: "inline-flex",
               alignItems: "center",
               gap: "8px",
             }}
           >
-            Enter HiveMind <ArrowRight size={18} strokeWidth={1.5} />
+            {submitting ? "Verifying..." : "Enter HiveMind"} <ArrowRight size={18} strokeWidth={1.5} />
           </button>
           <div style={{ marginTop: "20px" }}>
             <Link href="/" style={{ fontSize: "0.82rem", color: "var(--text-muted)", fontWeight: 600 }}>

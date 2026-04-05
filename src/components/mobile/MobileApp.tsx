@@ -571,8 +571,8 @@ function SettingsScreen() {
     setStatus(message);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     router.replace("/login");
   };
 
@@ -586,8 +586,8 @@ function SettingsScreen() {
       <div className={styles.profileCard}>
         <div className={styles.profileAvatar}>{user?.avatar || <UserCircle2 size={30} strokeWidth={1.8} />}</div>
         <div>
-          <div className={styles.profileName}>{user?.name || "Field Operator"}</div>
-          <div className={styles.profileRole}>{user?.role || "Field Operator"}</div>
+          <div className={styles.profileName}>{user?.name || "Urban Resident"}</div>
+          <div className={styles.profileRole}>{user?.role || "resident"}</div>
         </div>
       </div>
 
@@ -739,8 +739,10 @@ function SettingsScreen() {
                         type="button"
                         className={styles.settingAction}
                         onClick={() => {
-                          renewSession();
-                          setStatus("Secure session renewed.");
+                          void (async () => {
+                            const renewed = await renewSession();
+                            setStatus(renewed ? "Secure session renewed." : "Session renewal failed.");
+                          })();
                         }}
                       >
                         Renew Session
@@ -754,7 +756,7 @@ function SettingsScreen() {
         })}
       </div>
 
-      <button type="button" className={styles.logoutButton} onClick={handleLogout}>Logout</button>
+      <button type="button" className={styles.logoutButton} onClick={() => void handleLogout()}>Logout</button>
     </div>
   );
 }
