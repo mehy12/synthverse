@@ -27,11 +27,27 @@ export const RESIDENT_PROFILE: AuthUser = {
 };
 
 function getSessionSecret() {
-  return process.env.AUTH_SESSION_SECRET || DEV_FALLBACK_SECRET;
+  if (process.env.AUTH_SESSION_SECRET) {
+    return process.env.AUTH_SESSION_SECRET;
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("AUTH_SESSION_SECRET must be set in production.");
+  }
+
+  return DEV_FALLBACK_SECRET;
 }
 
 export function getExpectedAccessCode() {
-  return process.env.URBAN_RESIDENT_ACCESS_CODE || DEV_FALLBACK_ACCESS_CODE;
+  if (process.env.URBAN_RESIDENT_ACCESS_CODE) {
+    return process.env.URBAN_RESIDENT_ACCESS_CODE;
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("URBAN_RESIDENT_ACCESS_CODE must be set in production.");
+  }
+
+  return DEV_FALLBACK_ACCESS_CODE;
 }
 
 function toBase64Url(value: string) {
