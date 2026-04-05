@@ -339,7 +339,7 @@ function ReportScreen() {
         right={<div className={styles.topBarIcons}><button className={styles.iconButton} type="button" aria-label="Notifications" onClick={() => window.alert("Notifications: report feed is live.")}><Bell size={22} strokeWidth={2} /></button><div className={styles.avatarCircle}><UserCircle2 size={28} strokeWidth={1.8} /></div></div>}
       />
 
-      <LiveReportPanel />
+      <LiveReportPanel compact />
     </div>
   );
 }

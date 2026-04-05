@@ -25,6 +25,7 @@ type VerificationSummary = {
 
 interface LiveReportPanelProps {
   onSubmitted?: () => void;
+  compact?: boolean;
 }
 
 const REPORT_TYPES = [
@@ -115,7 +116,7 @@ function buildVerificationSummary(params: {
   return { score, status, notes: notes.join(" • ") };
 }
 
-export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
+export default function LiveReportPanel({ onSubmitted, compact = false }: LiveReportPanelProps) {
   const { user } = useAuth();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -356,8 +357,8 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
   return (
     <section
       style={{
-        margin: "16px 20px",
-        padding: 16,
+        margin: compact ? "12px 0" : "16px 20px",
+        padding: compact ? 14 : 16,
         border: "1px solid var(--border)",
         borderRadius: "var(--radius-xl)",
         background:
@@ -437,7 +438,7 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1.15fr 0.85fr",
+          gridTemplateColumns: compact ? "1fr" : "1.15fr 0.85fr",
           gap: 14,
           marginTop: 14,
         }}
@@ -460,7 +461,7 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
             onLoadedMetadata={() => setCameraReady(true)}
             style={{
               width: "100%",
-              height: 260,
+              height: compact ? 220 : 260,
               objectFit: "cover",
               display: "block",
             }}
@@ -656,7 +657,9 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+          gridTemplateColumns: compact
+            ? "repeat(2, minmax(0, 1fr))"
+            : "repeat(3, minmax(0, 1fr))",
           gap: 10,
           marginTop: 14,
         }}
@@ -816,16 +819,17 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
       <div
         style={{
           display: "flex",
+          flexDirection: compact ? "column" : "row",
           gap: 10,
           marginTop: 14,
-          alignItems: "center",
+          alignItems: compact ? "stretch" : "center",
         }}
       >
         <button
           type="button"
           onClick={submitReport}
           className="btn btn-primary"
-          style={{ padding: "10px 14px" }}
+          style={{ padding: "10px 14px", width: compact ? "100%" : undefined }}
           disabled={submitting || !capturedImage || !coords}
         >
           {submitting ? "Submitting..." : "Submit live report"}
