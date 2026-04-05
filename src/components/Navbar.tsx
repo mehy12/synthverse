@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { Shield, Map, Camera, Radio, Menu, X, LogOut, User } from "lucide-react";
+import { Shield, Map, Layers3, Camera, Radio, Menu, X, LogOut, User } from "lucide-react";
 import styles from "./Navbar.module.css";
 
 export default function Navbar() {
@@ -13,7 +13,8 @@ export default function Navbar() {
   const { user, logout } = useAuth();
 
   const navLinks = [
-    { name: "Command Center", href: "/command-center", icon: <Map size={16} strokeWidth={1.5} /> },
+    { name: "Map", href: "/map", icon: <Map size={16} strokeWidth={1.5} /> },
+    { name: "Command Center", href: "/command-center", icon: <Layers3 size={16} strokeWidth={1.5} /> },
     { name: "Live Feed", href: "/live-feed", icon: <Radio size={16} strokeWidth={1.5} /> },
     { name: "Reporting", href: "/reporting", icon: <Camera size={16} strokeWidth={1.5} /> },
   ];
