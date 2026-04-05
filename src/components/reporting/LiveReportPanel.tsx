@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useGeolocated } from "react-geolocated";
@@ -113,7 +113,7 @@ function buildVerificationSummary(params: {
         ? "LIKELY_LIVE_CAPTURE"
         : "NEEDS_REVIEW";
 
-  return { score, status, notes: notes.join(" • ") };
+  return { score, status, notes: notes.join(" â€¢ ") };
 }
 
 export default function LiveReportPanel({ onSubmitted, compact = false }: LiveReportPanelProps) {
@@ -139,8 +139,8 @@ export default function LiveReportPanel({ onSubmitted, compact = false }: LiveRe
       setManualCoords({ latitude: Number(lat), longitude: Number(lng) });
       setSubmitMessage(`Map location captured: ${Number(lat).toFixed(5)}, ${Number(lng).toFixed(5)}`);
     };
-    window.addEventListener("floodmind:map-mark", handleMark);
-    return () => window.removeEventListener("floodmind:map-mark", handleMark);
+    window.addEventListener("HiveMind:map-mark", handleMark);
+    return () => window.removeEventListener("HiveMind:map-mark", handleMark);
   }, []);
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -228,13 +228,13 @@ export default function LiveReportPanel({ onSubmitted, compact = false }: LiveRe
       return user ? `${user.role}:${user.name}` : "anonymous";
     }
 
-    const existing = localStorage.getItem("floodmind_reporter_key");
+    const existing = localStorage.getItem("HiveMind_reporter_key");
     if (existing) return existing;
 
     const generated = user
       ? `${user.role}:${user.name}`
       : `device:${crypto.randomUUID().slice(0, 12)}`;
-    localStorage.setItem("floodmind_reporter_key", generated);
+    localStorage.setItem("HiveMind_reporter_key", generated);
     return generated;
   }, [user]);
 
@@ -300,7 +300,7 @@ export default function LiveReportPanel({ onSubmitted, compact = false }: LiveRe
           locationAccuracyMeters: manualCoords ? 0 : (coords?.accuracy ?? null),
           verificationScore: manualCoords ? Math.min(100, verification.score + 10) : verification.score,
           verificationStatus: verification.status,
-          verificationNotes: verification.notes + (manualCoords ? " • location manually pinned on map" : ""),
+          verificationNotes: verification.notes + (manualCoords ? " â€¢ location manually pinned on map" : ""),
           timestamp: captureTimestamp ?? new Date().toISOString(),
           isUserReport: true,
         }),
@@ -882,3 +882,4 @@ export default function LiveReportPanel({ onSubmitted, compact = false }: LiveRe
     </section>
   );
 }
+

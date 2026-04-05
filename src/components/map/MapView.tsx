@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect, useMemo, useCallback } from "react";
+﻿import { Fragment, useState, useEffect, useMemo, useCallback } from "react";
 import {
   MapContainer,
   CircleMarker,
@@ -55,7 +55,7 @@ L.Icon.Default.mergeOptions({
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
-// ── Odisha Flood Logic & Fallback Data ──
+// â”€â”€ Odisha Flood Logic & Fallback Data â”€â”€
 const ODISHA_BOUNDS: [[number, number], [number, number]] = [
   [17.6, 81.6],
   [22.9, 87.7],
@@ -347,7 +347,7 @@ export default function MapView({
   const handleMapMark = useCallback((lat: number, lng: number) => {
     setMarkedPoint({ lat, lng });
     // Emit event for reporting panel
-    window.dispatchEvent(new CustomEvent("floodmind:map-mark", { 
+    window.dispatchEvent(new CustomEvent("HiveMind:map-mark", { 
       detail: { lat, lng } 
     }));
   }, []);
@@ -467,7 +467,7 @@ export default function MapView({
           className={`${styles.aroToggle} ${showARO ? styles.aroActive : ""}`} 
           onClick={() => setShowARO(!showARO)}
         >
-          {showARO ? "📡 ARO SYSTEM ACTIVE" : "📡 ACTIVATE ARO"}
+          {showARO ? "ðŸ“¡ ARO SYSTEM ACTIVE" : "ðŸ“¡ ACTIVATE ARO"}
         </div>
 
         <MapContainer
@@ -604,7 +604,7 @@ export default function MapView({
           ))}
         </MapContainer>
 
-        {/* ── Layer Manager Panel ────────────────────────────────── */}
+        {/* â”€â”€ Layer Manager Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <div className={`${styles.layerPanel} ${isLayerPanelMinimized ? styles.minimized : ""}`}>
           <div className={styles.panelHeader} onClick={() => setIsLayerPanelMinimized(!isLayerPanelMinimized)}>
             <div className={styles.panelTitle}>
@@ -680,7 +680,7 @@ export default function MapView({
           </div>
         </div>
 
-        {/* ── Legend ─────────────────────────────────────────── */}
+        {/* â”€â”€ Legend â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <div className={styles.legend}>
           <div className={styles.panelTitle} style={{ marginBottom: "12px" }}>
             <Activity size={14} /> LIVE RISK LEGEND
@@ -708,7 +708,7 @@ export default function MapView({
            onClick={() => setShowARO(!showARO)}
            style={{ top: "auto", bottom: "16px", left: "270px" }}
         >
-          {showARO ? "📡 ARO SYSTEM ACTIVE" : "📡 ACTIVATE ARO"}
+          {showARO ? "ðŸ“¡ ARO SYSTEM ACTIVE" : "ðŸ“¡ ACTIVATE ARO"}
         </div>
       </div>
       
@@ -716,4 +716,5 @@ export default function MapView({
     </div>
   );
 }
+
 

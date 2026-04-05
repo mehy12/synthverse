@@ -1,4 +1,4 @@
-{
+﻿{
   "model_name": "gradient_boosting",
   "rows_total": 1980,
   "rows_odisha": 1980,
@@ -19,6 +19,6 @@
     "rmse": 1.9059775874983464,
     "r2": 0.9285848269150985
   },
-  "model_file": "C:\\Users\\mibo2\\OneDrive\\Documents\\BGS\\heh\\advaya\\scripts\\ml\\artifacts\\odisha_flood_model.joblib",
-  "feature_importance_file": "C:\\Users\\mibo2\\OneDrive\\Documents\\BGS\\heh\\advaya\\scripts\\ml\\artifacts\\odisha_feature_importance.csv"
+  "model_file": "C:\\Users\\mibo2\\OneDrive\\Documents\\BGS\\heh\\HiveMind\\scripts\\ml\\artifacts\\odisha_flood_model.joblib",
+  "feature_importance_file": "C:\\Users\\mibo2\\OneDrive\\Documents\\BGS\\heh\\HiveMind\\scripts\\ml\\artifacts\\odisha_feature_importance.csv"
 }

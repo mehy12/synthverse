@@ -1,4 +1,4 @@
-const CACHE_NAME = "floodmind-shell-v1";
+﻿const CACHE_NAME = "HiveMind-shell-v1";
 const APP_SHELL = ["/", "/map", "/analytics", "/manifest.json", "/icon-192.svg"];
 
 self.addEventListener("install", (event) => {

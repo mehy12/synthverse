@@ -1,11 +1,11 @@
-/* ================================================================
-   FloodMind — Design System
+﻿/* ================================================================
+   HiveMind â€” Design System
    Clean white theme with teal accent pops
    ================================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-/* ── CSS Custom Properties ───────────────────────────────────── */
+/* â”€â”€ CSS Custom Properties â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 :root {
   /* Primary */
   --teal: #00B4B4;
@@ -55,7 +55,7 @@
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Reset ───────────────────────────────────────────────────── */
+/* â”€â”€ Reset â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 *,
 *::before,
 *::after {
@@ -119,7 +119,7 @@ ul, ol {
   list-style: none;
 }
 
-/* ── Typography ──────────────────────────────────────────────── */
+/* â”€â”€ Typography â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1.2;
@@ -139,7 +139,7 @@ h4 { font-size: 1rem; }
   color: var(--teal);
 }
 
-/* ── Cards ───────────────────────────────────────────────────── */
+/* â”€â”€ Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .card {
   background: var(--white);
   border: 1px solid var(--border);
@@ -154,7 +154,7 @@ h4 { font-size: 1rem; }
   padding: var(--card-padding);
 }
 
-/* ── Buttons ─────────────────────────────────────────────────── */
+/* â”€â”€ Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -198,7 +198,7 @@ h4 { font-size: 1rem; }
 .btn-sm { padding: 6px 14px; font-size: 0.8rem; }
 .btn-lg { padding: 12px 24px; font-size: 1rem; }
 
-/* ── Badges / Pills ──────────────────────────────────────────── */
+/* â”€â”€ Badges / Pills â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -236,7 +236,7 @@ h4 { font-size: 1rem; }
   border-color: rgba(16, 185, 129, 0.2);
 }
 
-/* ── Animations ──────────────────────────────────────────────── */
+/* â”€â”€ Animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .animate-slide-up {
   animation: slideUp 0.5s var(--ease) forwards;
   opacity: 0;
@@ -260,7 +260,7 @@ h4 { font-size: 1rem; }
 .stagger-item:nth-child(3) { animation-delay: 0.15s; }
 .stagger-item:nth-child(4) { animation-delay: 0.2s; }
 
-/* ── Skeleton Loader ─────────────────────────────────────────── */
+/* â”€â”€ Skeleton Loader â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .skeleton {
   background: linear-gradient(90deg, var(--gray-100) 25%, var(--border) 50%, var(--gray-100) 75%);
   background-size: 200% 100%;
@@ -268,7 +268,7 @@ h4 { font-size: 1rem; }
 }
 @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-/* ── Leaflet Overrides ───────────────────────────────────────── */
+/* â”€â”€ Leaflet Overrides â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .leaflet-popup-content-wrapper {
   border-radius: var(--radius-xl) !important;
   box-shadow: none !important;
@@ -276,7 +276,7 @@ h4 { font-size: 1rem; }
 }
 .leaflet-container { font-family: var(--font-sans) !important; }
 
-/* ── Radar / Marker ──────────────────────────────────────────── */
+/* â”€â”€ Radar / Marker â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .radar-blip-container {
   display: flex; justify-content: center; align-items: center;
   width: 20px; height: 20px;
@@ -295,7 +295,7 @@ h4 { font-size: 1rem; }
   100% { transform: scale(2.2); opacity: 0; }
 }
 
-/* ── IoT Buoy ────────────────────────────────────────────────── */
+/* â”€â”€ IoT Buoy â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes buoyPulse {
   0% { transform: scale(1); opacity: 0.7; }
   50% { transform: scale(1.8); opacity: 0; }
@@ -310,13 +310,13 @@ h4 { font-size: 1rem; }
 }
 .buoy-tooltip.leaflet-tooltip::before { display: none !important; }
 
-/* ── Scrollbar ───────────────────────────────────────────────── */
+/* â”€â”€ Scrollbar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--gray-100); }
 ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: var(--radius-full); }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-/* ── Utility ─────────────────────────────────────────────────── */
+/* â”€â”€ Utility â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .icon { width: 1.2em; height: 1.2em; }
 .mono { font-family: var(--font-mono); }
 
@@ -333,3 +333,4 @@ h4 { font-size: 1rem; }
     display: block !important;
   }
 }
+

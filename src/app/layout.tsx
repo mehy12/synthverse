@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "FloodMind — AI-Powered Urban Flood Digital Twin",
+  title: "HiveMind â€” AI-Powered Urban Flood Digital Twin",
   description:
     "Real-time flood simulation, cascade forecasting, evacuation zone mapping, and AI-driven disaster response. Turning urban data into life-saving decisions.",
   keywords: [
@@ -42,3 +42,4 @@ export default function RootLayout({
     </html>
   );
 }
+

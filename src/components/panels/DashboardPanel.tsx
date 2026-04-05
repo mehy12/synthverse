@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -722,9 +722,10 @@ export default function DashboardPanel({
           fontFamily: "var(--font-mono, monospace)",
         }}
       >
-        <span>ADVAYA FLOOD-INTEL v2.0</span>
-        <span>COORDS: 20.296°N, 85.824°E</span>
+        <span>HiveMind FLOOD-INTEL v2.0</span>
+        <span>COORDS: 20.296Â°N, 85.824Â°E</span>
       </div>
     </div>
   );
 }
+

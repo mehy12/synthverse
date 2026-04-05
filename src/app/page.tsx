@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowRight, Map, Activity, Shield, Award, TrendingUp, Zap, Check, X, BarChart3, Radio } from "lucide-react";
 import styles from "./page.module.css";
 import MobileApp from "@/components/mobile/MobileApp";
@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <>
     <div className={`desktop-only ${styles.container}`}>
-      {/* ── Hero Section ─────────────────────────────────────── */}
+      {/* â”€â”€ Hero Section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <div className={`badge badge-teal animate-slide-up`}>
@@ -21,7 +21,7 @@ export default function Home() {
           <p className={`${styles.subtitle} animate-slide-up`} style={{ animationDelay: "0.2s" }}>
             It's a prediction problem. Anyone can say "the streets are flooded." Nobody can
             predict which districts drown next, model the cascade, or coordinate the response.{" "}
-            <strong style={{ color: "var(--teal)" }}>FloodMind does all three.</strong>
+            <strong style={{ color: "var(--teal)" }}>HiveMind does all three.</strong>
           </p>
           <div className={`${styles.ctaGroup} animate-slide-up`} style={{ animationDelay: "0.3s" }}>
             <Link href="/live-feed" className="btn btn-primary btn-lg">
@@ -34,7 +34,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* ── Live Stats Bar ──────────────────────────────────── */}
+        {/* â”€â”€ Live Stats Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <div className={`${styles.statsGrid} animate-fade-in`} style={{ animationDelay: "0.5s" }}>
           <div className={styles.statCard}>
             <h3 style={{ color: "var(--danger)" }}>12</h3>
@@ -55,11 +55,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── The Cascade Loop ──────────────────────────────────── */}
+      {/* â”€â”€ The Cascade Loop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className={styles.loopSection}>
         <h2 style={{ textAlign: "center", marginBottom: "0.5rem" }}>The Cascade Loop</h2>
         <p className={styles.sectionSubtext}>
-          Every stage of disaster response was fragmented before FloodMind. Now it's a closed loop.
+          Every stage of disaster response was fragmented before HiveMind. Now it's a closed loop.
         </p>
         <div className={styles.loopGrid}>
           {[
@@ -77,14 +77,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Comparison: Why We Win ──────────────────────────────── */}
+      {/* â”€â”€ Comparison: Why We Win â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className={styles.moatsSection}>
-        <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>Why FloodMind Wins</h2>
+        <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>Why HiveMind Wins</h2>
         <div className={styles.moatsGrid}>
           {[
-            { bad: "Report flooding → nothing happens", good: "Report → emergency teams dispatched + responder rewarded" },
+            { bad: "Report flooding â†’ nothing happens", good: "Report â†’ emergency teams dispatched + responder rewarded" },
             { bad: "Show current water levels only", good: "Predict which districts flood in 30/60/90 days if nothing changes" },
-            { bad: "Siloed sensor data across agencies", good: "Unified digital twin — every sensor, every district, one view" },
+            { bad: "Siloed sensor data across agencies", good: "Unified digital twin â€” every sensor, every district, one view" },
             { bad: "Residents have no incentive to report", good: "Response Credits for verified reports + priority evacuation access" },
           ].map((moat, i) => (
             <div key={i} className={`${styles.moatCard} animate-slide-up stagger-item`}>
@@ -92,7 +92,7 @@ export default function Home() {
                 <X size={16} strokeWidth={1.5} style={{ color: "var(--danger)", flexShrink: 0, marginTop: 2 }} />
                 <span>{moat.bad}</span>
               </div>
-              <div className={styles.moatArrow}>→</div>
+              <div className={styles.moatArrow}>â†’</div>
               <div className={styles.moatGood}>
                 <Check size={16} strokeWidth={1.5} style={{ color: "var(--safe)", flexShrink: 0, marginTop: 2 }} />
                 <span>{moat.good}</span>
@@ -102,7 +102,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 3 Pillar Feature Cards ────────────────────────────── */}
+      {/* â”€â”€ 3 Pillar Feature Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className={styles.features}>
         <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>The 3 Pillars</h2>
         <div className={styles.featureGrid}>
@@ -123,7 +123,7 @@ export default function Home() {
             </div>
             <h3 className={styles.featureTitle}>Cascade Forecast</h3>
             <p className={styles.featureDesc}>
-              30/60/90 day district flood prediction. Interactive cascade timeline shows downstream impact propagation — and the economic cost in ₹ crore.
+              30/60/90 day district flood prediction. Interactive cascade timeline shows downstream impact propagation â€” and the economic cost in â‚¹ crore.
             </p>
             <span className={styles.cardCta}>View <ArrowRight size={14} strokeWidth={1.5} /></span>
           </Link>
@@ -152,11 +152,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Closing Pitch ─────────────────────────────────────── */}
+      {/* â”€â”€ Closing Pitch â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className={styles.closingSection}>
         <div className={styles.closingCard}>
           <blockquote className={styles.closingQuote}>
-            "We turned raw sensor streams into a living digital twin — one that doesn't just show you the flood, but tells you where it's going, who's in danger, and what to do about it."
+            "We turned raw sensor streams into a living digital twin â€” one that doesn't just show you the flood, but tells you where it's going, who's in danger, and what to do about it."
           </blockquote>
           <div style={{ display: "flex", gap: "12px", marginTop: "2rem", justifyContent: "center", flexWrap: "wrap" }}>
             <Link href="/command-center" className="btn btn-primary btn-lg">
@@ -175,3 +175,4 @@ export default function Home() {
     </>
   );
 }
+

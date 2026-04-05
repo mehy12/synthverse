@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 
@@ -21,9 +21,9 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const ROLE_DATA: Record<string, UserProfile> = {
-  responder: { name: "Arun K.", role: "responder", avatar: "🚒" },
-  coordinator: { name: "Inspector Nair", role: "coordinator", avatar: "👮" },
-  resident: { name: "Meera Ravi", role: "resident", avatar: "👩" },
+  responder: { name: "Arun K.", role: "responder", avatar: "ðŸš’" },
+  coordinator: { name: "Inspector Nair", role: "coordinator", avatar: "ðŸ‘®" },
+  resident: { name: "Meera Ravi", role: "resident", avatar: "ðŸ‘©" },
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedRole = localStorage.getItem("floodmind_role");
+    const storedRole = localStorage.getItem("HiveMind_role");
     if (storedRole && ROLE_DATA[storedRole]) {
       setUser(ROLE_DATA[storedRole]);
     }
@@ -42,13 +42,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (role && ROLE_DATA[role]) {
       const profile = ROLE_DATA[role];
       setUser(profile);
-      localStorage.setItem("floodmind_role", role);
+      localStorage.setItem("HiveMind_role", role);
     }
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("floodmind_role");
+    localStorage.removeItem("HiveMind_role");
   };
 
   return (
@@ -65,3 +65,4 @@ export function useAuth() {
   }
   return context;
 }
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -62,7 +62,7 @@ export default function LoginPage() {
           <div className="badge badge-teal" style={{ marginBottom: "16px" }}>SECURE ACCESS</div>
           <h2 style={{ fontSize: "2rem", marginBottom: "12px", color: "var(--text-heading)" }}>Choose Your Perspective</h2>
           <p style={{ color: "var(--text-secondary)", maxWidth: "500px", margin: "0 auto", fontSize: "0.9rem" }}>
-            Select your role to access role-specific tools and the FloodMind command center.
+            Select your role to access role-specific tools and the HiveMind command center.
           </p>
         </div>
 
@@ -124,11 +124,11 @@ export default function LoginPage() {
               gap: "8px",
             }}
           >
-            Enter FloodMind <ArrowRight size={18} strokeWidth={1.5} />
+            Enter HiveMind <ArrowRight size={18} strokeWidth={1.5} />
           </button>
           <div style={{ marginTop: "20px" }}>
             <Link href="/" style={{ fontSize: "0.82rem", color: "var(--text-muted)", fontWeight: 600 }}>
-              ← Return to homepage
+              â† Return to homepage
             </Link>
           </div>
         </div>
@@ -136,3 +136,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

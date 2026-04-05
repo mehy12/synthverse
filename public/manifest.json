@@ -1,6 +1,6 @@
-{
-  "name": "FloodMind",
-  "short_name": "FloodMind",
+﻿{
+  "name": "HiveMind",
+  "short_name": "HiveMind",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f0f4f5",

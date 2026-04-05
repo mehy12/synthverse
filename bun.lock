@@ -1,9 +1,9 @@
-{
+﻿{
   "lockfileVersion": 1,
   "configVersion": 0,
   "workspaces": {
     "": {
-      "name": "advaya",
+      "name": "HiveMind",
       "dependencies": {
         "@deck.gl/aggregation-layers": "^9.2.11",
         "@deck.gl/core": "^9.2.11",
@@ -1686,3 +1686,4 @@
     "@typescript-eslint/typescript-estree/minimatch/brace-expansion/balanced-match": ["balanced-match@4.0.4", "", {}, "sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA=="],
   }
 }
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, type ComponentType, type ReactNode } from "react";
 import {
@@ -63,7 +63,7 @@ function Brand({ subtitle = false }: { subtitle?: boolean }) {
         <Waves size={32} strokeWidth={2.25} />
       </div>
       <div className={styles.brandText}>
-        <div className={styles.brandTitle}>FloodMind</div>
+        <div className={styles.brandTitle}>HiveMind</div>
         {subtitle ? <div className={styles.brandSubtitle}>ODISHA CORRIDOR</div> : null}
       </div>
     </div>
@@ -353,7 +353,7 @@ function SettingsScreen() {
     "GPS Accuracy",
     "Report Privacy",
     "Data Sync",
-    "About FloodMind",
+    "About HiveMind",
   ];
 
   return (
@@ -402,3 +402,4 @@ export default function MobileApp({ initialTab = "map" }: MobileAppProps) {
     </div>
   );
 }
+

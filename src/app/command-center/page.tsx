@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -57,7 +57,7 @@ export default function MapPage() {
   return (
     <>
     <div className="desktop-only" style={{ height: "calc(100vh - var(--nav-height))", position: "relative", display: "flex" }}>
-      {/* ── Left Panel ─────────────────────────────────────── */}
+      {/* â”€â”€ Left Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div
         style={{
           width: 400,
@@ -90,7 +90,7 @@ export default function MapPage() {
 
           <div style={{ marginBottom: "12px" }}>
             <span className="badge badge-teal" style={{ marginRight: 6 }}>
-              📍 Odisha Corridor
+              ðŸ“ Odisha Corridor
             </span>
           </div>
 
@@ -103,7 +103,7 @@ export default function MapPage() {
               marginBottom: "8px",
             }}
           >
-            FloodMind Odisha Water Intelligence
+            HiveMind Odisha Water Intelligence
           </h2>
           <p
             style={{
@@ -312,13 +312,13 @@ export default function MapPage() {
             }}
           />
           <span>
-            Flood sensor feed • refreshing every 5 minutes •{" "}
+            Flood sensor feed â€¢ refreshing every 5 minutes â€¢{" "}
             {summary?.source ?? "API status: Healthy"}
           </span>
         </div>
       </div>
 
-      {/* ── Center Map ─────────────────────────────────────── */}
+      {/* â”€â”€ Center Map â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div style={{ flex: 1, position: "relative" }}>
         <Suspense fallback={<div>Loading Map...</div>}>
           <DeckMapView refreshKey={refreshKey} onSummaryChange={setSummary} />
@@ -331,3 +331,4 @@ export default function MapPage() {
     </>
   );
 }
+
