@@ -4,13 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { Shield, Map, Layers3, Camera, Radio, Menu, X, LogOut, User } from "lucide-react";
+import { Shield, Map, Layers3, Camera, Radio, Menu, X, User } from "lucide-react";
 import styles from "./Navbar.module.css";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   const navLinks = [
     { name: "Map", href: "/map", icon: <Map size={16} strokeWidth={1.5} /> },
@@ -53,9 +53,6 @@ export default function Navbar() {
                   <span className={styles.userName}>{user.name}</span>
                   <span className={styles.userRole}>{user.role}</span>
                 </div>
-                <button onClick={() => void logout()} className={styles.logoutBtn} title="Logout">
-                  <LogOut size={16} strokeWidth={1.5} />
-                </button>
               </div>
             ) : (
               <Link href="/login" className={styles.loginBtn} onClick={() => setMobileOpen(false)}>

@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Activity, MapPin, RefreshCw, ShieldCheck, TriangleAlert } from "lucide-react";
-import RequireAuth from "@/components/auth/RequireAuth";
 
 type FeedReport = {
   id: string;
@@ -82,8 +81,7 @@ export default function LiveFeedPage() {
   }, [reports]);
 
   return (
-    <RequireAuth>
-      <main style={{ minHeight: "calc(100vh - var(--nav-height))", background: "#f4f8f9", padding: "20px" }}>
+    <main style={{ minHeight: "calc(100vh - var(--nav-height))", background: "#f4f8f9", padding: "20px" }}>
       <section style={{ maxWidth: 1240, margin: "0 auto" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
           <div>
@@ -176,7 +174,6 @@ export default function LiveFeedPage() {
           )}
         </div>
       </section>
-      </main>
-    </RequireAuth>
+    </main>
   );
 }

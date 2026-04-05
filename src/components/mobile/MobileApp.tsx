@@ -502,7 +502,7 @@ function ReportScreen() {
 }
 
 function SettingsScreen() {
-  const { user, logout, renewSession, sessionExpiresAt } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
   const [openSetting, setOpenSetting] = useState<SettingKey | null>(null);
   const [settings, setSettings] = useState<MobileSettingsState>(DEFAULT_MOBILE_SETTINGS);
@@ -562,18 +562,13 @@ function SettingsScreen() {
     },
   ];
 
-  const sessionLabel = sessionExpiresAt
-    ? new Date(sessionExpiresAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-    : "Not available";
-
   const applySetting = (message: string, update: Partial<MobileSettingsState>) => {
     setSettings((current) => ({ ...current, ...update }));
     setStatus(message);
   };
 
-  const handleLogout = async () => {
-    await logout();
-    router.replace("/login");
+  const goToMap = () => {
+    router.replace("/map");
   };
 
   return (
@@ -734,19 +729,7 @@ function SettingsScreen() {
                   {row.key === "about" ? (
                     <>
                       <div className={styles.aboutLine}>HiveMind Mobile v2.0</div>
-                      <div className={styles.aboutLine}>Session expires at: {sessionLabel}</div>
-                      <button
-                        type="button"
-                        className={styles.settingAction}
-                        onClick={() => {
-                          void (async () => {
-                            const renewed = await renewSession();
-                            setStatus(renewed ? "Secure session renewed." : "Session renewal failed.");
-                          })();
-                        }}
-                      >
-                        Renew Session
-                      </button>
+                      <div className={styles.aboutLine}>Authentication disabled for open access.</div>
                     </>
                   ) : null}
                 </div>
@@ -756,7 +739,7 @@ function SettingsScreen() {
         })}
       </div>
 
-      <button type="button" className={styles.logoutButton} onClick={() => void handleLogout()}>Logout</button>
+      <button type="button" className={styles.logoutButton} onClick={goToMap}>Back To Map</button>
     </div>
   );
 }
