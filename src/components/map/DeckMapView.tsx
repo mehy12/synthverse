@@ -58,8 +58,10 @@ import HealthPredictionPanel from "../panels/HealthPredictionPanel";
 import { useARO } from "@/hooks/useARO";
 import { getSyntheticPopulation, type ResponseTarget } from "@/lib/response-orchestrator";
 import { nearestCityLabel, formatRelativeTime } from "@/lib/map-utils";
+import { haversineKm } from "@/lib/safe-zone-engine";
 import { useSyncExternalStore } from "react";
 import { agentStore, type ResponseUnit } from "@/store/agent-store";
+import powerGridNodes from "@/data/power-grid-locations.json";
 
 // ── Map styles ──────────────────────────────────────────────────
 type BaseLayer = "light" | "dark" | "satellite";
@@ -80,8 +82,17 @@ const INITIAL_VIEW_STATE = {
   maxZoom: 14,
 };
 
-type HazardMode = "flood" | "cyclone" | "earthquake";
+type IncidentScenario = "blackout" | "flood_blackout" | "cyclone" | "earthquake" | "strike";
 type RainScenario = "normal" | "rain" | "heavy_rain";
+
+type PowerNode = {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  circle: string;
+  division: string;
+};
 
 type HeatPoint = {
   lat: number; lng: number; weight: number;
@@ -129,7 +140,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
   const [showHealthPanel, setShowHealthPanel] = useState(true);
 
   // ── Simulation controls ────────────────────────────────────────
-  const [hazardMode, setHazardMode] = useState<HazardMode>("flood");
+  const [incidentScenario, setIncidentScenario] = useState<IncidentScenario>("flood_blackout");
   const [rainScenario, setRainScenario] = useState<RainScenario>("normal");
 
   // ── Panel state ────────────────────────────────────────────────
@@ -152,6 +163,52 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
   const [markedPoint, setMarkedPoint] = useState<{ lat: number; lng: number } | null>(null);
   const [liveSource, setLiveSource] = useState("Open-Meteo Marine API");
   const [liveUpdatedAt, setLiveUpdatedAt] = useState("");
+
+  const scenarioRadii = useMemo(
+    (): Record<IncidentScenario, { red: number; yellow: number }> => ({
+      blackout: { red: 15, yellow: 25 },
+      flood_blackout: { red: 20, yellow: 35 },
+      cyclone: { red: 30, yellow: 50 },
+      earthquake: { red: 22, yellow: 40 },
+      strike: { red: 10, yellow: 18 },
+    }),
+    []
+  );
+
+  const scenarioLabels = useMemo(
+    (): Record<IncidentScenario, string> => ({
+      blackout: "Blackout",
+      flood_blackout: "Flood + Blackout",
+      cyclone: "Cyclone",
+      earthquake: "Earthquake",
+      strike: "Strike / Bombing",
+    }),
+    []
+  );
+
+  const allPowerNodes = useMemo(
+    () => (powerGridNodes as PowerNode[]).filter((n) => Number.isFinite(n.lat) && Number.isFinite(n.lng)),
+    []
+  );
+
+  const activeImpact = useMemo(() => {
+    if (!markedPoint) return null;
+    const radii = scenarioRadii[incidentScenario];
+    const inRed = allPowerNodes.filter(
+      (n) => haversineKm(markedPoint.lat, markedPoint.lng, n.lat, n.lng) <= radii.red
+    );
+    const inYellow = allPowerNodes.filter((n) => {
+      const d = haversineKm(markedPoint.lat, markedPoint.lng, n.lat, n.lng);
+      return d > radii.red && d <= radii.yellow;
+    });
+
+    return {
+      redKm: radii.red,
+      yellowKm: radii.yellow,
+      affectedCritical: inRed,
+      affectedWarning: inYellow,
+    };
+  }, [allPowerNodes, incidentScenario, markedPoint, scenarioRadii]);
 
   // ── View state ─────────────────────────────────────────────────
   const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
@@ -242,8 +299,9 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
 
     const loadHeatmap = async () => {
       try {
-        const params = new URLSearchParams({ hazard: hazardMode });
-        if (hazardMode === "flood") params.set("scenario", rainScenario);
+        const apiHazard = incidentScenario === "cyclone" || incidentScenario === "earthquake" ? incidentScenario : "flood";
+        const params = new URLSearchParams({ hazard: apiHazard });
+        if (apiHazard === "flood") params.set("scenario", rainScenario);
         const response = await fetch(`/api/odisha-heatmap?${params.toString()}`, { cache: "no-store" });
         if (response.ok) {
           const payload = await response.json();
@@ -261,7 +319,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
 
     const reportInterval = setInterval(loadReports, 5000);
     return () => { isCancelled = true; clearInterval(reportInterval); };
-  }, [refreshKey, hazardMode, rainScenario]);
+  }, [refreshKey, incidentScenario, rainScenario]);
 
   // ── Push summary to parent (the feed system) ──────────────────
   useEffect(() => {
@@ -402,13 +460,90 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
           getLineWidth: 3,
         })
       );
+
+      if (activeImpact) {
+        list.push(
+          new ScatterplotLayer({
+            id: "impact-zone-yellow",
+            data: [{ ...markedPoint, radiusKm: activeImpact.yellowKm }],
+            pickable: false,
+            opacity: 0.12,
+            stroked: true,
+            filled: true,
+            radiusMinPixels: 0,
+            radiusMaxPixels: 2000,
+            getPosition: (d: any) => [d.lng, d.lat],
+            getRadius: (d: any) => d.radiusKm * 1000,
+            getFillColor: [234, 179, 8, 90],
+            getLineColor: [234, 179, 8, 210],
+            getLineWidth: 2,
+          })
+        );
+        list.push(
+          new ScatterplotLayer({
+            id: "impact-zone-red",
+            data: [{ ...markedPoint, radiusKm: activeImpact.redKm }],
+            pickable: false,
+            opacity: 0.18,
+            stroked: true,
+            filled: true,
+            radiusMinPixels: 0,
+            radiusMaxPixels: 1200,
+            getPosition: (d: any) => [d.lng, d.lat],
+            getRadius: (d: any) => d.radiusKm * 1000,
+            getFillColor: [239, 68, 68, 100],
+            getLineColor: [239, 68, 68, 230],
+            getLineWidth: 2,
+          })
+        );
+      }
+    }
+
+    if (activeImpact && showPowerGrid && activeImpact.affectedCritical.length > 0) {
+      list.push(
+        new ScatterplotLayer({
+          id: "affected-power-critical",
+          data: activeImpact.affectedCritical,
+          pickable: true,
+          opacity: 0.95,
+          stroked: true,
+          filled: true,
+          radiusMinPixels: 8,
+          radiusMaxPixels: 18,
+          getPosition: (d: any) => [d.lng, d.lat],
+          getRadius: 800,
+          getFillColor: [220, 38, 38, 220],
+          getLineColor: [255, 255, 255, 240],
+          getLineWidth: 2,
+        })
+      );
+    }
+
+    if (activeImpact && showPowerGrid && activeImpact.affectedWarning.length > 0) {
+      list.push(
+        new ScatterplotLayer({
+          id: "affected-power-warning",
+          data: activeImpact.affectedWarning,
+          pickable: true,
+          opacity: 0.9,
+          stroked: true,
+          filled: true,
+          radiusMinPixels: 6,
+          radiusMaxPixels: 14,
+          getPosition: (d: any) => [d.lng, d.lat],
+          getRadius: 650,
+          getFillColor: [245, 158, 11, 210],
+          getLineColor: [255, 255, 255, 220],
+          getLineWidth: 2,
+        })
+      );
     }
 
     return list;
   }, [timeHour, heatmapPoints, hotspotPoints, showARO, agents, onHover, handleMapClick,
       showFloodZones, showDistricts, showRivers, showHeatmap, showHotspots,
       showPowerGrid, showSewageGrid, showWaterways, showBasins, showPipelines, showIrrigation, showShelters,
-      userReports, markedPoint]);
+      userReports, markedPoint, activeImpact]);
 
   // ── Panel styling (adapts to theme) ────────────────────────────
   const panelBg = isDark ? "rgba(15, 23, 42, 0.92)" : "rgba(255, 255, 255, 0.95)";
@@ -549,16 +684,16 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
             <div style={{ marginBottom: 16 }}>
               <div style={{ fontSize: "0.6rem", color: panelMuted, marginBottom: 8, fontWeight: 700 }}>SIMULATION MODE</div>
               <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-                {(["flood", "cyclone", "earthquake"] as HazardMode[]).map((mode) => (
-                  <button key={mode} onClick={() => setHazardMode(mode)}
+                {(["flood_blackout", "blackout", "cyclone", "earthquake", "strike"] as IncidentScenario[]).map((mode) => (
+                  <button key={mode} onClick={() => setIncidentScenario(mode)}
                     style={{
                       flex: 1, padding: "6px", borderRadius: 6, fontSize: "0.7rem", fontWeight: 600,
                       textTransform: "capitalize",
-                      background: hazardMode === mode ? accentColor : panelToggleBg,
-                      color: hazardMode === mode ? "#fff" : panelMuted,
+                      background: incidentScenario === mode ? accentColor : panelToggleBg,
+                      color: incidentScenario === mode ? "#fff" : panelMuted,
                       border: `1px solid ${panelBorder}`, cursor: "pointer", transition: "all 0.2s",
                     }}
-                  >{mode}</button>
+                  >{scenarioLabels[mode]}</button>
                 ))}
               </div>
             </div>
@@ -738,6 +873,29 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
           }}>
             <MapPin size={10} /> Click map to mark hazard
           </div>
+          {markedPoint && activeImpact && (
+            <div
+              style={{
+                marginTop: 10,
+                paddingTop: 10,
+                borderTop: `1px solid ${panelBorder}`,
+                fontSize: "0.68rem",
+                color: panelText,
+                display: "flex",
+                flexDirection: "column",
+                gap: 4,
+              }}
+            >
+              <strong style={{ fontSize: "0.65rem", color: panelMuted, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                Grid Impact ({scenarioLabels[incidentScenario]})
+              </strong>
+              <span>Red Zone ({activeImpact.redKm} km): {activeImpact.affectedCritical.length} stations at shutdown risk</span>
+              <span>Yellow Zone ({activeImpact.yellowKm} km): {activeImpact.affectedWarning.length} stations degraded</span>
+              {!showPowerGrid && (
+                <span style={{ color: "#f59e0b" }}>Enable Power Grid layer to see impacted substations.</span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Hover Tooltip */}
