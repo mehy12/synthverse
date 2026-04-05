@@ -1,11 +1,11 @@
-﻿// HiveMind â€” Cascade Flood Prediction Model
+﻿// HiveMind — Cascade Flood Prediction Model
 // Exponential risk escalation model calibrated for urban district flood vulnerability
 //
 // Model type: District-specific exponential risk with cascade multipliers
 //
 // Formula per district:
-//   riskLevel(t) = baseline * exp(-Î» * flood_index * t)
-//   where Î» = district vulnerability coefficient
+//   riskLevel(t) = baseline * exp(-λ * flood_index * t)
+//   where λ = district vulnerability coefficient
 //         t = days since flood onset
 //         flood_index = normalized severity (0-1)
 //
@@ -57,8 +57,8 @@ export interface PredictionResult {
   };
 }
 
-// District vulnerability coefficients (Î»)
-// Higher Î» = more vulnerable to flooding
+// District vulnerability coefficients (λ)
+// Higher λ = more vulnerable to flooding
 const DISTRICT_VULNERABILITY: Record<string, {
   lambda: number;
   name: string;
@@ -73,7 +73,7 @@ const DISTRICT_VULNERABILITY: Record<string, {
   kochi_central: {
     lambda: 0.016,
     name: "Kochi Central",
-    icon: "ðŸ™ï¸",
+    icon: "🏙️",
     baseline: 100,
     threshold: 55,
     dailyEconomicValue: 8500,
@@ -84,7 +84,7 @@ const DISTRICT_VULNERABILITY: Record<string, {
   edapally: {
     lambda: 0.019,
     name: "Edapally",
-    icon: "ðŸ˜ï¸",
+    icon: "🏘️",
     baseline: 100,
     threshold: 50,
     dailyEconomicValue: 6200,
@@ -95,7 +95,7 @@ const DISTRICT_VULNERABILITY: Record<string, {
   aluva: {
     lambda: 0.022,
     name: "Aluva",
-    icon: "ðŸŒŠ",
+    icon: "🌊",
     baseline: 100,
     threshold: 40,
     dailyEconomicValue: 3800,
@@ -106,7 +106,7 @@ const DISTRICT_VULNERABILITY: Record<string, {
   fort_kochi: {
     lambda: 0.014,
     name: "Fort Kochi",
-    icon: "ðŸ›ï¸",
+    icon: "🏛️",
     baseline: 100,
     threshold: 50,
     dailyEconomicValue: 4200,
@@ -117,7 +117,7 @@ const DISTRICT_VULNERABILITY: Record<string, {
   kaloor: {
     lambda: 0.020,
     name: "Kaloor",
-    icon: "ðŸ¢",
+    icon: "🏢",
     baseline: 100,
     threshold: 45,
     dailyEconomicValue: 5200,
@@ -128,7 +128,7 @@ const DISTRICT_VULNERABILITY: Record<string, {
   mattancherry: {
     lambda: 0.017,
     name: "Mattancherry",
-    icon: "âš“",
+    icon: "⚓",
     baseline: 100,
     threshold: 48,
     dailyEconomicValue: 3500,
@@ -139,7 +139,7 @@ const DISTRICT_VULNERABILITY: Record<string, {
   thrippunithura: {
     lambda: 0.013,
     name: "Thrippunithura",
-    icon: "ðŸ ",
+    icon: "🏠",
     baseline: 100,
     threshold: 55,
     dailyEconomicValue: 2900,
@@ -150,7 +150,7 @@ const DISTRICT_VULNERABILITY: Record<string, {
   vypeen: {
     lambda: 0.021,
     name: "Vypeen Island",
-    icon: "ðŸï¸",
+    icon: "🏝️",
     baseline: 100,
     threshold: 42,
     dailyEconomicValue: 1800,
@@ -187,7 +187,7 @@ export function predictBiodiversityLoss(input: PollutionInput): PredictionResult
     };
   }
 
-  // Phase 2: Cascade effects â€” if upstream districts flood, downstream districts amplified
+  // Phase 2: Cascade effects — if upstream districts flood, downstream districts amplified
   const cascadeOrder = [
     "kochi_central", "aluva", "edapally", "fort_kochi",
     "kaloor", "mattancherry", "thrippunithura", "vypeen",
@@ -258,10 +258,11 @@ export function predictBiodiversityLoss(input: PollutionInput): PredictionResult
     mostVulnerable,
     cascadeChain: collapsed90,
     interventionBenefit: {
-      ifNow: `Recovery in ~${Math.round(totalLoss30 / 100000)} days, â‚¹${toCrore(totalLoss90 - totalLoss30)} Cr saved`,
-      if30Days: `Recovery in ~${Math.round(totalLoss60 / 80000)} days, â‚¹${toCrore(totalLoss90 - totalLoss60)} Cr saved`,
-      if60Days: `Severe damage â€” recovery may take years, â‚¹${toCrore(totalLoss90)} Cr total loss`,
+      ifNow: `Recovery in ~${Math.round(totalLoss30 / 100000)} days, ₹${toCrore(totalLoss90 - totalLoss30)} Cr saved`,
+      if30Days: `Recovery in ~${Math.round(totalLoss60 / 80000)} days, ₹${toCrore(totalLoss90 - totalLoss60)} Cr saved`,
+      if60Days: `Severe damage — recovery may take years, ₹${toCrore(totalLoss90)} Cr total loss`,
     },
   };
 }
+
 

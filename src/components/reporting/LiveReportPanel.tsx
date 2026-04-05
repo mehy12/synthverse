@@ -113,7 +113,7 @@ function buildVerificationSummary(params: {
         ? "LIKELY_LIVE_CAPTURE"
         : "NEEDS_REVIEW";
 
-  return { score, status, notes: notes.join(" â€¢ ") };
+  return { score, status, notes: notes.join(" • ") };
 }
 
 export default function LiveReportPanel({ onSubmitted, compact = false }: LiveReportPanelProps) {
@@ -300,7 +300,7 @@ export default function LiveReportPanel({ onSubmitted, compact = false }: LiveRe
           locationAccuracyMeters: manualCoords ? 0 : (coords?.accuracy ?? null),
           verificationScore: manualCoords ? Math.min(100, verification.score + 10) : verification.score,
           verificationStatus: verification.status,
-          verificationNotes: verification.notes + (manualCoords ? " â€¢ location manually pinned on map" : ""),
+          verificationNotes: verification.notes + (manualCoords ? " • location manually pinned on map" : ""),
           timestamp: captureTimestamp ?? new Date().toISOString(),
           isUserReport: true,
         }),
@@ -882,4 +882,5 @@ export default function LiveReportPanel({ onSubmitted, compact = false }: LiveRe
     </section>
   );
 }
+
 

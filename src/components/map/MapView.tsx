@@ -55,7 +55,7 @@ L.Icon.Default.mergeOptions({
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
-// â”€â”€ Odisha Flood Logic & Fallback Data â”€â”€
+// ── Odisha Flood Logic & Fallback Data ──
 const ODISHA_BOUNDS: [[number, number], [number, number]] = [
   [17.6, 81.6],
   [22.9, 87.7],
@@ -467,7 +467,7 @@ export default function MapView({
           className={`${styles.aroToggle} ${showARO ? styles.aroActive : ""}`} 
           onClick={() => setShowARO(!showARO)}
         >
-          {showARO ? "ðŸ“¡ ARO SYSTEM ACTIVE" : "ðŸ“¡ ACTIVATE ARO"}
+          {showARO ? "📡 ARO SYSTEM ACTIVE" : "📡 ACTIVATE ARO"}
         </div>
 
         <MapContainer
@@ -604,7 +604,7 @@ export default function MapView({
           ))}
         </MapContainer>
 
-        {/* â”€â”€ Layer Manager Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── Layer Manager Panel ────────────────────────────────── */}
         <div className={`${styles.layerPanel} ${isLayerPanelMinimized ? styles.minimized : ""}`}>
           <div className={styles.panelHeader} onClick={() => setIsLayerPanelMinimized(!isLayerPanelMinimized)}>
             <div className={styles.panelTitle}>
@@ -680,7 +680,7 @@ export default function MapView({
           </div>
         </div>
 
-        {/* â”€â”€ Legend â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── Legend ─────────────────────────────────────────── */}
         <div className={styles.legend}>
           <div className={styles.panelTitle} style={{ marginBottom: "12px" }}>
             <Activity size={14} /> LIVE RISK LEGEND
@@ -708,7 +708,7 @@ export default function MapView({
            onClick={() => setShowARO(!showARO)}
            style={{ top: "auto", bottom: "16px", left: "270px" }}
         >
-          {showARO ? "ðŸ“¡ ARO SYSTEM ACTIVE" : "ðŸ“¡ ACTIVATE ARO"}
+          {showARO ? "📡 ARO SYSTEM ACTIVE" : "📡 ACTIVATE ARO"}
         </div>
       </div>
       
@@ -716,5 +716,6 @@ export default function MapView({
     </div>
   );
 }
+
 
 

@@ -63,7 +63,7 @@ import { useSyncExternalStore } from "react";
 import { agentStore, type ResponseUnit } from "@/store/agent-store";
 import powerGridNodes from "@/data/power-grid-locations.json";
 
-// â”€â”€ Map styles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Map styles ──────────────────────────────────────────────────
 type BaseLayer = "light" | "dark" | "satellite";
 
 const MAP_STYLES: Record<BaseLayer, string> = {
@@ -119,11 +119,11 @@ interface DeckMapViewProps {
 }
 
 export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMapViewProps) {
-  // â”€â”€ Map base layer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Map base layer ─────────────────────────────────────────────
   const [baseLayer, setBaseLayer] = useState<BaseLayer>("light");
   const isDark = baseLayer === "dark";
 
-  // â”€â”€ Layer visibility toggles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Layer visibility toggles ───────────────────────────────────
   const [showHeatmap, setShowHeatmap] = useState(true);
   const [showFloodZones, setShowFloodZones] = useState(true);
   const [showRivers, setShowRivers] = useState(true);
@@ -139,26 +139,26 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
   const [showShelters, setShowShelters] = useState(false);
   const [showHealthPanel, setShowHealthPanel] = useState(true);
 
-  // â”€â”€ Simulation controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Simulation controls ────────────────────────────────────────
   const [incidentScenario, setIncidentScenario] = useState<IncidentScenario>("flood_blackout");
   const [rainScenario, setRainScenario] = useState<RainScenario>("normal");
 
-  // â”€â”€ Panel state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Panel state ────────────────────────────────────────────────
   const [isLayerPanelMinimized, setIsLayerPanelMinimized] = useState(false);
   const [showARO, setShowARO] = useState(false);
 
-  // â”€â”€ Time simulation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Time simulation ────────────────────────────────────────────
   const [timeHour, setTimeHour] = useState(0);
 
-  // â”€â”€ Selection & hover â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Selection & hover ──────────────────────────────────────────
   const [selectedDistrict, setSelectedDistrict] = useState<DistrictFeature | null>(null);
   const [hoverInfo, setHoverInfo] = useState<any>(null);
 
-  // â”€â”€ Data from API â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Data from API ──────────────────────────────────────────────
   const [heatmapPoints, setHeatmapPoints] = useState<HeatPoint[]>([]);
   const [hotspotPoints, setHotspotPoints] = useState<HotspotPoint[]>([]);
 
-  // â”€â”€ User reports & map marking (RESTORED) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── User reports & map marking (RESTORED) ──────────────────────
   const [userReports, setUserReports] = useState<any[]>([]);
   const [markedPoint, setMarkedPoint] = useState<{ lat: number; lng: number } | null>(null);
   const [liveSource, setLiveSource] = useState("Open-Meteo Marine API");
@@ -210,10 +210,10 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
     };
   }, [allPowerNodes, incidentScenario, markedPoint, scenarioRadii]);
 
-  // â”€â”€ View state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── View state ─────────────────────────────────────────────────
   const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
 
-  // â”€â”€ ARO agents â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── ARO agents ─────────────────────────────────────────────────
   const agents: ResponseUnit[] = useSyncExternalStore(
     (l) => agentStore.subscribe(l),
     () => agentStore.getSnapshot()
@@ -237,11 +237,11 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
 
   useARO(showARO, responseTargets);
 
-  // â”€â”€ Alerts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Alerts ─────────────────────────────────────────────────────
   const alerts = useMemo(() => generateAlerts(ODISHA_DISTRICTS, timeHour), [timeHour]);
   const timeLabel = useMemo(() => getTimeMultiplier(timeHour).label, [timeHour]);
 
-  // â”€â”€ Map click handler â€” mark hazard point â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Map click handler — mark hazard point ──────────────────────
   const handleMapClick = useCallback((info: any) => {
     // First check if a district polygon was clicked (for panel data)
     if (info.object?.properties) {
@@ -262,7 +262,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
     }
   }, []);
 
-  // â”€â”€ Load reports, flood feed, and heatmap (RESTORED) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Load reports, flood feed, and heatmap (RESTORED) ───────────
   useEffect(() => {
     let isCancelled = false;
 
@@ -321,7 +321,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
     return () => { isCancelled = true; clearInterval(reportInterval); };
   }, [refreshKey, incidentScenario, rainScenario]);
 
-  // â”€â”€ Push summary to parent (the feed system) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Push summary to parent (the feed system) ──────────────────
   useEffect(() => {
     if (typeof onSummaryChange !== "function") return;
     const sortedReports = [...userReports].sort(
@@ -352,7 +352,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
     });
   }, [liveSource, liveUpdatedAt, onSummaryChange, userReports]);
 
-  // â”€â”€ Delete citizen report â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Delete citizen report ──────────────────────────────────────
   const deleteCitizenReport = useCallback(async (reportId: string) => {
     const remaining = userReports.filter((r) => r.id !== reportId);
     setUserReports(remaining);
@@ -360,7 +360,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
     await fetch(`/api/reports?id=${encodeURIComponent(String(reportId))}`, { method: "DELETE" });
   }, [userReports]);
 
-  // â”€â”€ Hover handler â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Hover handler ──────────────────────────────────────────────
   const onHover = useCallback((info: any) => {
     if (info.object?.properties) {
       setHoverInfo({
@@ -375,7 +375,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
     }
   }, []);
 
-  // â”€â”€ Deck.gl Layers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Deck.gl Layers ─────────────────────────────────────────────
   const layers = useMemo(() => {
     const list: any[] = [];
 
@@ -394,7 +394,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
       list.push(createAgentLayer(agents));
     }
 
-    // â”€â”€ Infrastructure layers (RESTORED) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Infrastructure layers (RESTORED) ─────────────────────────
     if (showPowerGrid) {
       list.push(createPowerGridLinesLayer());
       list.push(createPowerGridNodesLayer());
@@ -420,7 +420,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
       list.push(createShelterLayer());
     }
 
-    // â”€â”€ User report markers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── User report markers ──────────────────────────────────────
     if (userReports.length > 0) {
       list.push(
         new ScatterplotLayer({
@@ -441,7 +441,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
       );
     }
 
-    // â”€â”€ Marked hazard point â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Marked hazard point ──────────────────────────────────────
     if (markedPoint) {
       list.push(
         new ScatterplotLayer({
@@ -545,7 +545,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
       showPowerGrid, showSewageGrid, showWaterways, showBasins, showPipelines, showIrrigation, showShelters,
       userReports, markedPoint, activeImpact]);
 
-  // â”€â”€ Panel styling (adapts to theme) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Panel styling (adapts to theme) ────────────────────────────
   const panelBg = isDark ? "rgba(15, 23, 42, 0.92)" : "rgba(255, 255, 255, 0.95)";
   const panelBorder = isDark ? "rgba(51, 65, 85, 0.4)" : "rgba(229, 231, 235, 1)";
   const panelText = isDark ? "#e2e8f0" : "#374151";
@@ -559,7 +559,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
 
   return (
     <div style={{ width: "100%", height: "100%", display: "flex", background: isDark ? "#020617" : "#f8f9fa" }}>
-      {/* â”€â”€ Map Area â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Map Area ──────────────────────────────────────────── */}
       <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
         <DeckGL
           viewState={viewState}
@@ -600,7 +600,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
             transition: "all 0.2s", letterSpacing: "0.05em",
           }}
         >
-          ðŸ“¡ {showARO ? "ARO ACTIVE" : "ACTIVATE ARO"}
+          📡 {showARO ? "ARO ACTIVE" : "ACTIVATE ARO"}
         </button>
 
         {/* Marked point clear button */}
@@ -618,11 +618,11 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
               cursor: "pointer", transition: "all 0.2s",
             }}
           >
-            <MapPin size={12} /> {markedPoint.lat.toFixed(4)}, {markedPoint.lng.toFixed(4)} â€” Clear Pin
+            <MapPin size={12} /> {markedPoint.lat.toFixed(4)}, {markedPoint.lng.toFixed(4)} — Clear Pin
           </button>
         )}
 
-        {/* â”€â”€ LAYER MANAGER PANEL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── LAYER MANAGER PANEL ─────────────────────────────── */}
         <div style={{
           position: "absolute", top: 16, right: 16, zIndex: 100,
           width: isLayerPanelMinimized ? 170 : 300,
@@ -762,13 +762,13 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
             <div style={{ fontSize: "0.6rem", color: panelMuted, marginBottom: 6, marginTop: 12, fontWeight: 700 }}>INFRASTRUCTURE</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
               {[
-                { label: "âš¡ Power Grid", state: showPowerGrid, toggle: setShowPowerGrid, icon: <Zap size={14} color="#f59e0b" /> },
-                { label: "ðŸš° Sewage Grid", state: showSewageGrid, toggle: setShowSewageGrid, icon: <Cable size={14} color="#10b981" /> },
-                { label: "ðŸŒŠ Waterways", state: showWaterways, toggle: setShowWaterways, icon: <Droplet size={14} color="#06b6d4" /> },
-                { label: "ðŸ—ºï¸ Basins", state: showBasins, toggle: setShowBasins, icon: <MapIcon size={14} color="#1e40af" /> },
-                { label: "ðŸ”§ Pipelines", state: showPipelines, toggle: setShowPipelines, icon: <Navigation size={14} color="#0ea5e9" /> },
-                { label: "ðŸŒ¾ Irrigation", state: showIrrigation, toggle: setShowIrrigation, icon: <Droplet size={14} color="#2563eb" /> },
-                { label: "ðŸ›ï¸ Shelters", state: showShelters, toggle: setShowShelters, icon: <Home size={14} color="#22c55e" /> },
+                { label: "⚡ Power Grid", state: showPowerGrid, toggle: setShowPowerGrid, icon: <Zap size={14} color="#f59e0b" /> },
+                { label: "🚰 Sewage Grid", state: showSewageGrid, toggle: setShowSewageGrid, icon: <Cable size={14} color="#10b981" /> },
+                { label: "🌊 Waterways", state: showWaterways, toggle: setShowWaterways, icon: <Droplet size={14} color="#06b6d4" /> },
+                { label: "🗺️ Basins", state: showBasins, toggle: setShowBasins, icon: <MapIcon size={14} color="#1e40af" /> },
+                { label: "🔧 Pipelines", state: showPipelines, toggle: setShowPipelines, icon: <Navigation size={14} color="#0ea5e9" /> },
+                { label: "🌾 Irrigation", state: showIrrigation, toggle: setShowIrrigation, icon: <Droplet size={14} color="#2563eb" /> },
+                { label: "🏛️ Shelters", state: showShelters, toggle: setShowShelters, icon: <Home size={14} color="#22c55e" /> },
               ].map((layer, idx) => (
                 <label key={`i-${idx}`}
                   style={{
@@ -830,13 +830,13 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
                 <Heart size={14} color="#ef4444" />
-                <span style={{ fontWeight: 500, fontSize: "0.78rem" }}>ðŸ¥ Health Predictor</span>
+                <span style={{ fontWeight: 500, fontSize: "0.78rem" }}>🏥 Health Predictor</span>
               </div>
             </label>
           </div>
         </div>
 
-        {/* â”€â”€ LEGEND â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── LEGEND ──────────────────────────────────────────── */}
         <div style={{
           position: "absolute", bottom: 80, left: 16, zIndex: 100,
           padding: 16, borderRadius: 12,
@@ -853,8 +853,8 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
           </div>
           {[
             { label: "Critical Risk (>0.8)", color: "#EF4444" },
-            { label: "High Risk (0.6â€“0.8)", color: "#F97316" },
-            { label: "Medium Risk (0.4â€“0.6)", color: "#FBBF24" },
+            { label: "High Risk (0.6–0.8)", color: "#F97316" },
+            { label: "Medium Risk (0.4–0.6)", color: "#FBBF24" },
             { label: "Low Risk (<0.4)", color: "#22C55E" },
           ].map((item) => (
             <div key={item.label} style={{
@@ -953,7 +953,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
         />
       </div>
 
-      {/* â”€â”€ Right Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Right Panel ───────────────────────────────────────── */}
       <div style={{ width: 360, minWidth: 360, height: "100%", display: "flex", flexDirection: "column" }}>
         {showARO ? (
           <CommandPanel />
@@ -969,4 +969,5 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
     </div>
   );
 }
+
 
