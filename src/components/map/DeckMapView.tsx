@@ -584,7 +584,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
           style={{
             position: "absolute", top: 16, left: 16, zIndex: 100,
             display: "flex", alignItems: "center", gap: 8,
-            padding: "8px 16px", borderRadius: 10,
+            padding: "8px 16px", borderRadius: 4,
             background: showARO ? "rgba(14, 165, 233, 0.2)" : isDark ? "rgba(15, 23, 42, 0.8)" : "rgba(255,255,255,0.9)",
             border: `1px solid ${showARO ? "rgba(56, 189, 248, 0.5)" : panelBorder}`,
             backdropFilter: "blur(12px)",
@@ -603,7 +603,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
             style={{
               position: "absolute", top: 56, left: 16, zIndex: 100,
               display: "flex", alignItems: "center", gap: 6,
-              padding: "6px 12px", borderRadius: 8,
+              padding: "6px 12px", borderRadius: 3,
               background: isDark ? "rgba(220, 38, 38, 0.15)" : "rgba(220, 38, 38, 0.1)",
               border: "1px solid rgba(220, 38, 38, 0.3)",
               backdropFilter: "blur(12px)",
@@ -621,7 +621,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
           width: isLayerPanelMinimized ? 170 : 300,
           padding: isLayerPanelMinimized ? "12px 16px" : "20px",
           background: panelBg, border: `1px solid ${panelBorder}`,
-          borderRadius: 12, backdropFilter: "blur(16px)",
+          borderRadius: 4, backdropFilter: "blur(16px)",
           transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
           boxShadow: isDark ? "0 8px 32px rgba(0,0,0,0.5)" : "0 4px 20px rgba(0,0,0,0.08)",
         }}>
@@ -641,7 +641,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
             </div>
             <div style={{
               display: "flex", alignItems: "center", justifyContent: "center",
-              width: 22, height: 22, borderRadius: 6, background: panelToggleBg,
+              width: 22, height: 22, borderRadius: 3, background: panelToggleBg,
               color: panelMuted, border: `1px solid ${panelBorder}`, cursor: "pointer",
             }}>
               {isLayerPanelMinimized ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
@@ -663,7 +663,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
                 {([["light", "Light"], ["dark", "Dark"], ["satellite", "Voyager"]] as [BaseLayer, string][]).map(([key, label]) => (
                   <button key={key} onClick={() => setBaseLayer(key)}
                     style={{
-                      flex: 1, padding: "6px", borderRadius: 6, fontSize: "0.7rem", fontWeight: 600,
+                      flex: 1, padding: "6px", borderRadius: 3, fontSize: "0.7rem", fontWeight: 600,
                       background: baseLayer === key ? accentColor : panelToggleBg,
                       color: baseLayer === key ? "#fff" : panelMuted,
                       border: `1px solid ${panelBorder}`, cursor: "pointer", transition: "all 0.2s",
@@ -680,7 +680,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
                 {(["flood_blackout", "blackout", "cyclone", "earthquake", "strike"] as IncidentScenario[]).map((mode) => (
                   <button key={mode} onClick={() => setIncidentScenario(mode)}
                     style={{
-                      flex: 1, padding: "6px", borderRadius: 6, fontSize: "0.7rem", fontWeight: 600,
+                      flex: 1, padding: "6px", borderRadius: 3, fontSize: "0.7rem", fontWeight: 600,
                       textTransform: "capitalize",
                       background: incidentScenario === mode ? accentColor : panelToggleBg,
                       color: incidentScenario === mode ? "#fff" : panelMuted,
@@ -698,7 +698,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
                 {(["normal", "rain", "heavy_rain"] as RainScenario[]).map((scen) => (
                   <button key={scen} onClick={() => setRainScenario(scen)}
                     style={{
-                      flex: 1, padding: "6px", borderRadius: 6, fontSize: "0.7rem", fontWeight: 600,
+                      flex: 1, padding: "6px", borderRadius: 3, fontSize: "0.7rem", fontWeight: 600,
                       textTransform: "capitalize",
                       background: rainScenario === scen ? (isDark ? "#f59e0b" : "var(--warning, #F97316)") : panelToggleBg,
                       color: rainScenario === scen ? "#fff" : panelMuted,
@@ -723,7 +723,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
                   style={{
                     display: "flex", alignItems: "center", gap: 10,
                     cursor: "pointer", userSelect: "none", fontSize: "0.82rem",
-                    color: panelText, padding: "5px 10px", borderRadius: 8,
+                    color: panelText, padding: "5px 10px", borderRadius: 3,
                     transition: "background 0.2s",
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = panelToggleBg)}
@@ -767,7 +767,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
                   style={{
                     display: "flex", alignItems: "center", gap: 10,
                     cursor: "pointer", userSelect: "none", fontSize: "0.82rem",
-                    color: panelText, padding: "5px 10px", borderRadius: 8,
+                    color: panelText, padding: "5px 10px", borderRadius: 3,
                     transition: "background 0.2s",
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = panelToggleBg)}
@@ -801,7 +801,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
               style={{
                 display: "flex", alignItems: "center", gap: 10,
                 cursor: "pointer", userSelect: "none", fontSize: "0.82rem",
-                color: panelText, padding: "5px 10px", borderRadius: 8,
+                color: panelText, padding: "5px 10px", borderRadius: 3,
                 transition: "background 0.2s",
               }}
               onMouseEnter={(e) => (e.currentTarget.style.background = panelToggleBg)}
@@ -832,7 +832,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
         {/* ── LEGEND ──────────────────────────────────────────── */}
         <div style={{
           position: "absolute", bottom: 80, left: 16, zIndex: 100,
-          padding: 16, borderRadius: 12,
+          padding: 16, borderRadius: 4,
           background: panelBg, border: `1px solid ${panelBorder}`,
           backdropFilter: "blur(16px)", width: 200,
           boxShadow: isDark ? "0 8px 32px rgba(0,0,0,0.5)" : "0 4px 20px rgba(0,0,0,0.08)",
@@ -896,7 +896,7 @@ export default function DeckMapView({ refreshKey = 0, onSummaryChange }: DeckMap
           <div style={{
             position: "absolute", left: hoverInfo.x + 12, top: hoverInfo.y - 12,
             zIndex: 100, pointerEvents: "none",
-            padding: "10px 14px", borderRadius: 10,
+            padding: "10px 14px", borderRadius: 4,
             background: tooltipBg, border: `1px solid ${tooltipBorder}`,
             backdropFilter: "blur(16px)", minWidth: 160,
           }}>
