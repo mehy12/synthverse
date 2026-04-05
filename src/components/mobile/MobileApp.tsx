@@ -5,6 +5,7 @@ import {
   ArrowUpRight,
   BarChart3,
   Bell,
+  Bot,
   Camera,
   ChevronDown,
   Crosshair,
@@ -107,7 +108,7 @@ function StopwatchIcon() {
   );
 }
 
-function MapScreen() {
+function MapScreen({ onOpenAnalytics }: { onOpenAnalytics: () => void }) {
   const [MobileMapStage, setMobileMapStage] = useState<ComponentType<MobileMapStageProps> | null>(null);
   const [layerMode, setLayerMode] = useState<MapLayerMode>("light");
   const [zoomSignal, setZoomSignal] = useState(0);
@@ -168,7 +169,7 @@ function MapScreen() {
   };
 
   return (
-    <div className={`${styles.screen} ${styles.mapScreen}`}>
+    <div className={styles.screen}>
       <TopBar
         left={<Brand subtitle />}
         center={
@@ -231,7 +232,10 @@ function MapScreen() {
                 <div className={styles.sheetSubtitle}>Live Heatmap</div>
               </div>
             </div>
-            <div className={styles.sheetMetaNote}>Data updates every 30s</div>
+            <button type="button" className={styles.simulationButton} onClick={onOpenAnalytics}>
+              <span className={styles.robotIcon}><Bot size={18} strokeWidth={2.2} /></span>
+              Trigger Simulation
+            </button>
           </div>
         </div>
       </div>
@@ -456,7 +460,7 @@ export default function MobileApp({ initialTab = "map" }: MobileAppProps) {
 
   return (
     <div className={styles.mobileApp}>
-      {activeTab === "map" ? <MapScreen /> : null}
+      {activeTab === "map" ? <MapScreen onOpenAnalytics={() => setActiveTab("analytics")} /> : null}
       {activeTab === "analytics" ? <AnalyticsScreen /> : null}
       {activeTab === "report" ? <ReportScreen /> : null}
       {activeTab === "settings" ? <SettingsScreen /> : null}

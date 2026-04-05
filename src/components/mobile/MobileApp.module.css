@@ -28,18 +28,6 @@
   padding: 18px 18px 8px;
 }
 
-.mapScreen {
-  min-height: calc(100dvh - 92px - env(safe-area-inset-bottom));
-  display: flex;
-  flex-direction: column;
-}
-
-.mapScreen .mapStage {
-  flex: 1;
-  height: auto;
-  min-height: 0;
-}
-
 .topBar {
   display: flex;
   align-items: center;
@@ -444,14 +432,6 @@
   margin-top: 3px;
   color: #7b8795;
   font-size: 0.92rem;
-}
-
-.sheetMetaNote {
-  font-size: 0.84rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  color: #5f7284;
-  white-space: nowrap;
 }
 
 .simulationButton {
@@ -1173,9 +1153,7 @@
   }
 
   .mapOverlayCard {
-    width: calc(100% - 132px);
-    min-width: 210px;
-    max-width: 250px;
+    width: calc(100% - 32px);
   }
 
   .sheetContent {
