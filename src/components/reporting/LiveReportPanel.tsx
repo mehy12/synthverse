@@ -141,6 +141,7 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
     window.addEventListener("floodmind:map-mark", handleMark);
     return () => window.removeEventListener("floodmind:map-mark", handleMark);
   }, []);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const {
     coords,
@@ -203,6 +204,10 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
       streamRef.current?.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
     };
+  }, []);
+
+  useEffect(() => {
+    setIsHydrated(true);
   }, []);
 
   const verification = useMemo(
@@ -327,11 +332,26 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
     }
   };
 
-  const locationLabel = manualCoords 
+  const locationLabel = manualCoords
     ? `${formatCoord(manualCoords.latitude)}, ${formatCoord(manualCoords.longitude)} (Pinned)`
-    : coords
-    ? `${formatCoord(coords.latitude)}, ${formatCoord(coords.longitude)} (GPS)`
-    : "Waiting for location fix";
+    : isHydrated
+      ? coords
+        ? `${formatCoord(coords.latitude)}, ${formatCoord(coords.longitude)} (GPS)`
+        : "Waiting for location fix"
+      : "Waiting for location fix";
+
+  const accuracyLabel =
+    isHydrated && coords?.accuracy != null
+      ? `${Math.round(coords.accuracy)}m`
+      : "waiting";
+
+  const geolocationStatusLabel = isHydrated
+    ? isGeolocationAvailable
+      ? isGeolocationEnabled
+        ? "enabled"
+        : "permission needed"
+      : "unsupported"
+    : "checking";
 
   return (
     <section
@@ -545,17 +565,11 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
               <div>{locationLabel}</div>
               <div>
                 Accuracy:{" "}
-                {coords?.accuracy != null
-                  ? `${Math.round(coords.accuracy)}m`
-                  : "waiting"}
+                {accuracyLabel}
               </div>
               <div>
                 Status:{" "}
-                {isGeolocationAvailable
-                  ? isGeolocationEnabled
-                    ? "enabled"
-                    : "permission needed"
-                  : "unsupported"}
+                {geolocationStatusLabel}
               </div>
             </div>
             <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
