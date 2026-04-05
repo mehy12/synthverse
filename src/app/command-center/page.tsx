@@ -3,8 +3,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Suspense, useState } from "react";
-import { Activity } from "lucide-react";
-import LiveReportPanel from "@/components/reporting/LiveReportPanel";
+import { Activity, Camera } from "lucide-react";
 import MobileApp from "@/components/mobile/MobileApp";
 
 const DeckMapView = dynamic(() => import("@/components/map/DeckMapView"), {
@@ -171,9 +170,31 @@ export default function MapPage() {
           </div>
         </div>
 
-        <LiveReportPanel
-          onSubmitted={() => setRefreshKey((value) => value + 1)}
-        />
+        <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--border)" }}>
+          <div
+            style={{
+              border: "1px solid var(--border)",
+              borderRadius: "var(--radius-xl)",
+              padding: "14px",
+              background: "var(--off-white)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+              <Camera size={14} strokeWidth={1.6} color="var(--teal)" />
+              <strong style={{ fontSize: "0.84rem", color: "var(--text-heading)" }}>Reporting Moved To Dedicated Route</strong>
+            </div>
+            <p style={{ margin: 0, fontSize: "0.8rem", lineHeight: 1.5, color: "var(--text-secondary)" }}>
+              Live camera + GPS field reporting now runs on a separate page for cleaner command center operations.
+            </p>
+            <Link
+              href="/reporting"
+              className="btn btn-teal btn-sm"
+              style={{ marginTop: 10, width: "100%", justifyContent: "center" }}
+            >
+              Open Reporting Desk
+            </Link>
+          </div>
+        </div>
 
         {/* Live Feed section */}
         <div style={{ padding: "16px 20px", flex: 1 }}>
