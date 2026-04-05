@@ -13,7 +13,7 @@ export default function Navbar() {
   const { user, logout } = useAuth();
 
   const navLinks = [
-    { name: "Command Center", href: "/map", icon: <Map size={16} strokeWidth={1.5} /> },
+    { name: "Command Center", href: "/command-center", icon: <Map size={16} strokeWidth={1.5} /> },
     { name: "Analytics", href: "/analytics", icon: <BarChart3 size={16} strokeWidth={1.5} /> },
   ];
 

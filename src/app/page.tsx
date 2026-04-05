@@ -28,7 +28,7 @@ export default function Home() {
               <Activity size={18} strokeWidth={1.5} />
               Trigger Simulation
             </Link>
-            <Link href="/map" className="btn btn-secondary btn-lg">
+            <Link href="/command-center" className="btn btn-secondary btn-lg">
               Open Command Center <ArrowRight size={16} strokeWidth={1.5} />
             </Link>
           </div>
@@ -106,7 +106,7 @@ export default function Home() {
       <section className={styles.features}>
         <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>The 3 Pillars</h2>
         <div className={styles.featureGrid}>
-          <Link href="/map" className={`${styles.featureCard} animate-slide-up stagger-item`}>
+          <Link href="/command-center" className={`${styles.featureCard} animate-slide-up stagger-item`}>
             <div className={styles.iconWrapper} style={{ background: "var(--teal-50)", color: "var(--teal)" }}>
               <Map size={20} strokeWidth={1.5} />
             </div>
@@ -139,7 +139,7 @@ export default function Home() {
             <span className={styles.cardCta}>View <ArrowRight size={14} strokeWidth={1.5} /></span>
           </Link>
 
-          <Link href="/map" className={`${styles.featureCard} animate-slide-up stagger-item`}>
+          <Link href="/command-center" className={`${styles.featureCard} animate-slide-up stagger-item`}>
             <div className={styles.iconWrapper} style={{ background: "var(--teal-50)", color: "var(--teal)" }}>
               <Radio size={20} strokeWidth={1.5} />
             </div>
@@ -159,7 +159,7 @@ export default function Home() {
             "We turned raw sensor streams into a living digital twin — one that doesn't just show you the flood, but tells you where it's going, who's in danger, and what to do about it."
           </blockquote>
           <div style={{ display: "flex", gap: "12px", marginTop: "2rem", justifyContent: "center", flexWrap: "wrap" }}>
-            <Link href="/map" className="btn btn-primary btn-lg">
+            <Link href="/command-center" className="btn btn-primary btn-lg">
               <Map size={18} strokeWidth={1.5} /> Open Command Center
             </Link>
             <Link href="/analytics" className="btn btn-secondary btn-lg">
