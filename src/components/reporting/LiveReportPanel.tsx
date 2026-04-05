@@ -29,12 +29,14 @@ interface LiveReportPanelProps {
 }
 
 const REPORT_TYPES = [
-  "Flooding",
-  "Blocked Drain",
+  "Floods",
   "Standing Water",
-  "River Surge",
-  "Road Washout",
-  "Silt Build-up",
+  "Potholes",
+  "Blackout",
+  "Blocked Drain",
+  "Road Damage",
+  "Sewage Overflow",
+  "Fallen Trees / Debris",
 ];
 
 const SEVERITIES = [1, 2, 3, 4, 5];
