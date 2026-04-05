@@ -1,17 +1,70 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { Circle, MapContainer, Marker, Polygon, Polyline, TileLayer, useMap } from "react-leaflet";
-import L from "leaflet";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Circle, CircleMarker, MapContainer, Polygon, Polyline, TileLayer, Tooltip, useMap } from "react-leaflet";
 import styles from "./MobileApp.module.css";
 import "leaflet/dist/leaflet.css";
+import HeatmapLayer from "@/components/map/HeatmapLayer";
+import powerGridNodes from "@/data/power-grid-locations.json";
 
 type MapLayerMode = "light" | "dark";
+type HazardMode = "flood" | "cyclone" | "earthquake";
+type RainScenario = "normal" | "rain" | "heavy_rain";
+
+type LayerVisibility = {
+  heatmap: boolean;
+  hotspots: boolean;
+  floodChannels: boolean;
+  safeZones: boolean;
+  powerGrid: boolean;
+};
+
+type HeatPoint = {
+  lat: number;
+  lng: number;
+  weight: number;
+  district?: string;
+  riskScore?: number;
+};
+
+type HotspotPoint = {
+  lat: number;
+  lng: number;
+  district?: string;
+  score?: number;
+};
+
+type ScenarioSummary = {
+  severePct: number;
+  highPct: number;
+  moderatePct: number;
+};
+
+type MapSnapshot = {
+  hazard: HazardMode;
+  scenario: RainScenario;
+  source: string;
+  generatedAt: string;
+  hotspotCount: number;
+  severePct: number;
+  topHotspots: HotspotPoint[];
+};
+
+type PowerNode = {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+};
 
 interface MobileMapStageProps {
   layerMode: MapLayerMode;
   zoomSignal: number;
   focusTarget: { lat: number; lng: number } | null;
+  hazardMode: HazardMode;
+  rainScenario: RainScenario;
+  layers: LayerVisibility;
+  onSnapshotChange?: (snapshot: MapSnapshot) => void;
 }
 
 function MapEffects({ zoomSignal, focusTarget }: Pick<MobileMapStageProps, "zoomSignal" | "focusTarget">) {
@@ -41,32 +94,25 @@ function MapEffects({ zoomSignal, focusTarget }: Pick<MobileMapStageProps, "zoom
   return null;
 }
 
-function createIcon(html: string) {
-  return L.divIcon({
-    html,
-    className: "mobile-map-icon",
-    iconSize: [1, 1],
-    iconAnchor: [0, 0],
-  });
-}
+export default function MobileMapStage({
+  layerMode,
+  zoomSignal,
+  focusTarget,
+  hazardMode,
+  rainScenario,
+  layers,
+  onSnapshotChange,
+}: MobileMapStageProps) {
+  const [points, setPoints] = useState<HeatPoint[]>([]);
+  const [hotspots, setHotspots] = useState<HotspotPoint[]>([]);
+  const [source, setSource] = useState("/api/odisha-heatmap");
+  const [generatedAt, setGeneratedAt] = useState("");
+  const [chanceByScenario, setChanceByScenario] = useState<Record<string, ScenarioSummary>>({});
 
-export default function MobileMapStage({ layerMode, zoomSignal, focusTarget }: MobileMapStageProps) {
-  const tileUrl = layerMode === "light"
-    ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-    : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
-
-  const criticalZone: Array<[number, number]> = [
-    [20.41, 85.88],
-    [20.37, 85.95],
-    [20.31, 85.91],
-    [20.34, 85.82],
-  ];
-
-  const warningZone: Array<[number, number]> = [
-    [20.28, 85.77],
-    [20.24, 85.84],
-    [20.18, 85.8],
-    [20.2, 85.72],
+  const safeZones: Array<{ name: string; lat: number; lng: number; radius: number }> = [
+    { name: "Chilika Basin South", lat: 19.645, lng: 85.22, radius: 1600 },
+    { name: "Mahanadi Delta East", lat: 20.32, lng: 86.41, radius: 1400 },
+    { name: "Brahmani Mouth", lat: 20.81, lng: 86.85, radius: 1250 },
   ];
 
   const flowLines: Array<Array<[number, number]>> = [
@@ -83,100 +129,177 @@ export default function MobileMapStage({ layerMode, zoomSignal, focusTarget }: M
     ],
   ];
 
-  const waterIcon = createIcon(`
-    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;transform:translate(-50%, -100%);">
-      <div style="width:34px;height:34px;border-radius:12px;background:#c81e1e;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 18px rgba(0,0,0,.18);">
-        <svg viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'>
-          <path d='M12 22s6-5.2 6-11.2A6 6 0 0 0 6 10.8C6 16.8 12 22 12 22z'/>
-          <circle cx='12' cy='10.5' r='2.3' fill='currentColor' stroke='none'/>
-        </svg>
-      </div>
-      <div style="background:#f3f4f6;color:#111827;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700;letter-spacing:.02em;box-shadow:0 4px 10px rgba(0,0,0,.08);">LVL 4.2m</div>
-    </div>
-  `);
-  const sensorIcon = createIcon(`
-    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;transform:translate(-50%, -100%);">
-      <div style="width:34px;height:34px;border-radius:12px;background:#0d7a6e;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 18px rgba(0,0,0,.18);">
-        <svg viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'>
-          <path d='M7 12h10' />
-          <path d='M12 7v10' />
-          <circle cx='12' cy='12' r='7' />
-        </svg>
-      </div>
-      <div style="background:#f3f4f6;color:#111827;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700;letter-spacing:.02em;box-shadow:0 4px 10px rgba(0,0,0,.08);">S-092</div>
-    </div>
-  `);
-  const normalIcon = createIcon(`
-    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;transform:translate(-50%, -100%);">
-      <div style="width:34px;height:34px;border-radius:10px;background:#0d7a6e;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 18px rgba(0,0,0,.18);">
-        <svg viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'>
-          <path d='M2 8c2-2 4-2 6 0s4 2 6 0 4-2 6 0' />
-          <path d='M2 13c2-2 4-2 6 0s4 2 6 0 4-2 6 0' />
-        </svg>
-      </div>
-      <div style="background:#f3f4f6;color:#111827;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700;letter-spacing:.02em;box-shadow:0 4px 10px rgba(0,0,0,.08);">NORMAL</div>
-    </div>
-  `);
+  const powerNodes = useMemo(
+    () =>
+      (powerGridNodes as PowerNode[])
+        .filter((node) => Number.isFinite(node.lat) && Number.isFinite(node.lng))
+        .slice(0, 20),
+    [],
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadHeatmap = async () => {
+      try {
+        const params = new URLSearchParams({ hazard: hazardMode });
+        if (hazardMode === "flood") {
+          params.set("scenario", rainScenario);
+        }
+
+        const response = await fetch(`/api/odisha-heatmap?${params.toString()}`, {
+          cache: "no-store",
+        });
+        const data = await response.json();
+
+        if (cancelled) return;
+
+        const nextPoints = Array.isArray(data?.points) ? data.points : [];
+        const nextHotspots = Array.isArray(data?.hotspots) ? data.hotspots : [];
+        const nextChance = data?.chanceByScenario && typeof data.chanceByScenario === "object"
+          ? data.chanceByScenario
+          : {};
+
+        setPoints(nextPoints);
+        setHotspots(nextHotspots);
+        setSource(typeof data?.source === "string" ? data.source : "/api/odisha-heatmap");
+        setGeneratedAt(typeof data?.generatedAt === "string" ? data.generatedAt : "");
+        setChanceByScenario(nextChance);
+
+        if (typeof onSnapshotChange === "function") {
+          const active = (nextChance[hazardMode === "flood" ? rainScenario : "normal"] ??
+            nextChance.normal ??
+            { severePct: 0, highPct: 0, moderatePct: 0 }) as ScenarioSummary;
+
+          onSnapshotChange({
+            hazard: hazardMode,
+            scenario: rainScenario,
+            source: typeof data?.source === "string" ? data.source : "/api/odisha-heatmap",
+            generatedAt: typeof data?.generatedAt === "string" ? data.generatedAt : "",
+            hotspotCount: nextHotspots.length,
+            severePct: Number(active.severePct ?? 0),
+            topHotspots: nextHotspots.slice(0, 3),
+          });
+        }
+      } catch {
+        if (cancelled) return;
+        setPoints([]);
+        setHotspots([]);
+      }
+    };
+
+    void loadHeatmap();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [hazardMode, rainScenario, onSnapshotChange]);
+
+  const tileUrl = layerMode === "light"
+    ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+    : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+
+  const criticalZone = hotspots.slice(0, 3).map((h) => [h.lat, h.lng] as [number, number]);
+  const warningZone = hotspots.slice(3, 6).map((h) => [h.lat, h.lng] as [number, number]);
 
   return (
     <MapContainer center={[20.2961, 85.8245]} zoom={11} scrollWheelZoom={false} zoomControl={false} className={styles.mapContainer}>
       <TileLayer key={layerMode} url={tileUrl} attribution="" />
       <MapEffects zoomSignal={zoomSignal} focusTarget={focusTarget} />
 
-      {/* Command-center inspired overlays */}
-      <Polygon
-        positions={criticalZone}
-        pathOptions={{
-          color: "#dc2626",
-          weight: 1.5,
-          fillColor: "#ef4444",
-          fillOpacity: 0.24,
-          dashArray: "4 6",
-        }}
-      />
-      <Polygon
-        positions={warningZone}
-        pathOptions={{
-          color: "#f59e0b",
-          weight: 1.4,
-          fillColor: "#facc15",
-          fillOpacity: 0.18,
-          dashArray: "5 6",
-        }}
-      />
+      <HeatmapLayer points={points} visible={layers.heatmap} theme={hazardMode} />
 
-      {flowLines.map((line, index) => (
-        <Polyline
-          // index is stable here because flow lines are static literals
-          key={`flow-${index}`}
-          positions={line}
+      {criticalZone.length >= 3 && (
+        <Polygon
+          positions={criticalZone}
           pathOptions={{
-            color: "#38bdf8",
-            weight: 2,
-            opacity: 0.75,
+            color: "#dc2626",
+            weight: 1.5,
+            fillColor: "#ef4444",
+            fillOpacity: 0.2,
+            dashArray: "4 6",
           }}
         />
-      ))}
+      )}
+      {warningZone.length >= 3 && (
+        <Polygon
+          positions={warningZone}
+          pathOptions={{
+            color: "#f59e0b",
+            weight: 1.4,
+            fillColor: "#facc15",
+            fillOpacity: 0.15,
+            dashArray: "5 6",
+          }}
+        />
+      )}
 
-      <Circle
-        center={[20.362, 85.892]}
-        radius={2100}
-        pathOptions={{ color: "#ef4444", fillColor: "#ef4444", fillOpacity: 0.16, weight: 1 }}
-      />
-      <Circle
-        center={[20.244, 85.744]}
-        radius={1600}
-        pathOptions={{ color: "#f59e0b", fillColor: "#f59e0b", fillOpacity: 0.14, weight: 1 }}
-      />
-      <Circle
-        center={[20.125, 85.88]}
-        radius={1200}
-        pathOptions={{ color: "#22c55e", fillColor: "#22c55e", fillOpacity: 0.12, weight: 1 }}
-      />
+      {layers.floodChannels &&
+        flowLines.map((line, index) => (
+          <Polyline
+            key={`flow-${index}`}
+            positions={line}
+            pathOptions={{
+              color: "#38bdf8",
+              weight: 2,
+              opacity: 0.75,
+            }}
+          />
+        ))}
 
-      <Marker position={[20.406, 85.91]} icon={waterIcon} />
-      <Marker position={[20.245, 85.74]} icon={sensorIcon} />
-      <Marker position={[20.125, 85.88]} icon={normalIcon} />
+      {layers.safeZones &&
+        safeZones.map((zone) => (
+          <Circle
+            key={zone.name}
+            center={[zone.lat, zone.lng]}
+            radius={zone.radius}
+            pathOptions={{ color: "#22c55e", fillColor: "#22c55e", fillOpacity: 0.08, weight: 1 }}
+          >
+            <Tooltip direction="top" offset={[0, -6]} opacity={1}>
+              <div style={{ fontSize: "0.72rem", fontWeight: 700 }}>{zone.name}</div>
+            </Tooltip>
+          </Circle>
+        ))}
+
+      {layers.hotspots &&
+        hotspots.slice(0, 10).map((hotspot, index) => (
+          <CircleMarker
+            key={`hotspot-${hotspot.lat}-${hotspot.lng}-${index}`}
+            center={[hotspot.lat, hotspot.lng]}
+            radius={7}
+            pathOptions={{
+              color: "#ef4444",
+              fillColor: "#f97316",
+              fillOpacity: 0.75,
+              weight: 2,
+            }}
+          >
+            <Tooltip direction="top" offset={[0, -6]} opacity={1}>
+              <div style={{ fontSize: "0.72rem", fontWeight: 700 }}>
+                {(hotspot.district || "Risk hotspot")} ({Math.round(hotspot.score ?? 0)})
+              </div>
+            </Tooltip>
+          </CircleMarker>
+        ))}
+
+      {layers.powerGrid &&
+        powerNodes.map((node) => (
+          <CircleMarker
+            key={`grid-${node.id}`}
+            center={[node.lat, node.lng]}
+            radius={4}
+            pathOptions={{
+              color: "#f59e0b",
+              fillColor: "#fbbf24",
+              fillOpacity: 0.85,
+              weight: 1.5,
+            }}
+          >
+            <Tooltip direction="top" offset={[0, -6]} opacity={1}>
+              <div style={{ fontSize: "0.7rem", fontWeight: 700 }}>{node.name}</div>
+            </Tooltip>
+          </CircleMarker>
+        ))}
     </MapContainer>
   );
 }

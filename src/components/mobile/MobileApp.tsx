@@ -5,6 +5,7 @@ import {
   Bell,
   Bot,
   Camera,
+  Check,
   ChevronDown,
   Crosshair,
   Layers3,
@@ -23,7 +24,25 @@ import LiveReportPanel from "@/components/reporting/LiveReportPanel";
 
 type MobileTab = "map" | "feed" | "report" | "settings";
 type MapLayerMode = "light" | "dark";
+type HazardMode = "flood" | "cyclone" | "earthquake";
+type RainScenario = "normal" | "rain" | "heavy_rain";
 type MapTarget = { lat: number; lng: number };
+type LayerVisibility = {
+  heatmap: boolean;
+  hotspots: boolean;
+  floodChannels: boolean;
+  safeZones: boolean;
+  powerGrid: boolean;
+};
+type MapSnapshot = {
+  hazard: HazardMode;
+  scenario: RainScenario;
+  source: string;
+  generatedAt: string;
+  hotspotCount: number;
+  severePct: number;
+  topHotspots: Array<{ lat: number; lng: number; district?: string; score?: number }>;
+};
 type FeedReport = {
   id: string;
   type: string;
@@ -40,6 +59,10 @@ interface MobileMapStageProps {
   layerMode: MapLayerMode;
   zoomSignal: number;
   focusTarget: MapTarget | null;
+  hazardMode: HazardMode;
+  rainScenario: RainScenario;
+  layers: LayerVisibility;
+  onSnapshotChange?: (snapshot: MapSnapshot) => void;
 }
 
 interface MobileAppProps {
@@ -108,6 +131,16 @@ function MapScreen({ onOpenLiveFeed }: { onOpenLiveFeed: () => void }) {
   const [layerMode, setLayerMode] = useState<MapLayerMode>("light");
   const [zoomSignal, setZoomSignal] = useState(0);
   const [focusTarget, setFocusTarget] = useState<MapTarget | null>(null);
+  const [hazardMode, setHazardMode] = useState<HazardMode>("flood");
+  const [rainScenario, setRainScenario] = useState<RainScenario>("normal");
+  const [layers, setLayers] = useState<LayerVisibility>({
+    heatmap: true,
+    hotspots: true,
+    floodChannels: true,
+    safeZones: true,
+    powerGrid: false,
+  });
+  const [mapSnapshot, setMapSnapshot] = useState<MapSnapshot | null>(null);
   const [statusMessage, setStatusMessage] = useState(
     "Tap a control to interact with the live map.",
   );
@@ -138,6 +171,13 @@ function MapScreen({ onOpenLiveFeed }: { onOpenLiveFeed: () => void }) {
     });
   };
 
+  const toggleLayer = (key: keyof LayerVisibility) => {
+    setLayers((current) => ({
+      ...current,
+      [key]: !current[key],
+    }));
+  };
+
   const handleZoomIn = () => {
     setZoomSignal((value) => value + 1);
     setStatusMessage("Zoomed in on the map.");
@@ -163,6 +203,14 @@ function MapScreen({ onOpenLiveFeed }: { onOpenLiveFeed: () => void }) {
     setStatusMessage("Centered on the Odisha corridor.");
   };
 
+  const activeHazardTitle =
+    hazardMode === "flood" ? "Flood Hazard" : hazardMode === "cyclone" ? "Cyclone Hazard" : "Earthquake Hazard";
+
+  const activeHazardSubtitle =
+    hazardMode === "flood"
+      ? `Scenario: ${rainScenario.replace("_", " ")}`
+      : "Scenario: model default";
+
   return (
     <div className={styles.screen}>
       <TopBar
@@ -182,13 +230,30 @@ function MapScreen({ onOpenLiveFeed }: { onOpenLiveFeed: () => void }) {
         </div>
         <div>
           <div className={styles.mapActionBannerTitle}>Live Map Response</div>
-          <div className={styles.mapActionBannerText}>{statusMessage}</div>
+          <div className={styles.mapActionBannerText}>
+            {mapSnapshot
+              ? `${mapSnapshot.severePct}% severe exposure • ${mapSnapshot.hotspotCount} hotspot(s)`
+              : statusMessage}
+          </div>
         </div>
       </div>
 
       <div className={styles.mapStage}>
         {MobileMapStage ? (
-          <MobileMapStage layerMode={layerMode} zoomSignal={zoomSignal} focusTarget={focusTarget} />
+          <MobileMapStage
+            layerMode={layerMode}
+            zoomSignal={zoomSignal}
+            focusTarget={focusTarget}
+            hazardMode={hazardMode}
+            rainScenario={rainScenario}
+            layers={layers}
+            onSnapshotChange={(snapshot) => {
+              setMapSnapshot(snapshot);
+              setStatusMessage(
+                `${snapshot.severePct}% severe exposure detected in ${snapshot.hazard.toUpperCase()} mode.`,
+              );
+            }}
+          />
         ) : (
           <div className={styles.mobileMapLoading} />
         )}
@@ -201,12 +266,78 @@ function MapScreen({ onOpenLiveFeed }: { onOpenLiveFeed: () => void }) {
 
         <div className={styles.mapBottomSheet}>
           <div className={styles.sheetHandle} />
+          <div className={styles.mobileControlSection}>
+            <div className={styles.mobileControlTitle}>Disaster Mode</div>
+            <div className={styles.mobilePillRow}>
+              {(["flood", "cyclone", "earthquake"] as HazardMode[]).map((mode) => {
+                const active = hazardMode === mode;
+                return (
+                  <button
+                    key={mode}
+                    type="button"
+                    className={`${styles.mobilePillButton} ${active ? styles.mobilePillButtonActive : ""}`}
+                    onClick={() => setHazardMode(mode)}
+                  >
+                    {active ? <Check size={12} strokeWidth={2.3} /> : null}
+                    {mode}
+                  </button>
+                );
+              })}
+            </div>
+
+            {hazardMode === "flood" ? (
+              <>
+                <div className={styles.mobileControlTitle}>Rain Intensity</div>
+                <div className={styles.mobilePillRow}>
+                  {(["normal", "rain", "heavy_rain"] as RainScenario[]).map((scenario) => {
+                    const active = rainScenario === scenario;
+                    return (
+                      <button
+                        key={scenario}
+                        type="button"
+                        className={`${styles.mobilePillButton} ${active ? styles.mobilePillButtonActive : ""}`}
+                        onClick={() => setRainScenario(scenario)}
+                      >
+                        {active ? <Check size={12} strokeWidth={2.3} /> : null}
+                        {scenario.replace("_", " ")}
+                      </button>
+                    );
+                  })}
+                </div>
+              </>
+            ) : null}
+
+            <div className={styles.mobileControlTitle}>Layers</div>
+            <div className={styles.mobilePillRow}>
+              {([
+                ["heatmap", "Heatmap"],
+                ["hotspots", "Hotspots"],
+                ["floodChannels", "Channels"],
+                ["safeZones", "Safe Zones"],
+                ["powerGrid", "Power Grid"],
+              ] as Array<[keyof LayerVisibility, string]>).map(([key, label]) => {
+                const active = layers[key];
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    className={`${styles.mobilePillButton} ${active ? styles.mobilePillButtonActive : ""}`}
+                    onClick={() => toggleLayer(key)}
+                  >
+                    {active ? <Check size={12} strokeWidth={2.3} /> : null}
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           <div className={styles.sheetContent}>
             <div className={styles.sheetLeft}>
               <div className={styles.sheetIconBox}><Waves size={26} strokeWidth={2.2} /></div>
               <div>
-                <div className={styles.sheetTitle}>Flood Hazard</div>
-                <div className={styles.sheetSubtitle}>Live Heatmap</div>
+                <div className={styles.sheetTitle}>{activeHazardTitle}</div>
+                <div className={styles.sheetSubtitle}>{activeHazardSubtitle}</div>
               </div>
             </div>
             <button type="button" className={styles.simulationButton} onClick={onOpenLiveFeed}>
@@ -220,19 +351,18 @@ function MapScreen({ onOpenLiveFeed }: { onOpenLiveFeed: () => void }) {
       <div className={styles.mapSummaryCard}>
         <div className={styles.cardLabel}>ZONES MONITORED</div>
         <div className={styles.cardHeaderRow}>
-          <div className={styles.cardHeaderTitle}>Mahanadi Delta</div>
-          <div className={styles.cardHeaderValue}>24 Total</div>
+          <div className={styles.cardHeaderTitle}>{mapSnapshot?.topHotspots?.[0]?.district || "Odisha Corridor"}</div>
+          <div className={styles.cardHeaderValue}>{mapSnapshot?.hotspotCount ?? 0} Total</div>
         </div>
-        <div className={styles.zoneRow}>
-          <span className={styles.zoneDotDanger} />
-          <span className={styles.zoneName}>Mahanadi Delta</span>
-          <span className={styles.zoneStatusDanger}>CRITICAL</span>
-        </div>
-        <div className={styles.zoneRow}>
-          <span className={styles.zoneDotSafe} />
-          <span className={styles.zoneName}>Chilika Lake Basin</span>
-          <span className={styles.zoneStatusSafe}>STABLE</span>
-        </div>
+        {(mapSnapshot?.topHotspots?.length ? mapSnapshot.topHotspots.slice(0, 2) : []).map((spot, idx) => (
+          <div className={styles.zoneRow} key={`${spot.lat}-${spot.lng}-${idx}`}>
+            <span className={idx === 0 ? styles.zoneDotDanger : styles.zoneDotSafe} />
+            <span className={styles.zoneName}>{spot.district || "Risk hotspot"}</span>
+            <span className={idx === 0 ? styles.zoneStatusDanger : styles.zoneStatusSafe}>
+              {Math.round(spot.score ?? 0)}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );

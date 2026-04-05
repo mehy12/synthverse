@@ -411,6 +411,48 @@
   gap: 16px;
 }
 
+.mobileControlSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.mobileControlTitle {
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: #647383;
+}
+
+.mobilePillRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mobilePillButton {
+  border: 1px solid rgba(13, 122, 110, 0.22);
+  background: rgba(255, 255, 255, 0.9);
+  color: #1f2937;
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: capitalize;
+}
+
+.mobilePillButtonActive {
+  background: #0d7a6e;
+  color: #fff;
+  border-color: #0d7a6e;
+}
+
 .sheetLeft {
   display: flex;
   align-items: center;
