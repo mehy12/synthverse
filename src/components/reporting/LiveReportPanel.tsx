@@ -456,6 +456,7 @@ export default function LiveReportPanel({ onSubmitted }: LiveReportPanelProps) {
             ref={videoRef}
             playsInline
             muted
+            autoPlay
             onLoadedMetadata={() => setCameraReady(true)}
             style={{
               width: "100%",

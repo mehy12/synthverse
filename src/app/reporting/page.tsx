@@ -56,7 +56,9 @@ export default function ReportingPage() {
       </div>
 
       <div className="mobile-only">
-        <MobileApp initialTab="report" />
+        <div style={{ minHeight: "100vh", paddingTop: 8 }}>
+          <LiveReportPanel />
+        </div>
       </div>
     </>
   );

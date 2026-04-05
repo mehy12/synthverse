@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import styles from "./MobileApp.module.css";
+import LiveReportPanel from "@/components/reporting/LiveReportPanel";
 
 type MobileTab = "map" | "analytics" | "report" | "settings";
 type MapLayerMode = "light" | "dark";
@@ -338,74 +339,7 @@ function ReportScreen() {
         right={<div className={styles.topBarIcons}><button className={styles.iconButton} type="button" aria-label="Notifications" onClick={() => window.alert("Notifications: report feed is live.")}><Bell size={22} strokeWidth={2} /></button><div className={styles.avatarCircle}><UserCircle2 size={28} strokeWidth={1.8} /></div></div>}
       />
 
-      <div className={styles.cameraFrame}>
-        <div className={styles.cameraTrustCard}>
-          <div className={styles.cardLabel}>TRUST SCORE</div>
-          <div className={styles.trustRow}><div className={styles.trustValue}>98%</div><ShieldCheck size={18} strokeWidth={2.4} className={styles.trustIcon} /></div>
-        </div>
-        <div className={styles.cameraGlow} />
-        <div className={styles.cameraControls}>
-          <button type="button" className={styles.darkPillButton}><Zap size={18} strokeWidth={2.2} /></button>
-          <button type="button" className={styles.captureButton} aria-label="Capture"><div className={styles.captureInner} /></button>
-          <button type="button" className={styles.darkPillButton}><FlipHorizontal2 size={18} strokeWidth={2.2} /></button>
-        </div>
-      </div>
-
-      <div className={styles.gpsCard}>
-        <div className={styles.gpsIconBox}><MapPin size={20} strokeWidth={2.2} /></div>
-        <div>
-          <div className={styles.cardLabel}>LIVE GPS DATA</div>
-          <div className={styles.gpsTitle}>Lower East Side, NYC</div>
-          <div className={styles.gpsMeta}>40.7128° N, 74.0060° W • 2m accuracy</div>
-        </div>
-      </div>
-
-      <div className={styles.fieldBlock}>
-        <div className={styles.fieldLabel}>HEADLINE</div>
-        <input className={styles.textInput} placeholder="Brief summary of the situation" />
-      </div>
-
-      <div className={styles.dualGrid}>
-        <div className={styles.fieldBlock}>
-          <div className={styles.fieldLabel}>REPORT TYPE</div>
-          <button className={styles.selectField} type="button">Street Flood <ChevronDown size={18} strokeWidth={2.3} /></button>
-        </div>
-        <div className={styles.fieldBlock}>
-          <div className={styles.fieldLabel}>SEVERITY</div>
-          <button className={styles.selectField} type="button"><span className={styles.severityCritical}>Critical</span> <ChevronDown size={18} strokeWidth={2.3} /></button>
-        </div>
-      </div>
-
-      <div className={styles.fieldBlock}>
-        <div className={styles.fieldLabel}>DESCRIPTION</div>
-        <textarea className={styles.textArea} placeholder="Provide details like water depth or immediate risks..." rows={4} />
-      </div>
-
-      <button className={styles.submitButton} type="button"><Send size={18} strokeWidth={2.4} /> Submit live report</button>
-
-      <div className={styles.feedHeaderRow}>
-        <div className={styles.feedTitle}><span className={styles.liveDotRed} /> Live Feed</div>
-        <div className={styles.feedMetaHeader}>NEARBY REPORTS</div>
-      </div>
-
-      <div className={styles.feedList}>
-        <article className={styles.feedCard}>
-          <div className={styles.feedThumbFlood} />
-          <div className={styles.feedBody}>
-            <div className={styles.feedTopRow}><div className={styles.pillCritical}>CRITICAL</div><div className={styles.feedTime}>2m ago</div></div>
-            <div className={styles.feedHeadline}>Main St Intersection Submerged</div>
-            <div className={styles.feedSubline}><User size={13} strokeWidth={2} /> Mark J. • 0.4 miles away</div>
-          </div>
-        </article>
-        <article className={styles.feedCard}>
-          <div className={styles.feedThumbTunnel} />
-          <div className={styles.feedBody}>
-            <div className={styles.feedTopRow}><div className={styles.pillModerate}>MODERATE</div><div className={styles.feedTime}>15m ago</div></div>
-            <div className={styles.feedHeadline}>Drain overflow near Park Ave</div>
-            <div className={styles.feedSubline}><User size={13} strokeWidth={2} /> Sarah W. • 1.2 miles away</div>
-          </div>
-        </article>
-      </div>
+      <LiveReportPanel />
     </div>
   );
 }
