@@ -198,24 +198,6 @@ function MapScreen({ onOpenAnalytics }: { onOpenAnalytics: () => void }) {
           <div className={styles.mobileMapLoading} />
         )}
 
-        <div className={styles.mapOverlayCard}>
-          <div className={styles.cardLabel}>ZONES MONITORED</div>
-          <div className={styles.cardHeaderRow}>
-            <div className={styles.cardHeaderTitle}>Mahanadi Delta</div>
-            <div className={styles.cardHeaderValue}>24 Total</div>
-          </div>
-          <div className={styles.zoneRow}>
-            <span className={styles.zoneDotDanger} />
-            <span className={styles.zoneName}>Mahanadi Delta</span>
-            <span className={styles.zoneStatusDanger}>CRITICAL</span>
-          </div>
-          <div className={styles.zoneRow}>
-            <span className={styles.zoneDotSafe} />
-            <span className={styles.zoneName}>Chilika Lake Basin</span>
-            <span className={styles.zoneStatusSafe}>STABLE</span>
-          </div>
-        </div>
-
         <div className={styles.mapControls}>
           <button type="button" className={styles.controlButton} aria-label="Locate" onClick={handleLocate}><Crosshair size={24} strokeWidth={2.2} /></button>
           <button type="button" className={styles.controlButton} aria-label="Layers" onClick={handleLayerToggle}><Layers3 size={24} strokeWidth={2.2} /></button>
@@ -237,6 +219,24 @@ function MapScreen({ onOpenAnalytics }: { onOpenAnalytics: () => void }) {
               Trigger Simulation
             </button>
           </div>
+        </div>
+      </div>
+
+      <div className={styles.mapSummaryCard}>
+        <div className={styles.cardLabel}>ZONES MONITORED</div>
+        <div className={styles.cardHeaderRow}>
+          <div className={styles.cardHeaderTitle}>Mahanadi Delta</div>
+          <div className={styles.cardHeaderValue}>24 Total</div>
+        </div>
+        <div className={styles.zoneRow}>
+          <span className={styles.zoneDotDanger} />
+          <span className={styles.zoneName}>Mahanadi Delta</span>
+          <span className={styles.zoneStatusDanger}>CRITICAL</span>
+        </div>
+        <div className={styles.zoneRow}>
+          <span className={styles.zoneDotSafe} />
+          <span className={styles.zoneName}>Chilika Lake Basin</span>
+          <span className={styles.zoneStatusSafe}>STABLE</span>
         </div>
       </div>
     </div>
