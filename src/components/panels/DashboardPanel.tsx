@@ -65,12 +65,12 @@ function CustomTooltip({ active, payload, label }: any) {
   return (
     <div
       style={{
-        background: "rgba(15, 23, 42, 0.95)",
-        border: "1px solid rgba(51, 65, 85, 0.5)",
+        background: "rgba(255, 255, 255, 0.98)",
+        border: "1px solid rgba(203, 213, 225, 1)",
         borderRadius: 8,
         padding: "8px 12px",
         fontSize: "0.72rem",
-        color: "#e2e8f0",
+        color: "#1f2937",
         backdropFilter: "blur(10px)",
       }}
     >
@@ -136,8 +136,8 @@ export default function DashboardPanel({
       style={{
         width: "100%",
         height: "100%",
-        background: "rgba(2, 6, 23, 0.97)",
-        borderLeft: "1px solid rgba(51, 65, 85, 0.4)",
+        background: "rgba(255, 255, 255, 0.98)",
+        borderLeft: "1px solid rgba(226, 232, 240, 1)",
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
@@ -148,11 +148,11 @@ export default function DashboardPanel({
       <div
         style={{
           padding: "16px 20px",
-          borderBottom: "1px solid rgba(51, 65, 85, 0.3)",
+          borderBottom: "1px solid rgba(226, 232, 240, 1)",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          background: "rgba(15, 23, 42, 0.6)",
+          background: "rgba(249, 250, 251, 0.95)",
         }}
       >
         <div>
@@ -161,7 +161,7 @@ export default function DashboardPanel({
               fontSize: "0.6rem",
               textTransform: "uppercase",
               letterSpacing: "0.12em",
-              color: "#64748b",
+              color: "#6b7280",
               fontWeight: 700,
               marginBottom: 4,
             }}
@@ -172,7 +172,7 @@ export default function DashboardPanel({
             style={{
               fontSize: "0.88rem",
               fontWeight: 700,
-              color: "#e2e8f0",
+              color: "#0f172a",
             }}
           >
             Flood Operations Dashboard
@@ -207,8 +207,8 @@ export default function DashboardPanel({
           display: "grid",
           gridTemplateColumns: "repeat(4, 1fr)",
           gap: 1,
-          background: "rgba(51, 65, 85, 0.2)",
-          borderBottom: "1px solid rgba(51, 65, 85, 0.3)",
+          background: "rgba(226, 232, 240, 1)",
+          borderBottom: "1px solid rgba(226, 232, 240, 1)",
         }}
       >
         {[
@@ -229,14 +229,14 @@ export default function DashboardPanel({
             key={i}
             style={{
               padding: "12px",
-              background: "rgba(2, 6, 23, 0.8)",
+              background: "rgba(255, 255, 255, 1)",
               textAlign: "center",
             }}
           >
             <div
               style={{
                 fontSize: "0.55rem",
-                color: "#64748b",
+                color: "#6b7280",
                 fontWeight: 700,
                 letterSpacing: "0.08em",
                 marginBottom: 4,
@@ -282,8 +282,8 @@ export default function DashboardPanel({
               <div
                 style={{
                   borderRadius: 12,
-                  border: "1px solid rgba(51, 65, 85, 0.3)",
-                  background: "rgba(15, 23, 42, 0.5)",
+                  border: "1px solid rgba(226, 232, 240, 1)",
+                  background: "rgba(255, 255, 255, 0.98)",
                   padding: 16,
                   marginBottom: 16,
                 }}
@@ -302,7 +302,7 @@ export default function DashboardPanel({
                         margin: 0,
                         fontSize: "1rem",
                         fontWeight: 700,
-                        color: "#f1f5f9",
+                        color: "#0f172a",
                       }}
                     >
                       {selectedDistrict.name}
@@ -319,7 +319,7 @@ export default function DashboardPanel({
                       <span
                         style={{
                           fontSize: "0.72rem",
-                          color: "#94a3b8",
+                          color: "#64748b",
                         }}
                       >
                         {selectedDistrict.population.toLocaleString()} pop.
@@ -350,10 +350,10 @@ export default function DashboardPanel({
                         width: 24,
                         height: 24,
                         borderRadius: 6,
-                        background: "rgba(100, 116, 139, 0.1)",
+                        background: "rgba(241, 245, 249, 1)",
                         border: "none",
                         cursor: "pointer",
-                        color: "#64748b",
+                        color: "#6b7280",
                       }}
                     >
                       <X size={12} />
@@ -373,14 +373,14 @@ export default function DashboardPanel({
                     style={{
                       padding: 10,
                       borderRadius: 8,
-                      background: "rgba(2, 6, 23, 0.5)",
-                      border: "1px solid rgba(51, 65, 85, 0.2)",
+                      background: "rgba(248, 250, 252, 1)",
+                      border: "1px solid rgba(226, 232, 240, 1)",
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
                       <ShieldAlert size={12} color="#ef4444" />
                       <span
-                        style={{ fontSize: "0.6rem", color: "#64748b", fontWeight: 700 }}
+                        style={{ fontSize: "0.6rem", color: "#6b7280", fontWeight: 700 }}
                       >
                         RISK SCORE
                       </span>
@@ -400,14 +400,14 @@ export default function DashboardPanel({
                     style={{
                       padding: 10,
                       borderRadius: 8,
-                      background: "rgba(2, 6, 23, 0.5)",
-                      border: "1px solid rgba(51, 65, 85, 0.2)",
+                      background: "rgba(248, 250, 252, 1)",
+                      border: "1px solid rgba(226, 232, 240, 1)",
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
                       <Gauge size={12} color="#38bdf8" />
                       <span
-                        style={{ fontSize: "0.6rem", color: "#64748b", fontWeight: 700 }}
+                        style={{ fontSize: "0.6rem", color: "#6b7280", fontWeight: 700 }}
                       >
                         WATER LEVEL
                       </span>
@@ -428,7 +428,7 @@ export default function DashboardPanel({
                     <span
                       style={{
                         fontSize: "0.6rem",
-                        color: "#64748b",
+                        color: "#6b7280",
                         marginLeft: 4,
                       }}
                     >
@@ -442,8 +442,8 @@ export default function DashboardPanel({
               <div
                 style={{
                   borderRadius: 12,
-                  border: "1px solid rgba(51, 65, 85, 0.3)",
-                  background: "rgba(15, 23, 42, 0.5)",
+                  border: "1px solid rgba(226, 232, 240, 1)",
+                  background: "rgba(255, 255, 255, 0.98)",
                   padding: 16,
                   marginBottom: 16,
                 }}
@@ -461,7 +461,7 @@ export default function DashboardPanel({
                     style={{
                       fontSize: "0.7rem",
                       fontWeight: 700,
-                      color: "#94a3b8",
+                      color: "#64748b",
                       textTransform: "uppercase",
                       letterSpacing: "0.08em",
                     }}
@@ -504,8 +504,8 @@ export default function DashboardPanel({
               <div
                 style={{
                   borderRadius: 12,
-                  border: "1px solid rgba(51, 65, 85, 0.3)",
-                  background: "rgba(15, 23, 42, 0.5)",
+                  border: "1px solid rgba(226, 232, 240, 1)",
+                  background: "rgba(255, 255, 255, 0.98)",
                   padding: 16,
                 }}
               >
@@ -522,7 +522,7 @@ export default function DashboardPanel({
                     style={{
                       fontSize: "0.7rem",
                       fontWeight: 700,
-                      color: "#94a3b8",
+                      color: "#64748b",
                       textTransform: "uppercase",
                       letterSpacing: "0.08em",
                     }}
@@ -617,15 +617,15 @@ export default function DashboardPanel({
                   width: "100%",
                   marginTop: 24,
                   borderRadius: 12,
-                  border: "1px solid rgba(51, 65, 85, 0.3)",
-                  background: "rgba(15, 23, 42, 0.3)",
+                  border: "1px solid rgba(226, 232, 240, 1)",
+                  background: "rgba(255, 255, 255, 0.98)",
                   overflow: "hidden",
                 }}
               >
                 <div
                   style={{
                     padding: "10px 14px",
-                    borderBottom: "1px solid rgba(51, 65, 85, 0.2)",
+                    borderBottom: "1px solid rgba(226, 232, 240, 1)",
                     fontSize: "0.6rem",
                     fontWeight: 700,
                     color: "#64748b",
@@ -652,7 +652,7 @@ export default function DashboardPanel({
                           padding: "8px 14px",
                           borderBottom:
                             i < 7
-                              ? "1px solid rgba(51, 65, 85, 0.15)"
+                              ? "1px solid rgba(226, 232, 240, 1)"
                               : "none",
                           fontSize: "0.72rem",
                         }}
@@ -660,7 +660,7 @@ export default function DashboardPanel({
                         <span
                           style={{
                             width: 18,
-                            color: "#475569",
+                            color: "#64748b",
                             fontWeight: 700,
                             fontFamily: "var(--font-mono, monospace)",
                             fontSize: "0.65rem",
@@ -671,7 +671,7 @@ export default function DashboardPanel({
                         <span
                           style={{
                             flex: 1,
-                            color: "#cbd5e1",
+                            color: "#1f2937",
                             fontWeight: 500,
                           }}
                         >
@@ -713,12 +713,12 @@ export default function DashboardPanel({
       <div
         style={{
           padding: "10px 16px",
-          borderTop: "1px solid rgba(51, 65, 85, 0.3)",
-          background: "rgba(2, 6, 23, 0.8)",
+          borderTop: "1px solid rgba(226, 232, 240, 1)",
+          background: "rgba(255, 255, 255, 0.98)",
           display: "flex",
           justifyContent: "space-between",
           fontSize: "0.6rem",
-          color: "#475569",
+          color: "#64748b",
           fontFamily: "var(--font-mono, monospace)",
         }}
       >
