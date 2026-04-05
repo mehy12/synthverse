@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Map, Layers3, Shield } from "lucide-react";
 import MobileApp from "@/components/mobile/MobileApp";
 
@@ -27,8 +27,12 @@ const MapView = dynamic(() => import("@/components/map/MapView"), {
 });
 
 export default function MapPage() {
-  const searchParams = useSearchParams();
-  const safeZoneMode = searchParams.get("safeZones") === "1";
+  const [safeZoneMode, setSafeZoneMode] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setSafeZoneMode(params.get("safeZones") === "1");
+  }, []);
 
   return (
     <>
